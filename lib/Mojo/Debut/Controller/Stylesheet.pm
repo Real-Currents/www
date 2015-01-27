@@ -1,4 +1,4 @@
-package MojoDebut::Controller::Stylesheet;
+package Mojo::Debut::Controller::Stylesheet;
 use Mojo::Base 'Mojolicious::Controller';
 
 # This action will render a template

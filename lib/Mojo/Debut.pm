@@ -1,4 +1,4 @@
-package MojoDebut;
+package Mojo::Debut;
 use Mojo::Base 'Mojolicious';
 use Mojo::Log;
 

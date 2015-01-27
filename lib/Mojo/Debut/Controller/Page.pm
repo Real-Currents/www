@@ -1,4 +1,4 @@
-package MojoDebut::Controller::Page;
+package Mojo::Debut::Controller::Page;
 use Mojo::Base 'Mojolicious::Controller';
 
 # This action will render a template

@@ -6,4 +6,4 @@ use warnings;
 use Mojolicious::Commands;
 BEGIN { unshift( @INC, "lib"); }
 
-Mojolicious::Commands->start_app('MojoDebut');
+Mojolicious::Commands->start_app('Mojo::Debut');
