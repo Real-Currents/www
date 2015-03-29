@@ -10,10 +10,10 @@ sub startup {
 	my @content_items;
 	my @pages;
 	my @header_links;
+    $self->log->debug( "Running Mojoliciou v". Mojolicious->VERSION );
 	
 	$self->log->debug( "Check for content dir: " );
-	$self->log->debug( -d 'content' );
-	opendir $content, 'content' or die "$!";
+	opendir $content, 'content' or die "'content' dir does not exist: $!\n";
 	
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
@@ -63,7 +63,7 @@ sub startup {
 	$r->get('/:section')
 	  ->to( %page_params );
 	  
-	$self->log->debug( "Close content dir: " );
+	$self->log->debug( "Close content dir" );
 	closedir $content or die "$!";
 }
 

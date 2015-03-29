@@ -1,2 +1,5 @@
+bin
+man
 log
-public/libs
+t/heroku.t
+.net-heroku
