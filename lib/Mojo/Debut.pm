@@ -10,7 +10,7 @@ sub startup {
 	my @content_items;
 	my @pages;
 	my @header_links;
-    $self->log->debug( "Running Mojoliciou v". Mojolicious->VERSION );
+    $self->log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 	
 	$self->log->debug( "Check for content dir: " );
 	opendir $content, 'content' or die "'content' dir does not exist: $!\n";

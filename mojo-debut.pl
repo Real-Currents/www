@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 # Start command line interface for application
-use Mojolicious::Commands;
 BEGIN { unshift( @INC, "lib"); }
+use Mojolicious::Commands;
 
 Mojolicious::Commands->start_app('Mojo::Debut');
