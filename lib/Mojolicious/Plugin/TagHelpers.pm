@@ -52,18 +52,14 @@ sub _form_for {
   my ($c, @url) = (shift, shift);
   push @url, shift if ref $_[0] eq 'HASH';
 
-  # POST detection
-  my @post;
-  if (my $r = $c->app->routes->lookup($url[0])) {
-    my %methods = (GET => 1, POST => 1);
-    do {
-      my @via = @{$r->via || []};
-      %methods = map { $_ => 1 } grep { $methods{$_} } @via if @via;
-    } while $r = $r->parent;
-    @post = (method => 'POST') if $methods{POST} && !$methods{GET};
-  }
+  # Method detection
+  my $r      = $c->app->routes->lookup($url[0]);
+  my $method = $r ? $r->suggested_method : 'GET';
+  my @post   = $method ne 'GET' ? (method => 'POST') : ();
 
-  return _tag('form', action => $c->url_for(@url), @post, @_);
+  my $url = $c->url_for(@url);
+  $url->query({_method => $method}) if @post && $method ne 'POST';
+  return _tag('form', action => $url, @post, @_);
 }
 
 sub _hidden_field {
@@ -238,8 +234,8 @@ Mojolicious::Plugin::TagHelpers - Tag helpers plugin
 L<Mojolicious::Plugin::TagHelpers> is a collection of HTML tag helpers for
 L<Mojolicious>.
 
-Most form helpers can automatically pick up previous input values and will
-show them as default. You can also use
+Most form helpers can automatically pick up previous input values and will show
+them as default. You can also use
 L<Mojolicious::Plugin::DefaultHelpers/"param"> to set them manually and let
 necessary attributes always be generated automatically.
 
@@ -303,8 +299,8 @@ L<Mojolicious::Plugin::DefaultHelpers/"csrf_token">.
   %= date_field end => '2012-12-21'
   %= date_field end => '2012-12-21', id => 'foo'
 
-Generate C<input> tag of type C<date>. Previous input values will
-automatically get picked up and shown as default.
+Generate C<input> tag of type C<date>. Previous input values will automatically
+get picked up and shown as default.
 
   <input name="end" type="date">
   <input name="end" type="date" value="2012-12-21">
@@ -364,10 +360,14 @@ Generate C<input> tag of type C<file>.
     %= text_field 'first_name'
     %= submit_button
   % end
+  %= form_for some_delete_route => begin
+    %= submit_button 'Remove'
+  % end
 
 Generate portable C<form> tag with L<Mojolicious::Controller/"url_for">. For
-routes that allow C<POST> but not C<GET>, a C<method> attribute will be
-automatically added.
+routes that do not allow C<GET>, a C<method> attribute with the value C<POST>
+will be automatically added. And for methods other than C<GET> or C<POST>, an
+C<_method> query parameter will be added as well.
 
   <form action="/path/to/login">
     <input name="first_name" type="text">
@@ -384,6 +384,9 @@ automatically added.
   <form action="http://example.com/login" method="POST">
     <input name="first_name" type="text">
     <input value="Ok" type="submit">
+  </form>
+  <form action="/path/to/delete/route?_method=DELETE" method="POST">
+    <input value="Remove" type="submit">
   </form>
 
 =head2 hidden_field
@@ -409,14 +412,14 @@ Generate portable C<img> tag.
 =head2 input_tag
 
   %= input_tag 'first_name'
-  %= input_tag first_name => 'Default name'
+  %= input_tag first_name => 'Default'
   %= input_tag 'employed', type => 'checkbox'
 
 Generate C<input> tag. Previous input values will automatically get picked up
 and shown as default.
 
   <input name="first_name">
-  <input name="first_name" value="Default name">
+  <input name="first_name" value="Default">
   <input name="employed" type="checkbox">
 
 =head2 javascript
@@ -564,8 +567,8 @@ automatically get picked up and shown as default.
   %= select_field country => [c(EU => [qw(de en)]), c(Asia => [qw(cn jp)])]
 
 Generate C<select> and C<option> tags from array references and C<optgroup>
-tags from L<Mojo::Collection> objects. Previous input values will
-automatically get picked up and shown as default.
+tags from L<Mojo::Collection> objects. Previous input values will automatically
+get picked up and shown as default.
 
   <select name="country">
     <option value="de">de</option>
@@ -642,7 +645,7 @@ Alias for L</"tag">.
   <%= tag div => (id => 'foo') => begin %>test & 123<% end %>
 
 HTML tag generator, the C<data> attribute may contain a hash reference with
-pairs to generate attributes from.
+key/value pairs to generate attributes from.
 
   <br>
   <div></div>
@@ -688,35 +691,35 @@ get picked up and shown as default.
 
 =head2 text_area
 
-  %= text_area 'foo'
-  %= text_area 'foo', cols => 40
-  %= text_area foo => 'Default!', cols => 40
-  %= text_area foo => (cols => 40) => begin
-    Default!
+  %= text_area 'story'
+  %= text_area 'story', cols => 40
+  %= text_area story => 'Default', cols => 40
+  %= text_area story => (cols => 40) => begin
+    Default
   % end
 
 Generate C<textarea> tag. Previous input values will automatically get picked
 up and shown as default.
 
-  <textarea name="foo"></textarea>
-  <textarea cols="40" name="foo"></textarea>
-  <textarea cols="40" name="foo">Default!</textarea>
-  <textarea cols="40" name="foo">
-    Default!
+  <textarea name="story"></textarea>
+  <textarea cols="40" name="story"></textarea>
+  <textarea cols="40" name="story">Default</textarea>
+  <textarea cols="40" name="story">
+    Default
   </textarea>
 
 =head2 text_field
 
   %= text_field 'first_name'
-  %= text_field first_name => 'Default name'
-  %= text_field first_name => 'Default name', class => 'user'
+  %= text_field first_name => 'Default'
+  %= text_field first_name => 'Default', class => 'user'
 
-Generate C<input> tag of type C<text>. Previous input values will
-automatically get picked up and shown as default.
+Generate C<input> tag of type C<text>. Previous input values will automatically
+get picked up and shown as default.
 
   <input name="first_name" type="text">
-  <input name="first_name" type="text" value="Default name">
-  <input class="user" name="first_name" type="text" value="Default name">
+  <input name="first_name" type="text" value="Default">
+  <input class="user" name="first_name" type="text" value="Default">
 
 =head2 time_field
 
@@ -724,8 +727,8 @@ automatically get picked up and shown as default.
   %= time_field start => '23:59:59'
   %= time_field start => '23:59:59', id => 'foo'
 
-Generate C<input> tag of type C<time>. Previous input values will
-automatically get picked up and shown as default.
+Generate C<input> tag of type C<time>. Previous input values will automatically
+get picked up and shown as default.
 
   <input name="start" type="time">
   <input name="start" type="time" value="23:59:59">
@@ -750,8 +753,8 @@ get picked up and shown as default.
   %= week_field vacation => '2012-W17'
   %= week_field vacation => '2012-W17', id => 'foo'
 
-Generate C<input> tag of type C<week>. Previous input values will
-automatically get picked up and shown as default.
+Generate C<input> tag of type C<week>. Previous input values will automatically
+get picked up and shown as default.
 
   <input name="vacation" type="week">
   <input name="vacation" type="week" value="2012-W17">

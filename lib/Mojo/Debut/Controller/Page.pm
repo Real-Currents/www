@@ -8,18 +8,22 @@ sub load {
 	
 	# Render template "welcome" with message
 	$msg = 'Welcome to the Mojolicious real-time web framework!' 
-		if( $self->stash('section') eq "welcome" );
+		if( $self->stash('page') eq "welcome" );
 		
-	if( $self->stash('section') =~ /(\w+)/ ) {
+	if( $self->stash('page') =~ /(\w+)/ ) {
 		$self->render_maybe( 
 			msg => $msg,
 			template => $1 
-		); #or error( $self, @_ );
-	} else {
-		$self->render(
+		);# or error( $self, @_ );
+		
+	} elsif( $self->stash('section') =~ /(\w+)/ ) {
+		$self->render_maybe( 
 			msg => $msg,
-			template => 'welcome'
-		);
+			template => $1 
+		);# or error( $self, @_ );
+		
+	} else {
+		error( $self, @_ );
 	}
 }
 

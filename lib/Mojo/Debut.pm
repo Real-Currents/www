@@ -31,6 +31,13 @@ sub startup {
 	# Documentation browser under "/perldoc"
 	$self->plugin('PODRenderer');
 	
+	# Select index file
+	$self->plugin(
+		'Directory' => { 
+			root => 'public',
+			dir_index => [qw'default.html index.html index.htm'] 
+		});
+	
 	# Check requests
 	my $reqCheck = sub {
 		my $self = shift;

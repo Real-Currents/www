@@ -13,7 +13,7 @@ sub load {
 sub parse {
   my ($self, $content, $file, $conf, $app) = @_;
 
-  # Run Perl code
+  # Run Perl code in sandbox
   my $config
     = eval 'package Mojolicious::Plugin::Config::Sandbox; no warnings;'
     . "sub app; local *app = sub { \$app }; use Mojo::Base -strict; $content";
@@ -66,7 +66,13 @@ Mojolicious::Plugin::Config - Perl-ish configuration plugin
 
   # myapp.conf (it's just Perl returning a hash)
   {
-    foo       => "bar",
+    # Just a value
+    foo => "bar",
+
+    # Nested data structures are fine too
+    baz => ['♥'],
+
+    # You have full access to the application
     music_dir => app->home->rel_dir('music')
   };
 
@@ -133,8 +139,8 @@ environment variable or C<$moniker.conf> in the application home directory.
 
 =head1 METHODS
 
-L<Mojolicious::Plugin::Config> inherits all methods from
-L<Mojolicious::Plugin> and implements the following new ones.
+L<Mojolicious::Plugin::Config> inherits all methods from L<Mojolicious::Plugin>
+and implements the following new ones.
 
 =head2 load
 
