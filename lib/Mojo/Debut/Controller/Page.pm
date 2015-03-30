@@ -10,13 +10,13 @@ sub load {
 	$msg = 'Welcome to the Mojolicious real-time web framework!' 
 		if( $self->stash('page') eq "welcome" );
 		
-	if( $self->stash('page') =~ /(\w+)/ ) {
+	if( $self->stash('page') =~ /([\w|\-]+)/ ) {
 		$self->render_maybe( 
 			msg => $msg,
 			template => $1 
 		);# or error( $self, @_ );
 		
-	} elsif( $self->stash('section') =~ /(\w+)/ ) {
+	} elsif( $self->stash('section') =~ /([\w|\-]+)/ ) {
 		$self->render_maybe( 
 			msg => $msg,
 			template => $1 
