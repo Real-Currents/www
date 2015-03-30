@@ -7,17 +7,19 @@ my $content; # Handle for the content dir
 # This method will run once at server start
 sub startup {
 	my $self = shift;
+	my $log = $self->log;
 	my @content_items;
 	my @pages;
 	my @header_links;
-    $self->log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 	
-	$self->log->debug( "Check for content dir: " );
+    $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
+	
+	$log->debug( "Check for content dir: " );
 	opendir $content, 'public/content' or die "'content' dir does not exist: $!\n";
 	
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
-		$self->log->debug( "$content_item \n" );
+		$log->debug( "$content_item \n" );
 		@content_items = (@content_items, $content_item);
 		if( $content_item =~ m/(\w+)\.md/ ){
 			@pages = (@pages, $content_item);
@@ -28,6 +30,21 @@ sub startup {
 
 	# Documentation browser under "/perldoc"
 	$self->plugin('PODRenderer');
+	
+	# Check requests
+	my $reqCheck = sub {
+		my $self = shift;
+		my $req = $self->req;
+		my $path = $req->url->path;
+    	$log->debug( "Requested resource is ". $req->url );
+		
+		# Remove route heading if more than one node listed in path
+		if( $path =~ /(pages|sections|styles)(\/[\w|\-]+)\/.+/ ) {
+			$path =~ s/(?:pages|sections|styles)//;
+			$log->debug( "Modified request is ". $req->url->path($path) );
+		}
+	};
+	$self->hook(before_dispatch => $reqCheck);
 
 	# Router
 	my $r = $self->routes;
@@ -51,29 +68,32 @@ sub startup {
 	);
 	  
 	# Route to stylesheet templates before pages
-	$r->get('/(:stylesheet).css')
+	$r->get('/styles/(:stylesheet).css')
 	  ->to(
 			controller => 'Stylesheet',
 			action	=> 'load'
 		);
 
 	# Normal route to controller	  
-	$r->get('/:section')
+	$r->get('/pages/(:page)')
 	  ->to( %page_params );
 	  
-	$r->any('/')
-	  ->to(
-			controller => 'Page',
-			action	=> 'error'
-		);
+	$r->get('/sections/(:section)')
+	  ->to( %page_params );
 	  
-	$r->any('/*')
-	  ->to(
-			controller => 'Page',
-			action	=> 'error'
-		);
-	  
-	$self->log->debug( "Close content dir" );
+#	$r->any('/')
+#	  ->to(
+#			controller => 'Page',
+#			action	=> 'error'
+#		);
+#	  
+#	$r->any('/*')
+#	  ->to(
+#			controller => 'Page',
+#			action	=> 'error'
+#		);
+	
+	$log->debug( "Close content dir" );
 	closedir $content or die "$!";
 }
 
