@@ -1,5 +1,6 @@
 bin
 man
 log
+libs
 t/heroku.t
 .net-heroku

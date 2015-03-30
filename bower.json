@@ -1,0 +1,31 @@
+{
+  "name": "Mojo::Debut",
+  "version": "0.0.1",
+  "authors": [
+    "John <john@real-currents.com>"
+  ],
+  "description": "Application Content Provider",
+  "main": "mojo-debut.pl",
+  "keywords": [
+    "Mojolicious",
+    "Perl",
+    "AngularJS",
+    "content",
+    "markdown",
+    "flatfile"
+  ],
+  "license": "Artistic License version 2.0",
+  "homepage": "http://mojo-debut.heroku.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "https://github.com/Revlin/angular.git#revlin/1.3.x-svg"
+  }
+}
