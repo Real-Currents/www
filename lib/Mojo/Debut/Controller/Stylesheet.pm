@@ -5,7 +5,16 @@ use Mojo::Base 'Mojolicious::Controller';
 sub load {
 	my $self = shift;
 	my $stylesheet = $self->stash('stylesheet');
-	$self->render( template => "styles/$stylesheet", format => 'css', handler => 'ep' );
+	$self->render_maybe( 
+		template => "styles/$stylesheet", 
+		format => 'css', 
+		handler => 'ep' 
+	); #or error( $self, @_ );
+}
+
+sub error {
+	my $self = shift;
+	$self->reply->static('error.html');
 }
 
 1;

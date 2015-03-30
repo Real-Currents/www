@@ -39,8 +39,8 @@ sub startup {
     	$log->debug( "Requested resource is ". $req->url );
 		
 		# Remove route heading if more than one node listed in path
-		if( $path =~ /(pages|sections|styles)(\/[\w|\-]+)\/.+/ ) {
-			$path =~ s/(?:pages|sections|styles)//;
+		if( $path =~ /(pages|sections|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
+			$path =~ s/(?:pages|sections|scripts|styles)//;
 			$log->debug( "Modified request is ". $req->url->path($path) );
 		}
 	};

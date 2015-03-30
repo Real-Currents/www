@@ -1,3 +1,0 @@
-AddType text/html .html
-AddHandler default-handler .html
-AddOutputFilter INCLUDES .html

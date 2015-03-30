@@ -14,7 +14,7 @@ sub load {
 		$self->render_maybe( 
 			msg => $msg,
 			template => $1 
-		) or error( $self, @_ );
+		); #or error( $self, @_ );
 	} else {
 		$self->render(
 			msg => $msg,
@@ -25,7 +25,9 @@ sub load {
 
 sub error {
 	my $self = shift;
-	$self->reply->static('.errordocs/missing.html');
+	
+	# Render an error page
+	$self->reply->static('error.html');
 }
 
 1;
