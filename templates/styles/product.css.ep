@@ -1,0 +1,133 @@
+.mainFrame .primaryNav {
+	margin: 19px 0 0 792px;
+	padding:0;
+	background-color: transparent;
+	float: left;
+	width: 380px;
+	display: inline-block;
+	float:				right;
+	min-width:			396px;
+	margin-right: 		7.5%;
+	background-size:	cover;
+	color:				#868585;
+	text-align: 		right;
+ }
+.mainFrame .primaryNav * {
+	color:				#868585;
+	font-size:			5%;
+}
+.mainFrame .primaryNav *:hover {
+	color:				#555555;
+}
+
+     .mainFrame .primaryNav .productsNav {
+		 margin: 0 0 0 0;
+		 cursor: pointer;
+		 float:left;
+		 display: inline-block;
+		 width: 274px;
+		 height: 36px;
+		 background:url(/images/product.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 width: 			97px;
+		 height: 			21px;
+		 float:				right;
+		 width:				28%;
+		 text-align: 		right;
+	 }
+     .mainFrame .primaryNav .productsNav:hover {
+         background:url(/images/product_over.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 color:				#555555;
+     }
+
+     .mainFrame .primaryNav .newsNav {
+		 margin: 			0px 6px 0 6px;
+		 cursor: 			pointer;
+		 float:				left;
+		 display: 			inline-block;
+		 width: 			72px;
+		 height: 			31px;
+		 background:		url(/images/news.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 width:				49px;
+		 height:			22px;
+		 float:				right;
+		 width:				20%;
+		 text-align: 		right;
+	 }
+	 .mainFrame .primaryNav .newsNav:hover        {
+		 background:url(/images/news_over.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 color:				#555555;
+	 }
+
+     .mainFrame .primaryNav .aboutNav {
+		 margin: 0 0 0 0;
+		 cursor: pointer;
+		 float:left;
+		 display: inline-block;
+		 width: 108px;
+		 height: 31px;
+		 background:url(/images/about.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 width:				73px;
+		 height:			21px;
+		 float:				right;
+		 width:				21.5%;
+		 text-align: 		right;
+	 }
+     .mainFrame .primaryNav .aboutNav:hover        {
+         background:url(/images/about_over.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 color:				#555555;
+     }
+
+	 .mainFrame .primaryNav .contactNav {
+		  margin: 0 0 0 0;
+		 cursor: pointer;
+		 float:	left;
+		 display: inline-block;
+		 width: 126px;
+		 height: 31px;
+		 background:url(/images/contact.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 width:				85px;
+		 height:			21px;
+		 float:				right;
+		 width:				25%;
+		 text-align: 		right;
+	 }
+	 .mainFrame .primaryNav .contactNav:hover        {
+		 background:url(/images/contact_over.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 color:				#555555;
+	 }
+
+     .mainFrame .primaryNav .storeNav {
+		 margin: 0 0 0 0;
+		 cursor: pointer;
+		 float:left;
+		 display: inline-block;
+		 width: 90px;
+		 height: 31px;
+		 background:url(/images/store.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 float:				right;
+		 width:				25%;
+	 }
+     .mainFrame .primaryNav .storeNav:hover        {
+         background:url(/images/store_over.png) no-repeat top left;
+		 background-size: 	cover;
+		 /*background-image:	none;*/
+		 color:				#555555;
+     }

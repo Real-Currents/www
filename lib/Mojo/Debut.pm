@@ -49,19 +49,29 @@ sub startup {
 			return $stash->{style};
 		}
 	);
-
-	# Normal route to controller
+	  
+	# Route to stylesheet templates before pages
 	$r->get('/(:stylesheet).css')
 	  ->to(
-	  	controller => 'Stylesheet',
-		action	=> 'load'
-	  );
-	  
-	$r->get('/')
-	  ->to( %page_params );
-	  
+			controller => 'Stylesheet',
+			action	=> 'load'
+		);
+
+	# Normal route to controller	  
 	$r->get('/:section')
 	  ->to( %page_params );
+	  
+	$r->any('/')
+	  ->to(
+			controller => 'Page',
+			action	=> 'error'
+		);
+	  
+	$r->any('/*')
+	  ->to(
+			controller => 'Page',
+			action	=> 'error'
+		);
 	  
 	$self->log->debug( "Close content dir" );
 	closedir $content or die "$!";
