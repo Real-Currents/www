@@ -10,8 +10,8 @@ use Config;
 use Cwd qw(cwd);
 use Test::Lib;
 
-use Mojo;
-use Mojolicious;
+#use Mojo;
+#use Mojolicious;
 
 # Disable uploads when using CGI.pm
 $CGI::DISABLE_UPLOADS	= 1;

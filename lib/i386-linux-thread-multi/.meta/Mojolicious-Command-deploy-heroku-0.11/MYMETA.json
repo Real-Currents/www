@@ -1,0 +1,46 @@
+{
+   "abstract" : "Deploy to Heroku",
+   "author" : [
+      "Glen Hinkle"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141170, CPAN::Meta::Converter version 2.143240",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Mojolicious-Command-deploy-heroku",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "File::Path" : "2.08",
+            "File::Slurp" : "9999.19",
+            "IPC::Cmd" : "0.78",
+            "Mojolicious" : "4.50",
+            "Mojolicious::Command::deploy" : "0.01",
+            "Net::Heroku" : "0.08"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/tempire/mojolicious-command-deploy-heroku.git"
+      }
+   },
+   "version" : "0.11"
+}

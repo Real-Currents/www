@@ -1,0 +1,10 @@
+/home/revlin/perl5/lib/perl5/Test/Trap.pm
+/home/revlin/perl5/lib/perl5/Test/Trap/Builder.pm
+/home/revlin/perl5/lib/perl5/Test/Trap/Builder/PerlIO.pm
+/home/revlin/perl5/lib/perl5/Test/Trap/Builder/SystemSafe.pm
+/home/revlin/perl5/lib/perl5/Test/Trap/Builder/TempFile.pm
+/home/revlin/perl5/man/man3/Test::Trap.3
+/home/revlin/perl5/man/man3/Test::Trap::Builder.3
+/home/revlin/perl5/man/man3/Test::Trap::Builder::PerlIO.3
+/home/revlin/perl5/man/man3/Test::Trap::Builder::SystemSafe.3
+/home/revlin/perl5/man/man3/Test::Trap::Builder::TempFile.3

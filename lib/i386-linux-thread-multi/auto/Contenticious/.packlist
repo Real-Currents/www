@@ -1,0 +1,16 @@
+../mojo-debut/lib/Contenticious.pm
+../mojo-debut/lib/Contenticious.pod
+../mojo-debut/lib/Contenticious/Commands.pm
+../mojo-debut/lib/Contenticious/Content.pm
+../mojo-debut/lib/Contenticious/Content/Node.pm
+../mojo-debut/lib/Contenticious/Content/Node/Directory.pm
+../mojo-debut/lib/Contenticious/Content/Node/File.pm
+../mojo-debut/lib/Contenticious/Generator.pm
+/home/revlin/perl5/bin/contenticious
+/home/revlin/perl5/man/man3/Contenticious.3
+/home/revlin/perl5/man/man3/Contenticious::Commands.3
+/home/revlin/perl5/man/man3/Contenticious::Content.3
+/home/revlin/perl5/man/man3/Contenticious::Content::Node.3
+/home/revlin/perl5/man/man3/Contenticious::Content::Node::Directory.3
+/home/revlin/perl5/man/man3/Contenticious::Content::Node::File.3
+/home/revlin/perl5/man/man3/Contenticious::Generator.3

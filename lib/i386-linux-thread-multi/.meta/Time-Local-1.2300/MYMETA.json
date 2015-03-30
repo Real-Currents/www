@@ -1,0 +1,60 @@
+{
+   "abstract" : "efficiently compute time from local and GMT time",
+   "author" : [
+      "Dave Rolsky <autarch@urth.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300016, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.143240",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Time-Local",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "POSIX" : "0",
+            "Test::More" : "0.88",
+            "warnings" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "Config" : "0",
+            "Exporter" : "0",
+            "constant" : "0",
+            "strict" : "0",
+            "vars" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "POSIX" : "0",
+            "Test::More" : "0.88",
+            "warnings" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-time-local@rt.cpan.org",
+         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Time-Local"
+      },
+      "repository" : {
+         "type" : "git",
+         "url" : "git://git.urth.org/Time-Local.git",
+         "web" : "http://git.urth.org/Time-Local.git"
+      }
+   },
+   "version" : "1.2300"
+}

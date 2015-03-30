@@ -1,0 +1,16 @@
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Base.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/Unix.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/VMS.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/Windows.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/Windows/BCC.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/Windows/GCC.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/Windows/MSVC.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/aix.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/android.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/cygwin.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/darwin.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/dec_osf.pm
+/home/revlin/perl5/lib/perl5/ExtUtils/CBuilder/Platform/os2.pm
+/home/revlin/perl5/man/man3/ExtUtils::CBuilder.3
+/home/revlin/perl5/man/man3/ExtUtils::CBuilder::Platform::Windows.3
