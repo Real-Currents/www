@@ -48,8 +48,8 @@
 	</div>
 
     <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-    <script src="libs/jquery/dist/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--script src="libs/jquery/dist/jquery.min.js"></script-->
+    <script src="libs/angular/dist/angular.min.js"></script>
+    <script src="libs/ui-bootstrap/ui-bootstrap-0.12.1.min.js"></script>
   </body>
 </html>
