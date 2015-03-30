@@ -13,7 +13,7 @@ sub startup {
     $self->log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 	
 	$self->log->debug( "Check for content dir: " );
-	opendir $content, 'content' or die "'content' dir does not exist: $!\n";
+	opendir $content, 'public/content' or die "'content' dir does not exist: $!\n";
 	
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
