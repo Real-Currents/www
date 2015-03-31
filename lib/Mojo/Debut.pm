@@ -88,13 +88,8 @@ sub startup {
 	  
 	$r->get('/sections/(:section)')
 	  ->to( %page_params );
-	  
-#	$r->any('/')
-#	  ->to(
-#			controller => 'Page',
-#			action	=> 'error'
-#		);
-#	  
+
+	# Error handling for non-routable URLs
 #	$r->any('/*')
 #	  ->to(
 #			controller => 'Page',
