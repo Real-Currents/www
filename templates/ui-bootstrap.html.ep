@@ -1,4 +1,4 @@
-% title "Test Angular-UI Bootstrap";
+% title "Test Angular UI Bootstrap";
 % style 'index.css';
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -31,7 +31,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#"><%= title %></a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -43,13 +43,64 @@
       </div>
     </div>
 
-    <div class="container">
-		
+    <div class="container-fluid" data-ng-app="ui.bootstrap.demo">	
+
+		<div data-ng-controller="CarouselDemoCtrl"
+			 class="panel panel-default" >
+			<div class="panel-body" style="min-height: 305px">
+				<carousel interval="myInterval">
+				  <slide data-ng-repeat="slide in slides" active="slide.active">
+					<img data-ng-src="{{slide.image}}" style="margin:auto;">
+					<div class="carousel-caption">
+					  <h4>Slide {{$index}}</h4>
+					  <p>{{slide.text}}</p>
+					</div>
+				  </slide>
+				</carousel>
+			</div>
+			<div class="panel-footer">
+				<div>
+				  <button type="button" class="btn btn-info" data-ng-click="addSlide()">Add Slide</button>
+				</div>
+				<div>
+				  Interval, in milliseconds: <input type="number" class="form-control" data-ng-model="myInterval">
+				  <br />Enter a negative number or 0 to stop the interval.
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+	
+	<div class="page-footer panel panel-default">
+		<div class="panel-footer">
+			<a href="/libs/ui-bootstrap/index.html">UI Bootstrap Documentation</a>
+		</div>
 	</div>
 
     <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
     <!--script src="libs/jquery/dist/jquery.min.js"></script-->
     <script src="libs/angular/dist/angular.min.js"></script>
-    <script src="libs/ui-bootstrap/ui-bootstrap-0.12.1.min.js"></script>
+    <script src="libs/angular/dist/angular-touch.min.js"></script>
+    <script src="libs/ui-bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+	<script type="text/javascript">
+	angular.module('ui.bootstrap.demo', ['ui.bootstrap']);
+	
+	angular.module('ui.bootstrap.demo').controller('CarouselDemoCtrl', function ($scope) {
+		$scope.myInterval = 5000;
+		var slides = $scope.slides = [];
+		$scope.addSlide = function() {
+			var newWidth = 600 + slides.length + 1;
+			slides.push({
+				image: 'http://placekitten.com/' + newWidth + '/300',
+				text: ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
+					['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
+			});
+		};
+		for (var i=0; i<4; i++) {
+			$scope.addSlide();
+		}
+	});
+	</script>
   </body>
 </html>
