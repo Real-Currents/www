@@ -1,8 +1,13 @@
 {
-    pages_dir   => app->home->rel_dir('content'),
+    pages_dir   => app->home->rel_dir('public/content'),
     dump_dir    => app->home->rel_dir('public'),
-    name        => 'This is Contenticious.',
-    copyright   => 'Zaphod Beeblebrox',
+    name        => 'Mojo::Debut => Built with Mojolicious & Contenticious.',
+    copyright   => '',
     cached      => 0,
     perldoc     => 1,
+	hypnotoad   => {
+		listen  => ['http://*:3000'], 
+		workers => 10,  
+		proxy   => 1
+	}
 }
