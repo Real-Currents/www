@@ -20,10 +20,10 @@ After installing Contenticious you can access these documents via the
 
     $ perldoc Contenticious::Content::Node
 
-[app]:          perldoc/Contenticious
-[content]:      perldoc/Contenticious/Content
-[node]:         perldoc/Contenticious/Content/Node
-[file]:         perldoc/Contenticious/Content/Node/File
-[dir]:          perldoc/Contenticious/Content/Node/Directory
-[commands]:     perldoc/Contenticious/Commands
-[generator]:    perldoc/Contenticious/Generator
+[app]:          /perldoc/Contenticious
+[content]:      /perldoc/Contenticious/Content
+[node]:         /perldoc/Contenticious/Content/Node
+[file]:         /perldoc/Contenticious/Content/Node/File
+[dir]:          /perldoc/Contenticious/Content/Node/Directory
+[commands]:     /perldoc/Contenticious/Commands
+[generator]:    /perldoc/Contenticious/Generator

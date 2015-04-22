@@ -195,7 +195,7 @@ pre, code {
     </p>
     % }
     <p id="built_with">
-        built with
+        Mojo::Debut => built with
         <a href="http://memowe.github.com/contenticious">contenticious</a>,
         on top of <a href="http://mojolicio.us/">Mojolicious</a>.
     </p>

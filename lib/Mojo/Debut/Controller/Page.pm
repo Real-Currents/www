@@ -16,12 +16,6 @@ sub load {
 			template => $1 
 		);# or error( $self, @_ );
 		
-	} elsif( $self->stash('section') =~ /([\w|\-]+)/ ) {
-		$self->render_maybe( 
-			msg => $msg,
-			template => $1 
-		);# or error( $self, @_ );
-		
 	} else {
 		error( $self, @_ );
 	}
