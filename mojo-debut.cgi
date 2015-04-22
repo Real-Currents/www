@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use warnings;
 use strict;
-use :5.10;
+use 5.10.1;
 
 use lib 'lib';
 use CGI;

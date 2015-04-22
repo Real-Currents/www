@@ -1,9 +1,12 @@
 #!/usr/bin/env perl
 use warnings;
 use strict;
+use 5.10.1;
 
 # CGI transaction to upload files
-use Cwd qw(chdir cwd);
+use lib 'lib';
+use CGI qw(chdir cwd);
+use CGI::Carp qw(fatalsToBrowser);
 use Mojo::JSON qw(decode_json encode_json);
 use Mojolicious::Lite;
 
