@@ -77,8 +77,8 @@ sub startup {
 		);
 
 	# Normal route to controller	  
-	$r->get('/(:page)')
-	  ->to( %page_params );
+#	$r->get('/(:page)')
+#	  ->to( %page_params );
 
 	# Error handling for non-routable URLs
 #	$r->any('/*')
@@ -87,7 +87,7 @@ sub startup {
 #			action	=> 'error'
 #		);
 	
-	$self->Contenticious::startup(@_);
+	$self->Contenticious::startup(@_); #SUPER::startup(@_);
 
 	# Select index file
 #	$self->plugin(
