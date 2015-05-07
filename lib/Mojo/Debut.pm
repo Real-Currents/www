@@ -32,7 +32,7 @@ sub startup {
 	$log->debug( "Close content dir" );
 	closedir $content or die "$!";
 	
-	# Check requests
+	# Check (& clean) request path
 	my $reqCheck = sub {
 		my $self = shift;
 		my $req = $self->req;
@@ -47,6 +47,9 @@ sub startup {
 		}
 	};
 	$self->hook(before_dispatch => $reqCheck);
+
+	# Helper to browse documentation under "/perldoc"
+	$self->plugin('PODRenderer');
 
 	# Create a new helper for stashing style rules in templates
 	$self->helper(
