@@ -17,7 +17,7 @@ sub readContent( $ ) {
 	
 	return unless( -e -d $content );
 
-	opendir $content, $content  or die "$!";
+	opendir $content, $content or die "$!";
 	
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {

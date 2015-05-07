@@ -9,12 +9,15 @@ sub load {
 		template => "styles/$stylesheet", 
 		format => 'css', 
 		handler => 'ep' 
-	); #or error( $self, @_ );
+	) or $self->reply->static(
+			"/$1.html"
+	) or error( $self, @_ );
 }
 
 sub error {
 	my $self = shift;
-	$self->reply->static('error.html');
+#	$self->reply->static('.errordocs/missing.html');
+	$self->render(text => "404");
 }
 
 1;

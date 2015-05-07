@@ -40,23 +40,13 @@ sub startup {
     	$log->debug( "Requested resource is ". $req->url );
 		
 		# Remove route heading if more than one node listed in path
-		if( $path =~ /(pages|sections|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
-			$path =~ s/(?:pages|sections|scripts|styles)//;
+		if( $path =~ /(product|sections|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
+			$path =~ s/(?:product|sections|scripts|styles)//;
 			$path =~ s/(\/\/)/\//;
 			$log->debug( "Modified request is ". $req->url->path($path) );
 		}
 	};
 	$self->hook(before_dispatch => $reqCheck);
-
-	# Router
-	my $r = $self->routes;
-	my %page_params = (
-		controller => 'Page',
-		action	=> 'load',
-		content_items => \@content_items,
-		pages => \@pages,
-		header_links => \@header_links
-	);
 
 	# Create a new helper for stashing style rules in templates
 	$self->helper(
@@ -68,7 +58,17 @@ sub startup {
 			return $stash->{style};
 		}
 	);
-	  
+
+	# Router
+	my $r = $self->routes;
+	my %page_params = (
+		controller => 'Product',
+		action	=> 'load',
+		content_items => \@content_items,
+		pages => \@pages,
+		header_links => \@header_links
+	);
+	
 	# Route to stylesheet templates before pages
 	$r->get('/styles/(:stylesheet).css')
 	  ->to(
@@ -76,25 +76,30 @@ sub startup {
 			action	=> 'load'
 		);
 
-	# Normal route to controller	  
-#	$r->get('/(:page)')
-#	  ->to( %page_params );
-
-	# Error handling for non-routable URLs
-#	$r->any('/*')
-#	  ->to(
-#			controller => 'Page',
-#			action	=> 'error'
-#		);
+	# Normal route to controller
+	$r->get('/product')
+	  ->to( %page_params );
+	  
+	$r->get('/product/(:product_page)')
+	  ->to( %page_params );
 	
 	$self->Contenticious::startup(@_); #SUPER::startup(@_);
 
-	# Select index file
-#	$self->plugin(
-#		'Directory' => { 
-#			root => 'public',
-#			dir_index => [qw'default.html index.html index.htm'] 
-#		});
+	# Default route to site index
+	$r->get('/')->to(cb => sub {
+		my $self = shift;
+		$self->reply->static('/default.html');
+	});
+	
+
+
+	# Error handling for non-routable URLs
+	$r->any('/*')
+	  ->to(
+			controller => 'Product',
+			action	=> 'error'
+		);
+
 }
 
 1;

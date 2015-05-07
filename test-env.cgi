@@ -33,17 +33,26 @@ print "<h4>Host machine:</h4>\n";
 print "$Config{osname}<br />\n";
 print "$Config{archname}<br />\n";
 
-print "<br \>\n", cwd, "<br />\n";
+# Check for 'public' symlink to parent dir,
+# if none, make one...
+unless( -e -l cwd().'/public' ) {
+	print "<br />\n 'public' does not exist or is not symlink<br />\n";
+	symlink '../', 'public' or die "$!\n";
+} else {
+	print "<br />\n 'public' is symlink<br />\n";
+}
+
+print "<br />\n", cwd, "<br />\n";
 chdir '../';
-print "<br \>\n", cwd, "<br />\n";
+print "<br />\n", cwd, "<br />\n";
 Test::Lib::readContent( cwd );
 chdir '../';
-print "<br \>\n", cwd, "<br />\n";
+print "<br />\n", cwd, "<br />\n";
 Test::Lib::readContent( cwd );
 chdir '../';
-print "<br \>\n", cwd, "<br />\n";
+print "<br />\n", cwd, "<br />\n";
 Test::Lib::readContent( cwd );
-print "<br \>\n", cwd.'/htconfig', "<br />\n";
+print "<br />\n", cwd.'/htconfig', "<br />\n";
 Test::Lib::readContent( cwd.'/htconfig' );
 
 # List standard %ENV variables
