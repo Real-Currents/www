@@ -91,7 +91,7 @@ sub startup {
 	# Default route to site index
 	$r->get('/')->to(cb => sub {
 		my $self = shift;
-		$self->reply->static('public/default.html');
+		$self->reply->static('default.html');
 	});
 	
 
