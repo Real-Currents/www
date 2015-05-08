@@ -1,2 +1,2 @@
 #!/bin/sh
-./mojo-debut.pl daemon --listen http://*:$PORT --mode production
+./mojo-debut.pl daemon --listen http://*:$PORT --mode development
