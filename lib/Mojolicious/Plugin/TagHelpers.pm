@@ -14,33 +14,24 @@ sub register {
     $app->helper("${name}_field" => sub { _input(@_, type => $name) });
   }
 
+  my @helpers = (
+    qw(csrf_field form_for hidden_field javascript label_for link_to),
+    qw(password_field select_field stylesheet submit_button tag_with_error),
+    qw(text_area)
+  );
+  $app->helper($_ => __PACKAGE__->can("_$_")) for @helpers;
+
   $app->helper(check_box =>
       sub { _input(shift, shift, value => shift, @_, type => 'checkbox') });
-  $app->helper(csrf_field => \&_csrf_field);
   $app->helper(file_field =>
       sub { shift; _tag('input', name => shift, @_, type => 'file') });
-
-  $app->helper(form_for     => \&_form_for);
-  $app->helper(hidden_field => \&_hidden_field);
   $app->helper(image => sub { _tag('img', src => shift->url_for(shift), @_) });
   $app->helper(input_tag => sub { _input(@_) });
-  $app->helper(javascript => \&_javascript);
-  $app->helper(label_for  => \&_label_for);
-  $app->helper(link_to    => \&_link_to);
-
-  $app->helper(password_field => \&_password_field);
   $app->helper(radio_button =>
       sub { _input(shift, shift, value => shift, @_, type => 'radio') });
 
-  $app->helper(select_field  => \&_select_field);
-  $app->helper(stylesheet    => \&_stylesheet);
-  $app->helper(submit_button => \&_submit_button);
-
   # "t" is just a shortcut for the "tag" helper
   $app->helper($_ => sub { shift; _tag(@_) }) for qw(t tag);
-
-  $app->helper(tag_with_error => \&_tag_with_error);
-  $app->helper(text_area      => \&_text_area);
 }
 
 sub _csrf_field {
@@ -371,22 +362,22 @@ C<_method> query parameter will be added as well.
 
   <form action="/path/to/login">
     <input name="first_name" type="text">
-    <input value="Ok" type="submit">
+    <input type="submit" value="Ok">
   </form>
   <form action="/path/to/login.txt" method="POST">
     <input name="first_name" type="text">
-    <input value="Ok" type="submit">
+    <input type="submit" value="Ok">
   </form>
   <form action="/path/to/login" enctype="multipart/form-data">
     <input disabled="disabled" name="first_name" type="text">
-    <input value="Ok" type="submit">
+    <input type="submit" value="Ok">
   </form>
   <form action="http://example.com/login" method="POST">
     <input name="first_name" type="text">
-    <input value="Ok" type="submit">
+    <input type="submit" value="Ok">
   </form>
   <form action="/path/to/delete/route?_method=DELETE" method="POST">
-    <input value="Remove" type="submit">
+    <input type="submit" value="Remove">
   </form>
 
 =head2 hidden_field

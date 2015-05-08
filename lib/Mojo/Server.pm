@@ -3,19 +3,18 @@ use Mojo::Base 'Mojo::EventEmitter';
 
 use Carp 'croak';
 use Cwd 'abs_path';
-use Mojo::Loader;
+use Mojo::Loader 'load_class';
 use Mojo::Util 'md5_sum';
 use POSIX;
 use Scalar::Util 'blessed';
 
-has app => sub { shift->build_app('Mojo::HelloWorld') };
-has [qw(group user)];
+has app           => sub { shift->build_app('Mojo::HelloWorld') };
 has reverse_proxy => sub { $ENV{MOJO_REVERSE_PROXY} };
 
 sub build_app {
   my ($self, $app) = @_;
   local $ENV{MOJO_EXE};
-  return $app->new unless my $e = Mojo::Loader->new->load($app);
+  return $app->new unless my $e = load_class $app;
   die ref $e ? $e : qq{Can't find application class "$app" in \@INC. (@INC)\n};
 }
 
@@ -71,36 +70,13 @@ sub new {
 
 sub run { croak 'Method "run" not implemented by subclass' }
 
-sub setuidgid {
-  my $self = shift;
-
-  # Group (make sure secondary groups are reassigned too)
-  if (my $group = $self->group) {
-    return $self->_log(qq{Group "$group" does not exist.})
-      unless defined(my $gid = getgrnam $group);
-    return $self->_log(qq{Can't switch to group "$group": $!})
-      unless ($( = $) = "$gid $gid") && $) eq "$gid $gid" && $( eq "$gid $gid";
-  }
-
-  # User
-  return $self unless my $user = $self->user;
-  return $self->_log(qq{User "$user" does not exist.})
-    unless defined(my $uid = getpwnam $user);
-  return $self->_log(qq{Can't switch to user "$user": $!})
-    unless POSIX::setuid($uid);
-
-  return $self;
-}
-
-sub _log { $_[0]->app->log->error($_[1]) and return $_[0] }
-
 1;
 
 =encoding utf8
 
 =head1 NAME
 
-Mojo::Server - HTTP server base class
+Mojo::Server - HTTP/WebSocket server base class
 
 =head1 SYNOPSIS
 
@@ -119,12 +95,15 @@ Mojo::Server - HTTP server base class
 
 =head1 DESCRIPTION
 
-L<Mojo::Server> is an abstract HTTP server base class.
+L<Mojo::Server> is an abstract base class for HTTP/WebSocket servers and server
+interfaces, like L<Mojo::Server::CGI>, L<Mojo::Server::Daemon>,
+L<Mojo::Server::Hypnotoad>, L<Mojo::Server::Morbo>, L<Mojo::Server::Prefork>
+and L<Mojo::Server::PSGI>.
 
 =head1 EVENTS
 
-L<Mojo::Server> inherits all events from L<Mojo::EventEmitter> and can emit
-the following new ones.
+L<Mojo::Server> inherits all events from L<Mojo::EventEmitter> and can emit the
+following new ones.
 
 =head2 request
 
@@ -155,13 +134,6 @@ L<Mojo::Server> implements the following attributes.
 
 Application this server handles, defaults to a L<Mojo::HelloWorld> object.
 
-=head2 group
-
-  my $group = $server->group;
-  $server   = $server->group('users');
-
-Group for server process.
-
 =head2 reverse_proxy
 
   my $bool = $server->reverse_proxy;
@@ -169,13 +141,6 @@ Group for server process.
 
 This server operates behind a reverse proxy, defaults to the value of the
 C<MOJO_REVERSE_PROXY> environment variable.
-
-=head2 user
-
-  my $user = $server->user;
-  $server  = $server->user('web');
-
-User for the server process.
 
 =head1 METHODS
 
@@ -211,6 +176,8 @@ Load application from script.
 =head2 new
 
   my $server = Mojo::Server->new;
+  my $server = Mojo::Server->new(reverse_proxy => 1);
+  my $server = Mojo::Server->new({reverse_proxy => 1});
 
 Construct a new L<Mojo::Server> object and subscribe to L</"request"> event
 with default request handling.
@@ -220,12 +187,6 @@ with default request handling.
   $server->run;
 
 Run server. Meant to be overloaded in a subclass.
-
-=head2 setuidgid
-
-  $server = $server->setuidgid;
-
-Set L</"user"> and L</"group"> for process.
 
 =head1 SEE ALSO
 

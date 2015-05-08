@@ -5,7 +5,7 @@ use Compress::Raw::Zlib 'Z_SYNC_FLUSH';
 use Config;
 use Mojo::JSON qw(encode_json j);
 use Mojo::Transaction::HTTP;
-use Mojo::Util qw(b64_encode decode encode sha1_bytes xor_encode);
+use Mojo::Util qw(b64_encode decode dumper encode sha1_bytes xor_encode);
 
 use constant DEBUG => $ENV{MOJO_WEBSOCKET_DEBUG} || 0;
 
@@ -45,19 +45,19 @@ sub build_frame {
   my $len    = length $payload;
   my $masked = $self->masked;
   if ($len < 126) {
-    warn "-- Small payload ($len)\n$payload\n" if DEBUG;
+    warn "-- Small payload ($len)\n@{[dumper $payload]}" if DEBUG;
     $frame .= pack 'C', $masked ? ($len | 128) : $len;
   }
 
   # Extended payload (16-bit)
   elsif ($len < 65536) {
-    warn "-- Extended 16-bit payload ($len)\n$payload\n" if DEBUG;
+    warn "-- Extended 16-bit payload ($len)\n@{[dumper $payload]}" if DEBUG;
     $frame .= pack 'Cn', $masked ? (126 | 128) : 126, $len;
   }
 
   # Extended payload (64-bit with 32-bit fallback)
   else {
-    warn "-- Extended 64-bit payload ($len)\n$payload\n" if DEBUG;
+    warn "-- Extended 64-bit payload ($len)\n@{[dumper $payload]}" if DEBUG;
     $frame .= pack 'C', $masked ? (127 | 128) : 127;
     $frame .= MODERN ? pack('Q>', $len) : pack('NN', 0, $len & 0xffffffff);
   }
@@ -106,7 +106,7 @@ sub client_challenge {
     if ($headers->sec_websocket_extensions // '') =~ /permessage-deflate/;
 
   return _challenge($self->req->headers->sec_websocket_key) eq
-    $headers->sec_websocket_accept;
+    $headers->sec_websocket_accept && ++$self->{open};
 }
 
 sub client_handshake {
@@ -138,6 +138,8 @@ sub finish {
 
   return $self;
 }
+
+sub is_established { !!shift->{open} }
 
 sub is_websocket {1}
 
@@ -202,7 +204,7 @@ sub parse_frame {
   # Payload
   my $payload = $len ? substr($$buffer, 0, $len, '') : '';
   $payload = xor_encode($payload, substr($payload, 0, 4, '') x 128) if $masked;
-  warn "$payload\n" if DEBUG;
+  warn dumper $payload if DEBUG;
 
   return [$fin, $rsv1, $rsv2, $rsv3, $op, $payload];
 }
@@ -212,11 +214,7 @@ sub remote_port    { shift->handshake->remote_port }
 sub req            { shift->handshake->req }
 sub res            { shift->handshake->res }
 
-sub resume {
-  my $self = shift;
-  $self->handshake->resume;
-  return $self;
-}
+sub resume { $_[0]->handshake->resume and return $_[0] }
 
 sub send {
   my ($self, $msg, $cb) = @_;
@@ -246,6 +244,8 @@ sub server_handshake {
   $res_headers->sec_websocket_accept(
     _challenge($req_headers->sec_websocket_key));
 }
+
+sub server_open { shift->{open}++ }
 
 sub server_read {
   my ($self, $chunk) = @_;
@@ -323,7 +323,7 @@ sub _message {
   $self->emit(json => j($msg)) if $self->has_subscribers('json');
   $op = delete $self->{op};
   $self->emit($op == TEXT ? 'text' : 'binary' => $msg);
-  $self->emit(message => $op == TEXT ? decode('UTF-8', $msg) : $msg)
+  $self->emit(message => $op == TEXT ? decode 'UTF-8', $msg : $msg)
     if $self->has_subscribers('message');
 }
 
@@ -353,9 +353,9 @@ Mojo::Transaction::WebSocket - WebSocket transaction
 
 =head1 DESCRIPTION
 
-L<Mojo::Transaction::WebSocket> is a container for WebSocket transactions
-based on L<RFC 6455|http://tools.ietf.org/html/rfc6455>. Note that 64-bit
-frames require a Perl with support for quads or they are limited to 32-bit.
+L<Mojo::Transaction::WebSocket> is a container for WebSocket transactions based
+on L<RFC 6455|http://tools.ietf.org/html/rfc6455>. Note that 64-bit frames
+require a Perl with support for quads or they are limited to 32-bit.
 
 =head1 EVENTS
 
@@ -397,7 +397,7 @@ Emitted once all data has been sent.
     ...
   });
 
-Emitted when transaction is finished.
+Emitted when the WebSocket connection has been closed.
 
 =head2 frame
 
@@ -442,9 +442,9 @@ gets emitted when it has at least one subscriber.
     ...
   });
 
-Emitted when a complete WebSocket message has been received, text messages
-will be automatically decoded. Note that this event only gets emitted when it
-has at least one subscriber.
+Emitted when a complete WebSocket message has been received, text messages will
+be automatically decoded. Note that this event only gets emitted when it has at
+least one subscriber.
 
   $ws->on(message => sub {
     my ($ws, $msg) = @_;
@@ -502,8 +502,8 @@ C<MOJO_MAX_WEBSOCKET_SIZE> environment variable or C<262144> (256KB).
 
 =head1 METHODS
 
-L<Mojo::Transaction::WebSocket> inherits all methods from
-L<Mojo::Transaction> and implements the following new ones.
+L<Mojo::Transaction::WebSocket> inherits all methods from L<Mojo::Transaction>
+and implements the following new ones.
 
 =head2 build_frame
 
@@ -542,8 +542,7 @@ Build WebSocket message.
 
   my $bool = $ws->client_challenge;
 
-Check WebSocket handshake challenge client-side, used to implement user
-agents.
+Check WebSocket handshake challenge client-side, used to implement user agents.
 
 =head2 client_handshake
 
@@ -565,9 +564,9 @@ Write data client-side, used to implement user agents.
 
 =head2 connection
 
-  my $connection = $ws->connection;
+  my $id = $ws->connection;
 
-Connection identifier or socket.
+Connection identifier.
 
 =head2 finish
 
@@ -576,6 +575,12 @@ Connection identifier or socket.
   $ws = $ws->finish(1003 => 'Cannot accept data!');
 
 Close WebSocket connection gracefully.
+
+=head2 is_established
+
+ my $bool = $ws->is_established;
+
+Check if WebSocket connection has been established yet.
 
 =head2 is_websocket
 
@@ -604,6 +609,8 @@ Local interface port.
 =head2 new
 
   my $ws = Mojo::Transaction::WebSocket->new;
+  my $ws = Mojo::Transaction::WebSocket->new(compressed => 1);
+  my $ws = Mojo::Transaction::WebSocket->new({compressed => 1});
 
 Construct a new L<Mojo::Transaction::WebSocket> object and subscribe to
 L</"frame"> event with default message parser, which also handles C<PING> and
@@ -680,6 +687,12 @@ Transaction closed server-side, used to implement web servers.
   $ws->server_handshake;
 
 Perform WebSocket handshake server-side, used to implement web servers.
+
+=head2 server_open
+
+  $ws->server_open;
+
+WebSocket connection established server-side, used to implement web servers.
 
 =head2 server_read
 

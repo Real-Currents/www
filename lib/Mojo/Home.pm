@@ -7,29 +7,26 @@ use File::Basename 'dirname';
 use File::Find 'find';
 use File::Spec::Functions qw(abs2rel catdir catfile splitdir);
 use FindBin;
-use Mojo::Util qw(class_to_path slurp);
+use Mojo::Util 'class_to_path';
 
 has parts => sub { [] };
 
 sub detect {
-  my $self = shift;
+  my ($self, $class) = @_;
 
   # Environment variable
-  return $self->parts([splitdir(abs_path $ENV{MOJO_HOME})]) if $ENV{MOJO_HOME};
+  return $self->parts([splitdir abs_path $ENV{MOJO_HOME}]) if $ENV{MOJO_HOME};
 
   # Try to find home from lib directory
-  if (my $class = @_ ? shift : 'Mojo::HelloWorld') {
-    my $file = class_to_path $class;
-    if (my $path = $INC{$file}) {
-      $path =~ s/\Q$file\E$//;
-      my @home = splitdir $path;
+  if ($class && (my $path = $INC{my $file = class_to_path $class})) {
+    $path =~ s/\Q$file\E$//;
+    my @home = splitdir $path;
 
-      # Remove "lib" and "blib"
-      pop @home while @home && ($home[-1] =~ /^b?lib$/ || $home[-1] eq '');
+    # Remove "lib" and "blib"
+    pop @home while @home && ($home[-1] =~ /^b?lib$/ || $home[-1] eq '');
 
-      # Turn into absolute path
-      return $self->parts([splitdir(abs_path(catdir(@home) || '.'))]);
-    }
+    # Turn into absolute path
+    return $self->parts([splitdir abs_path catdir(@home) || '.']);
   }
 
   # FindBin fallback
@@ -44,12 +41,12 @@ sub lib_dir {
 sub list_files {
   my ($self, $dir) = @_;
 
-  $dir = catdir @{$self->parts}, split '/', ($dir // '');
+  $dir = catdir @{$self->parts}, split('/', $dir // '');
   return [] unless -d $dir;
   my @files;
   find {
     wanted => sub {
-      my @parts = splitdir(abs2rel($File::Find::name, $dir));
+      my @parts = splitdir abs2rel($File::Find::name, $dir);
       push @files, join '/', @parts unless grep {/^\./} @parts;
     },
     no_chdir => 1
@@ -58,16 +55,16 @@ sub list_files {
   return [sort @files];
 }
 
-sub mojo_lib_dir { catdir(dirname(__FILE__), '..') }
+sub mojo_lib_dir { catdir dirname(__FILE__), '..' }
 
 sub new { @_ > 1 ? shift->SUPER::new->parse(@_) : shift->SUPER::new }
 
 sub parse { shift->parts([splitdir shift]) }
 
-sub rel_dir { catdir(@{shift->parts}, split '/', shift) }
-sub rel_file { catfile(@{shift->parts}, split '/', shift) }
+sub rel_dir  { catdir @{shift->parts},  split('/', shift) }
+sub rel_file { catfile @{shift->parts}, split('/', shift) }
 
-sub to_string { catdir(@{shift->parts}) }
+sub to_string { catdir @{shift->parts} }
 
 1;
 

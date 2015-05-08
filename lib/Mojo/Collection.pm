@@ -5,37 +5,15 @@ use Carp 'croak';
 use Exporter 'import';
 use List::Util;
 use Mojo::ByteStream;
-use Mojo::Util 'deprecated';
 use Scalar::Util 'blessed';
 
-# DEPRECATED in Tiger Face!
-use overload '""' => sub {
-  deprecated 'Stringification support in Mojo::Collection is DEPRECATED'
-    . ' in favor of Mojo::Collection::join';
-  shift->join("\n");
-};
-use overload bool => sub {1}, fallback => 1;
-
 our @EXPORT_OK = ('c');
-
-# DEPRECATED in Tiger Face!
-sub AUTOLOAD {
-  my $self = shift;
-  my ($package, $method) = our $AUTOLOAD =~ /^(.+)::(.+)$/;
-  deprecated "Mojo::Collection::AUTOLOAD ($method) is DEPRECATED"
-    . ' in favor of Mojo::Collection::map';
-  croak "Undefined subroutine &${package}::$method called"
-    unless blessed $self && $self->isa(__PACKAGE__);
-  return $self->map($method, @_);
-}
-
-# DEPRECATED in Tiger Face!
-sub DESTROY { }
 
 sub c { __PACKAGE__->new(@_) }
 
 sub compact {
-  $_[0]->new(grep { defined && (ref || length) } @{$_[0]});
+  my $self = shift;
+  return $self->new(grep { defined && (ref || length) } @$self);
 }
 
 sub each {
@@ -75,14 +53,6 @@ sub map {
 sub new {
   my $class = shift;
   return bless [@_], ref $class || $class;
-}
-
-# DEPRECATED in Tiger Face!
-sub pluck {
-  deprecated
-    'Mojo::Collection::pluck is DEPRECATED in favor of Mojo::Collection::map';
-  my ($self, $key) = (shift, shift);
-  return $self->new(map { ref eq 'HASH' ? $_->{$key} : $_->$key(@_) } @$self);
 }
 
 sub reduce {
@@ -241,8 +211,8 @@ all elements.
 
 Evaluate regular expression or callback for each element in collection and
 create a new collection with all elements that matched the regular expression,
-or for which the callback returned true. The element will be the first
-argument passed to the callback and is also available as C<$_>.
+or for which the callback returned true. The element will be the first argument
+passed to the callback and is also available as C<$_>.
 
   # Find all values that contain the word "mojo"
   my $interesting = $collection->grep(qr/mojo/i);
@@ -272,9 +242,9 @@ Return the last element in collection.
   my $new = $collection->map($method);
   my $new = $collection->map($method, @args);
 
-Evaluate callback for, or call method on, each element in collection and
-create a new collection from the results. The element will be the first
-argument passed to the callback and is also available as C<$_>.
+Evaluate callback for, or call method on, each element in collection and create
+a new collection from the results. The element will be the first argument
+passed to the callback and is also available as C<$_>.
 
   # Longer version
   my $new = $collection->map(sub { $_->$method(@args) });
@@ -337,8 +307,8 @@ Number of elements in collection.
 Sort elements based on return value of callback and create a new collection
 from the results.
 
-  # Sort values case insensitive
-  my $insensitive = $collection->sort(sub { uc($a) cmp uc($b) });
+  # Sort values case-insensitive
+  my $case_insensitive = $collection->sort(sub { uc($a) cmp uc($b) });
 
 =head2 tap
 

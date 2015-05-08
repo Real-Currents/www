@@ -4,18 +4,15 @@ use Mojo::Base -base;
 # No imports, for security reasons!
 use Carp ();
 use Mojo::ByteStream;
-use Mojo::Transaction::HTTP;
 use Mojo::URL;
 use Mojo::Util;
-use Mojolicious;
 use Mojolicious::Routes::Match;
 use Scalar::Util ();
 use Time::HiRes  ();
 
-has app => sub { Mojolicious->new };
+has [qw(app tx)];
 has match =>
   sub { Mojolicious::Routes::Match->new(root => shift->app->routes) };
-has tx => sub { Mojo::Transaction::HTTP->new };
 
 # Reserved stash values
 my %RESERVED = map { $_ => 1 } (
@@ -40,9 +37,6 @@ sub continue { $_[0]->app->routes->continue($_[0]) }
 
 sub cookie {
   my ($self, $name) = (shift, shift);
-
-  # Multiple names
-  return map { $self->cookie($_) } @$name if ref $name eq 'ARRAY';
 
   # Response cookie
   if (@_) {
@@ -113,7 +107,8 @@ sub finish {
 
   # WebSocket
   my $tx = $self->tx;
-  $tx->finish(@_) and return $self if $tx->is_websocket;
+  $tx->finish(@_) and return $tx->is_established ? $self : $self->rendered(101)
+    if $tx->is_websocket;
 
   # Chunked stream
   return @_ ? $self->write_chunk(@_)->write_chunk('') : $self->write_chunk('')
@@ -143,32 +138,14 @@ sub helpers { $_[0]->app->renderer->get_helper('')->($_[0]) }
 sub on {
   my ($self, $name, $cb) = @_;
   my $tx = $self->tx;
-  $self->rendered(101) if $tx->is_websocket;
+  $self->rendered(101) if $tx->is_websocket && !$tx->is_established;
   return $tx->on($name => sub { shift; $self->$cb(@_) });
 }
 
 sub param {
   my ($self, $name) = (shift, shift);
-
-  # Multiple names
-  return map { $self->param($_) } @$name if ref $name eq 'ARRAY';
-
-  # List names
-  my $captures = $self->stash->{'mojo.captures'} ||= {};
-  unless (defined $name) {
-    my $req  = $self->req;
-    my @keys = $req->param;
-    push @keys, map  { $_->name } @{$req->uploads};
-    push @keys, grep { !$RESERVED{$_} } keys %$captures;
-    my %seen;
-    return sort grep { !$seen{$_}++ } @keys;
-  }
-
-  # Value
   return $self->every_param($name)->[-1] unless @_;
-
-  # Override values
-  $captures->{$name} = @_ > 1 ? [@_] : $_[0];
+  $self->stash->{'mojo.captures'}{$name} = @_ > 1 ? [@_] : $_[0];
   return $self;
 }
 
@@ -191,16 +168,14 @@ sub render {
   my $plugins = $app->plugins->emit_hook(before_render => $self, $args);
   my $maybe   = delete $args->{'mojo.maybe'};
 
-  # Render
   my $ts = $args->{'mojo.to_string'};
   my ($output, $format) = $app->renderer->render($self, $args);
-  return defined $output ? Mojo::ByteStream->new($output) : undef if $ts;
 
-  # Maybe
+  # Maybe no 404
+  return defined $output ? Mojo::ByteStream->new($output) : undef if $ts;
   return $maybe ? undef : !$self->helpers->reply->not_found
     unless defined $output;
 
-  # Prepare response
   $plugins->emit_hook(after_render => $self, \$output, $format);
   my $headers = $self->res->body($output)->headers;
   $headers->content_type($app->types->type($format) || 'text/plain')
@@ -277,7 +252,7 @@ sub send {
   Carp::croak 'No WebSocket connection to send message to'
     unless $tx->is_websocket;
   $tx->send($msg, $cb ? sub { shift; $self->$cb(@_) } : ());
-  return $self;
+  return $tx->is_established ? $self : $self->rendered(101);
 }
 
 sub session {
@@ -303,9 +278,6 @@ sub session {
 
 sub signed_cookie {
   my ($self, $name, $value, $options) = @_;
-
-  # Multiple names
-  return map { $self->signed_cookie($_) } @$name if ref $name eq 'ARRAY';
 
   # Request cookie
   return $self->every_signed_cookie($name)->[-1] unless defined $value;
@@ -334,7 +306,7 @@ sub url_for {
   # Relative URL
   my $path = $url->path;
   if ($target =~ m!^/!) {
-    if (my $prefix = $self->stash->{path}) {
+    if (defined(my $prefix = $self->stash->{path})) {
       my $real = $req->url->path->to_route;
       $real =~ s!/?\Q$prefix\E$!$target!;
       $target = $real;
@@ -426,8 +398,8 @@ implements the following new ones.
   my $app = $c->app;
   $c      = $c->app(Mojolicious->new);
 
-A reference back to the application that dispatched to this controller,
-defaults to a L<Mojolicious> object.
+A reference back to the application that dispatched to this controller, usually
+a L<Mojolicious> object.
 
   # Use application logger
   $c->app->log->debug('Hello Mojo');
@@ -453,14 +425,17 @@ L<Mojolicious::Routes::Match> object.
   $c     = $c->tx(Mojo::Transaction::HTTP->new);
 
 The transaction that is currently being processed, usually a
-L<Mojo::Transaction::HTTP> or L<Mojo::Transaction::WebSocket> object. Note
-that this reference is usually weakened, so the object needs to be referenced
+L<Mojo::Transaction::HTTP> or L<Mojo::Transaction::WebSocket> object. Note that
+this reference is usually weakened, so the object needs to be referenced
 elsewhere as well when you're performing non-blocking operations and the
 underlying connection might get closed early.
 
   # Check peer information
   my $address = $c->tx->remote_address;
   my $port    = $c->tx->remote_port;
+
+  # Increase size limit for WebSocket messages to 16MB
+  $c->tx->max_websocket_size(16777216) if $c->tx->is_websocket;
 
   # Perform non-blocking operation without knowing the connection status
   my $tx = $c->tx;
@@ -477,14 +452,14 @@ implements the following new ones.
 
   $c->continue;
 
-Continue dispatch chain with L<Mojolicious::Routes/"continue">.
+Continue dispatch chain from an intermediate destination with
+L<Mojolicious::Routes/"continue">.
 
 =head2 cookie
 
-  my $value       = $c->cookie('foo');
-  my ($foo, $bar) = $c->cookie(['foo', 'bar']);
-  $c              = $c->cookie(foo => 'bar');
-  $c              = $c->cookie(foo => 'bar', {path => '/'});
+  my $value = $c->cookie('foo');
+  $c        = $c->cookie(foo => 'bar');
+  $c        = $c->cookie(foo => 'bar', {path => '/'});
 
 Access request cookie values and create new response cookies. If there are
 multiple values sharing the same name, and you want to access more than just
@@ -493,12 +468,15 @@ the last one, you can use L</"every_cookie">.
   # Create response cookie with domain and expiration date
   $c->cookie(user => 'sri', {domain => 'example.com', expires => time + 60});
 
+  # Create secure response cookie
+  $c->cookie(secret => 'I <3 Mojolicious', {secure => 1, httponly => 1});
+
 =head2 every_cookie
 
   my $values = $c->every_cookie('foo');
 
-Similar to L</"cookie">, but returns all request cookie values sharing the
-same name as an array reference.
+Similar to L</"cookie">, but returns all request cookie values sharing the same
+name as an array reference.
 
   $ Get first cookie value
   my $first = $c->every_cookie('foo')->[0];
@@ -530,7 +508,9 @@ sharing the same name as an array reference.
   $c = $c->finish(1003 => 'Cannot accept data!');
   $c = $c->finish('Bye!');
 
-Close WebSocket connection or long poll stream gracefully.
+Close WebSocket connection or long poll stream gracefully. This method will
+automatically respond to WebSocket handshake requests with a C<101> response
+status, to establish the WebSocket connection.
 
 =head2 flash
 
@@ -538,8 +518,7 @@ Close WebSocket connection or long poll stream gracefully.
   $c      = $c->flash({foo => 'bar'});
   $c      = $c->flash(foo => 'bar');
 
-Data storage persistent only for the next request, stored in the
-L</"session">.
+Data storage persistent only for the next request, stored in the L</"session">.
 
   # Show message after redirect
   $c->flash(message => 'User created successfully!');
@@ -564,9 +543,9 @@ L<Mojolicious::Plugin::DefaultHelpers> and L<Mojolicious::Plugin::TagHelpers>.
   my $cb = $c->on(finish => sub {...});
 
 Subscribe to events of L</"tx">, which is usually a L<Mojo::Transaction::HTTP>
-or L<Mojo::Transaction::WebSocket> object. Note that this method will
-automatically respond to WebSocket handshake requests with a C<101> response
-status.
+or L<Mojo::Transaction::WebSocket> object. This method will automatically
+respond to WebSocket handshake requests with a C<101> response status, to
+establish the WebSocket connection.
 
   # Do something after the transaction has been finished
   $c->on(finish => sub {
@@ -595,12 +574,10 @@ status.
 
 =head2 param
 
-  my @names       = $c->param;
-  my $value       = $c->param('foo');
-  my ($foo, $bar) = $c->param(['foo', 'bar']);
-  $c              = $c->param(foo => 'ba;r');
-  $c              = $c->param(foo => qw(ba;r baz));
-  $c              = $c->param(foo => ['ba;r', 'baz']);
+  my $value = $c->param('foo');
+  $c        = $c->param(foo => 'ba;r');
+  $c        = $c->param(foo => qw(ba;r baz));
+  $c        = $c->param(foo => ['ba;r', 'baz']);
 
 Access route placeholder values that are not reserved stash values, file
 uploads as well as C<GET> and C<POST> parameters extracted from the query
@@ -608,8 +585,8 @@ string and C<application/x-www-form-urlencoded> or C<multipart/form-data>
 message body, in that order. If there are multiple values sharing the same
 name, and you want to access more than just the last one, you can use
 L</"every_param">. Parts of the request body need to be loaded into memory to
-parse C<POST> parameters, so you have to make sure it is not excessively
-large, there's a 10MB limit by default.
+parse C<POST> parameters, so you have to make sure it is not excessively large,
+there's a 16MB limit by default.
 
   # Get first value
   my $first = $c->every_param('foo')->[0];
@@ -617,7 +594,7 @@ large, there's a 10MB limit by default.
 For more control you can also access request information directly.
 
   # Only GET parameters
-  my $foo = $c->req->url->query->param('foo');
+  my $foo = $c->req->query_params->param('foo');
 
   # Only POST parameters
   my $foo = $c->req->body_params->param('foo');
@@ -632,8 +609,8 @@ For more control you can also access request information directly.
 
   $c = $c->redirect_to('named', foo => 'bar');
   $c = $c->redirect_to('named', {foo => 'bar'});
-  $c = $c->redirect_to('/perldoc');
-  $c = $c->redirect_to('http://mojolicio.us/perldoc');
+  $c = $c->redirect_to('/index.html');
+  $c = $c->redirect_to('http://example.com/index.html');
 
 Prepare a C<302> redirect response, takes the same arguments as L</"url_for">.
 
@@ -653,14 +630,17 @@ Prepare a C<302> redirect response, takes the same arguments as L</"url_for">.
   my $bool = $c->render(handler => 'something');
   my $bool = $c->render('foo/index');
 
-Render content with L<Mojolicious::Renderer/"render"> and emit hooks
+Render content with L<Mojolicious/"renderer"> and emit hooks
 L<Mojolicious/"before_render"> as well as L<Mojolicious/"after_render">, or
 call L<Mojolicious::Plugin::DefaultHelpers/"reply-E<gt>not_found"> if no
-response could be generated, all additional pairs get merged into the
+response could be generated, all additional key/value pairs get merged into the
 L</"stash">.
 
   # Render characters
   $c->render(text => 'I ♥ Mojolicious!');
+
+  # Render characters (alternative)
+  $c->stash(text => 'I ♥ Mojolicious!')->render;
 
   # Render binary data
   use Mojo::JSON 'encode_json';
@@ -675,13 +655,13 @@ L</"stash">.
   # Render template "foo/bar.html.ep"
   $c->render(template => 'foo/bar', format => 'html', handler => 'ep');
 
-  # Render template "foo/bar.*.*"
-  $c->render(template => 'foo/bar');
-
   # Render template "test.*.*" with arbitrary values "foo" and "bar"
   $c->render(template => 'test', foo => 'test', bar => 23);
 
   # Render template "test.xml.*"
+  $c->render(template => 'test', format => 'xml');
+
+  # Render template "test.xml.*" (alternative)
   $c->render('test', format => 'xml');
 
 =head2 render_later
@@ -735,9 +715,6 @@ using a C<200> response code.
   $c->res->body('Hello World!');
   $c->rendered(200);
 
-  # Accept WebSocket handshake without subscribing to an event
-  $c->rendered(101);
-
 =head2 req
 
   my $req = $c->req;
@@ -786,11 +763,14 @@ Get L<Mojo::Message::Response> object from L</"tx">.
 
 Automatically select best possible representation for resource from C<Accept>
 request header, C<format> stash value or C<format> C<GET>/C<POST> parameter,
-defaults to rendering an empty C<204> response. Since browsers often don't
-really know what they actually want, unspecific C<Accept> request headers with
-more than one MIME type will be ignored, unless the C<X-Requested-With> header
-is set to the value C<XMLHttpRequest>.
+defaults to rendering an empty C<204> response. Each representation can be
+handled with a callback or a hash reference containing arguments to be passed
+to L</"render">. Since browsers often don't really know what they actually
+want, unspecific C<Accept> request headers with more than one MIME type will be
+ignored, unless the C<X-Requested-With> header is set to the value
+C<XMLHttpRequest>.
 
+  # Everything else than "json" and "xml" gets a 204 response
   $c->respond_to(
     json => sub { $c->render(json => {just => 'works'}) },
     xml  => {text => '<just>works</just>'},
@@ -810,7 +790,9 @@ L<Mojolicious::Plugin::DefaultHelpers/"accepts">.
   $c = $c->send($chars => sub {...});
 
 Send message or frame non-blocking via WebSocket, the optional drain callback
-will be invoked once all data has been written.
+will be invoked once all data has been written. This method will automatically
+respond to WebSocket handshake requests with a C<101> response status, to
+establish the WebSocket connection.
 
   # Send "Text" message
   $c->send('I ♥ Mojolicious!');
@@ -832,8 +814,8 @@ will be invoked once all data has been written.
   });
 
 For mostly idle WebSockets you might also want to increase the inactivity
-timeout with L<Mojolicious::Plugin::DefaultHelpers/"inactivity_timeout">,
-which usually defaults to C<15> seconds.
+timeout with L<Mojolicious::Plugin::DefaultHelpers/"inactivity_timeout">, which
+usually defaults to C<15> seconds.
 
   # Increase inactivity timeout for connection to 300 seconds
   $c->inactivity_timeout(300);
@@ -847,8 +829,8 @@ which usually defaults to C<15> seconds.
 
 Persistent data storage for the next few requests, all session data gets
 serialized with L<Mojo::JSON> and stored Base64 encoded in HMAC-SHA1 signed
-cookies. Note that cookies usually have a C<4096> byte (4KB) limit, depending
-on browser.
+cookies, to prevent tampering. Note that cookies usually have a C<4096> byte
+(4KB) limit, depending on browser.
 
   # Manipulate session
   $c->session->{foo} = 'bar';
@@ -866,15 +848,15 @@ on browser.
 
 =head2 signed_cookie
 
-  my $value       = $c->signed_cookie('foo');
-  my ($foo, $bar) = $c->signed_cookie(['foo', 'bar']);
-  $c              = $c->signed_cookie(foo => 'bar');
-  $c              = $c->signed_cookie(foo => 'bar', {path => '/'});
+  my $value = $c->signed_cookie('foo');
+  $c        = $c->signed_cookie(foo => 'bar');
+  $c        = $c->signed_cookie(foo => 'bar', {path => '/'});
 
 Access signed request cookie values and create new signed response cookies. If
 there are multiple values sharing the same name, and you want to access more
-than just the last one, you can use L</"every_signed_cookie">. Cookies failing
-HMAC-SHA1 signature verification will be automatically discarded.
+than just the last one, you can use L</"every_signed_cookie">. Cookies are
+cryptographically signed with HMAC-SHA1, to prevent tampering, and the ones
+failing signature verification will be automatically discarded.
 
 =head2 stash
 
@@ -904,21 +886,21 @@ reserved for internal use.
   my $url = $c->url_for({name => 'sebastian'});
   my $url = $c->url_for('test', name => 'sebastian');
   my $url = $c->url_for('test', {name => 'sebastian'});
-  my $url = $c->url_for('/perldoc');
-  my $url = $c->url_for('//mojolicio.us/perldoc');
-  my $url = $c->url_for('http://mojolicio.us/perldoc');
+  my $url = $c->url_for('/index.html');
+  my $url = $c->url_for('//example.com/index.html');
+  my $url = $c->url_for('http://example.com/index.html');
   my $url = $c->url_for('mailto:sri@example.com');
 
 Generate a portable L<Mojo::URL> object with base for a path, URL or route.
 
-  # "http://127.0.0.1:3000/perldoc" if application has been started with Morbo
-  $c->url_for('/perldoc')->to_abs;
+  # "http://127.0.0.1:3000/index.html" if application was started with Morbo
+  $c->url_for('/index.html')->to_abs;
 
-  # "/perldoc?foo=bar" if application is deployed under "/"
-  $c->url_for('/perldoc')->query(foo => 'bar');
+  # "/index.html?foo=bar" if application is deployed under "/"
+  $c->url_for('/index.html')->query(foo => 'bar');
 
-  # "/myapp/perldoc?foo=bar" if application is deployed under "/myapp"
-  $c->url_for('/perldoc')->query(foo => 'bar');
+  # "/myapp/index.html?foo=bar" if application is deployed under "/myapp"
+  $c->url_for('/index.html')->query(foo => 'bar');
 
 You can also use the helper L<Mojolicious::Plugin::DefaultHelpers/"url_with">
 to inherit query parameters from the current request.
@@ -935,7 +917,7 @@ validate C<GET> and C<POST> parameters extracted from the query string and
 C<application/x-www-form-urlencoded> or C<multipart/form-data> message body.
 Parts of the request body need to be loaded into memory to parse C<POST>
 parameters, so you have to make sure it is not excessively large, there's a
-10MB limit by default.
+16MB limit by default.
 
   my $validation = $c->validation;
   $validation->required('title')->size(3, 50);
@@ -944,18 +926,21 @@ parameters, so you have to make sure it is not excessively large, there's a
 =head2 write
 
   $c = $c->write;
+  $c = $c->write('');
   $c = $c->write($bytes);
   $c = $c->write(sub {...});
   $c = $c->write($bytes => sub {...});
 
-Write dynamic content non-blocking, the optional drain callback will be
-invoked once all data has been written.
+Write dynamic content non-blocking, the optional drain callback will be invoked
+once all data has been written. Calling this method without a chunk of data
+will finalize the response headers and allow for dynamic content to be written
+later.
 
   # Keep connection alive (with Content-Length header)
   $c->res->headers->content_length(6);
   $c->write('Hel' => sub {
     my $c = shift;
-    $c->write('lo!')
+    $c->write('lo!');
   });
 
   # Close connection when finished (without Content-Length header)
@@ -967,9 +952,27 @@ invoked once all data has been written.
     });
   });
 
-For Comet (long polling) you might also want to increase the inactivity
-timeout with L<Mojolicious::Plugin::DefaultHelpers/"inactivity_timeout">,
-which usually defaults to C<15> seconds.
+You can call L</"finish"> or write an empty chunk of data at any time to end
+the stream.
+
+  HTTP/1.1 200 OK
+  Connection: keep-alive
+  Date: Sat, 13 Sep 2014 16:48:29 GMT
+  Content-Length: 6
+  Server: Mojolicious (Perl)
+
+  Hello!
+
+  HTTP/1.1 200 OK
+  Connection: close
+  Date: Sat, 13 Sep 2014 16:48:29 GMT
+  Server: Mojolicious (Perl)
+
+  Hello!
+
+For Comet (long polling) you might also want to increase the inactivity timeout
+with L<Mojolicious::Plugin::DefaultHelpers/"inactivity_timeout">, which usually
+defaults to C<15> seconds.
 
   # Increase inactivity timeout for connection to 300 seconds
   $c->inactivity_timeout(300);
@@ -977,28 +980,38 @@ which usually defaults to C<15> seconds.
 =head2 write_chunk
 
   $c = $c->write_chunk;
+  $c = $c->write_chunk('');
   $c = $c->write_chunk($bytes);
   $c = $c->write_chunk(sub {...});
   $c = $c->write_chunk($bytes => sub {...});
 
 Write dynamic content non-blocking with C<chunked> transfer encoding, the
-optional drain callback will be invoked once all data has been written.
+optional drain callback will be invoked once all data has been written. Calling
+this method without a chunk of data will finalize the response headers and
+allow for dynamic content to be written later.
 
   # Make sure previous chunk has been written before continuing
-  $c->write_chunk('He' => sub {
+  $c->write_chunk('H' => sub {
     my $c = shift;
-    $c->write_chunk('ll' => sub {
+    $c->write_chunk('ell' => sub {
       my $c = shift;
       $c->finish('o!');
     });
   });
 
-You can call L</"finish"> at any time to end the stream.
+You can call L</"finish"> or write an empty chunk of data at any time to end
+the stream.
 
-  2
-  He
-  2
-  ll
+  HTTP/1.1 200 OK
+  Connection: keep-alive
+  Date: Sat, 13 Sep 2014 16:48:29 GMT
+  Transfer-Encoding: chunked
+  Server: Mojolicious (Perl)
+
+  1
+  H
+  3
+  ell
   2
   o!
   0

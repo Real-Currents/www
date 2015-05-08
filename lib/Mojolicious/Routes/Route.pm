@@ -32,13 +32,6 @@ sub add_child {
 
 sub any { shift->_generate_route(ref $_[0] eq 'ARRAY' ? shift : [], @_) }
 
-# DEPRECATED in Tiger Face!
-sub bridge {
-  Mojo::Util::deprecated 'Mojolicious::Routes::Route::bridge is DEPRECATED in'
-    . ' favor of Mojolicious::Routes::Route::under';
-  shift->route(@_)->inline(1);
-}
-
 sub delete { shift->_generate_route(DELETE => @_) }
 
 sub detour { shift->partial(1)->to(@_) }
@@ -50,11 +43,9 @@ sub find {
   my $candidate;
   while (my $child = shift @children) {
 
-    # Match
+    # Custom names have priority
     $candidate = $child->has_custom_name ? return $child : $child
       if $child->name eq $name;
-
-    # Search children too
     push @children, @{$child->children};
   }
 
@@ -101,7 +92,7 @@ sub over {
 
 sub parse {
   my $self = shift;
-  $self->{name} = $self->pattern->parse(@_)->pattern // '';
+  $self->{name} = $self->pattern->parse(@_)->unparsed // '';
   $self->{name} =~ s/\W+//g;
   return $self;
 }
@@ -129,10 +120,23 @@ sub root { shift->_chain->[0] }
 
 sub route {
   my $self   = shift;
-  my $route  = $self->add_child($self->new(@_))->children->[-1];
+  my $route  = $self->add_child(__PACKAGE__->new(@_))->children->[-1];
   my $format = $self->pattern->constraints->{format};
   $route->pattern->constraints->{format} //= 0 if defined $format && !$format;
   return $route;
+}
+
+sub suggested_method {
+  my $self = shift;
+
+  my %via;
+  for my $route (@{$self->_chain}) {
+    next unless my @via = @{$route->via || []};
+    %via = map { $_ => 1 } keys %via ? grep { $via{$_} } @via : @via;
+  }
+
+  return 'POST' if $via{POST} && !$via{GET};
+  return $via{GET} ? 'GET' : (sort keys %via)[0] || 'GET';
 }
 
 sub to {
@@ -162,7 +166,7 @@ sub to {
 }
 
 sub to_string {
-  join '', map { $_->pattern->pattern // '' } @{shift->_chain};
+  join '', map { $_->pattern->unparsed // '' } @{shift->_chain};
 }
 
 sub under { shift->_generate_route(under => @_) }
@@ -302,8 +306,8 @@ current parent if necessary.
   my $route = $r->any([qw(GET POST)] => '/:foo' => [foo => qr/\w+/]);
 
 Generate L<Mojolicious::Routes::Route> object matching any of the listed HTTP
-request methods or all. See also L<Mojolicious::Guides::Tutorial> for many
-more argument variations.
+request methods or all. See also L<Mojolicious::Guides::Tutorial> for many more
+argument variations.
 
   $r->any('/user')->to('user#whatever');
 
@@ -314,9 +318,8 @@ more argument variations.
   my $route = $r->delete('/:foo' => {foo => 'bar'} => sub {...});
   my $route = $r->delete('/:foo' => [foo => qr/\w+/] => sub {...});
 
-Generate L<Mojolicious::Routes::Route> object matching only C<DELETE>
-requests. See also L<Mojolicious::Guides::Tutorial> for many more argument
-variations.
+Generate L<Mojolicious::Routes::Route> object matching only C<DELETE> requests.
+See also L<Mojolicious::Guides::Tutorial> for many more argument variations.
 
   $r->delete('/user')->to('user#remove');
 
@@ -394,8 +397,8 @@ the current route.
   my $r = Mojolicious::Routes::Route->new('/:action', action => qr/\w+/);
   my $r = Mojolicious::Routes::Route->new(format => 0);
 
-Construct a new L<Mojolicious::Routes::Route> object and L</"parse"> pattern
-if necessary.
+Construct a new L<Mojolicious::Routes::Route> object and L</"parse"> pattern if
+necessary.
 
 =head2 options
 
@@ -499,6 +502,13 @@ The L<Mojolicious::Routes> object this route is a descendant of.
 
 Low-level generator for routes matching all HTTP request methods, returns a
 L<Mojolicious::Routes::Route> object.
+
+=head2 suggested_method
+
+  my $method = $r->suggested_method;
+
+Suggested HTTP method for reaching this route, C<GET> and C<POST> are
+preferred.
 
 =head2 to
 

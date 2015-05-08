@@ -10,13 +10,13 @@ use Socket qw(IPPROTO_TCP SOCK_STREAM TCP_NODELAY);
 # Non-blocking name resolution requires Net::DNS::Native
 use constant NDN => $ENV{MOJO_NO_NDN}
   ? 0
-  : eval 'use Net::DNS::Native 0.14 (); 1';
+  : eval 'use Net::DNS::Native 0.15 (); 1';
 my $NDN = NDN ? Net::DNS::Native->new(pool => 5, extra_thread => 1) : undef;
 
 # TLS support requires IO::Socket::SSL
 use constant TLS => $ENV{MOJO_NO_TLS}
   ? 0
-  : eval 'use IO::Socket::SSL 1.84 (); 1';
+  : eval 'use IO::Socket::SSL 1.94 (); 1';
 use constant TLS_READ  => TLS ? IO::Socket::SSL::SSL_WANT_READ()  : 0;
 use constant TLS_WRITE => TLS ? IO::Socket::SSL::SSL_WANT_WRITE() : 0;
 
@@ -32,8 +32,7 @@ has reactor => sub { Mojo::IOLoop->singleton->reactor };
 sub DESTROY { shift->_cleanup }
 
 sub connect {
-  my $self = shift;
-  my $args = ref $_[0] ? $_[0] : {@_};
+  my ($self, $args) = (shift, ref $_[0] ? $_[0] : {@_});
 
   # Timeout
   weaken $self;
@@ -66,8 +65,8 @@ sub connect {
 
 sub _cleanup {
   my $self = shift;
-  return $self unless my $reactor = $self->reactor;
   $NDN->timedout($self->{dns}) if $self->{dns};
+  my $reactor = $self->reactor;
   $self->{$_} && $reactor->remove(delete $self->{$_}) for qw(dns timer handle);
   return $self;
 }
@@ -93,7 +92,7 @@ sub _connect {
     ->watch($handle, 0, 1);
 }
 
-sub _port { $_[0]->{socks_port} || $_[0]->{port} || ($_[0]->{tls} ? 443 : 80) }
+sub _port { $_[0]{socks_port} || $_[0]{port} || ($_[0]{tls} ? 443 : 80) }
 
 sub _ready {
   my ($self, $args) = @_;
@@ -143,7 +142,7 @@ sub _try_socks {
   my $handle = $self->{handle};
   return $self->_try_tls($args) unless $args->{socks_address};
   return $self->emit(
-    error => 'IO::Socket::Socks 0.64 required for SOCKS support')
+    error => 'IO::Socket::Socks 0.64+ required for SOCKS support')
     unless SOCKS;
 
   my %options
@@ -163,9 +162,8 @@ sub _try_tls {
   my ($self, $args) = @_;
 
   my $handle = $self->{handle};
-  return $self->_cleanup->emit(connect => $handle)
-    if !$args->{tls} || $handle->isa('IO::Socket::SSL');
-  return $self->emit(error => 'IO::Socket::SSL 1.84 required for TLS support')
+  return $self->_cleanup->emit(connect => $handle) unless $args->{tls};
+  return $self->emit(error => 'IO::Socket::SSL 1.94+ required for TLS support')
     unless TLS;
 
   # Upgrade
@@ -265,8 +263,8 @@ implements the following new ones.
   $client->connect(address => '127.0.0.1', port => 3000);
 
 Open a socket connection to a remote host. Note that non-blocking name
-resolution depends on L<Net::DNS::Native> (0.14+), SOCKS5 support on
-L<IO::Socket::Socks> (0.64), and TLS support on L<IO::Socket::SSL> (1.84+).
+resolution depends on L<Net::DNS::Native> (0.15+), SOCKS5 support on
+L<IO::Socket::Socks> (0.64), and TLS support on L<IO::Socket::SSL> (1.94+).
 
 These options are currently available:
 

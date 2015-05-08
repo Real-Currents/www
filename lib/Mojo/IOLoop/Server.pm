@@ -12,7 +12,7 @@ use Socket qw(IPPROTO_TCP TCP_NODELAY);
 # TLS support requires IO::Socket::SSL
 use constant TLS => $ENV{MOJO_NO_TLS}
   ? 0
-  : eval 'use IO::Socket::SSL 1.84 (); 1';
+  : eval 'use IO::Socket::SSL 1.94 (); 1';
 use constant TLS_READ  => TLS ? IO::Socket::SSL::SSL_WANT_READ()  : 0;
 use constant TLS_WRITE => TLS ? IO::Socket::SSL::SSL_WANT_WRITE() : 0;
 
@@ -39,8 +39,7 @@ sub generate_port {
 sub handle { shift->{handle} }
 
 sub listen {
-  my $self = shift;
-  my $args = ref $_[0] ? $_[0] : {@_};
+  my ($self, $args) = (shift, ref $_[0] ? $_[0] : {@_});
 
   # Look for reusable file descriptor
   my $address = $args->{address} || '0.0.0.0';
@@ -50,7 +49,7 @@ sub listen {
   $fd = $1 if $port && $ENV{MOJO_REUSE} =~ /(?:^|\,)\Q$address:$port\E:(\d+)/;
 
   # Allow file descriptor inheritance
-  local $^F = 1000;
+  local $^F = 1023;
 
   # Reuse file descriptor
   my $handle;
@@ -80,7 +79,7 @@ sub listen {
   $self->{handle} = $handle;
 
   return unless $args->{tls};
-  croak "IO::Socket::SSL 1.84 required for TLS support" unless TLS;
+  croak "IO::Socket::SSL 1.94+ required for TLS support" unless TLS;
 
   weaken $self;
   my $tls = $self->{tls} = {
@@ -234,8 +233,8 @@ Get handle for server.
 
   $server->listen(port => 3000);
 
-Create a new listen socket. Note that TLS support depends on
-L<IO::Socket::SSL> (1.84+).
+Create a new listen socket. Note that TLS support depends on L<IO::Socket::SSL>
+(1.94+).
 
 These options are currently available:
 

@@ -2,6 +2,7 @@ package Mojolicious::Commands;
 use Mojo::Base 'Mojolicious::Command';
 
 use Getopt::Long 'GetOptionsFromArray';
+use Mojo::Loader qw(find_modules load_class);
 use Mojo::Server;
 use Mojo::Util 'tablify';
 
@@ -58,18 +59,13 @@ sub run {
   return 1 if $ENV{HARNESS_ACTIVE};
 
   # Find all available commands
-  my (@rows, %seen);
-  my $loader = Mojo::Loader->new;
+  my %all;
   for my $ns (@{$self->namespaces}) {
-    for my $module (@{$loader->search($ns)}) {
-      next unless my $command = _command($module);
-      $command =~ s/^\Q$ns\E:://;
-      next if $seen{$command}++;
-      push @rows, [" $command", $module->new->description];
-    }
+    $all{substr $_, length "${ns}::"} //= $_->new->description
+      for grep { _command($_) } find_modules $ns;
   }
-  @rows = sort { $a->[0] cmp $b->[0] } @rows;
 
+  my @rows = map { [" $_", $all{$_}] } sort keys %all;
   return print $self->message, tablify(\@rows), $self->hint;
 }
 
@@ -94,7 +90,7 @@ BEGIN { _args([@ARGV]) }
 sub _command {
   my ($module, $fatal) = @_;
   return $module->isa('Mojolicious::Command') ? $module : undef
-    unless my $e = Mojo::Loader->new->load($module);
+    unless my $e = load_class $module;
   $fatal && ref $e ? die $e : return undef;
 }
 
@@ -134,8 +130,8 @@ These commands are available by default.
 
   $ ./myapp.pl cgi
 
-Use L<Mojolicious::Command::cgi> to start application with CGI backend,
-usually auto detected.
+Use L<Mojolicious::Command::cgi> to start application with CGI backend, usually
+auto detected.
 
 =head2 cpanify
 
@@ -188,8 +184,8 @@ L<Mojolicious::Lite> application.
   $ mojo generate makefile
   $ ./myapp.pl generate makefile
 
-Use L<Mojolicious::Command::generate::makefile> to generate C<Makefile.PL>
-file for application.
+Use L<Mojolicious::Command::generate::makefile> to generate C<Makefile.PL> file
+for application.
 
 =head2 generate plugin
 
