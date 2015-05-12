@@ -1,7 +1,7 @@
 {
     pages_dir   => app->home->rel_dir('public/content'),
     dump_dir    => app->home->rel_dir('public'),
-    name        => 'Mojo::Debut',
+    name        => 'Mojo::Debut Content Provisor',
     copyright   => '',
     cached      => 0,
     perldoc     => 1,

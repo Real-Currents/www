@@ -40,8 +40,8 @@ sub startup {
     	$log->debug( "Requested resource is ". $req->url );
 		
 		# Remove route heading if more than one node listed in path
-		if( $path =~ /(product|sections|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
-			$path =~ s/(?:product|sections|scripts|styles)//;
+		if( $path =~ /(product|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
+			$path =~ s/(?:product|scripts|styles)//;
 			$path =~ s/(\/\/)/\//;
 			$log->debug( "Modified request is ". $req->url->path($path) );
 		}
@@ -86,14 +86,13 @@ sub startup {
 	$r->get('/product/(:product_page)')
 	  ->to( %page_params );
 	
-	$self->Contenticious::startup(@_); #SUPER::startup(@_);
+	$self->SUPER::startup(@_); #Contenticious::startup(@_);
 
 	# Default route to site index
 	$r->get('/')->to(cb => sub {
 		my $self = shift;
 		$self->reply->static('default.html');
 	});
-	
 
 
 	# Error handling for non-routable URLs
