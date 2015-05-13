@@ -1,6 +1,7 @@
 package Mojo::Debut;
 use base qw(Contenticious);
 use Mojo::Log;
+use IO::Handle;
 
 my $content; # Handle for the content dir
 
@@ -12,6 +13,7 @@ sub startup {
 	my @content_items;
 	my @pages;
 	my @header_links;
+	$content = new IO::Handle;
 	
     $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 	
@@ -39,7 +41,7 @@ sub startup {
 		my $path = $req->url->path;
     	$log->debug( "Requested resource is ". $req->url );
 		
-		# Remove route heading if more than one node listed in path
+		# Remove route heading for these types if more than one node in path 
 		if( $path =~ /(product|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
 			$path =~ s/(?:product|scripts|styles)//;
 			$path =~ s/(\/\/)/\//;
