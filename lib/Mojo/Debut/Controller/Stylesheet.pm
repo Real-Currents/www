@@ -9,8 +9,6 @@ sub load {
 		template => "styles/$stylesheet", 
 		format => 'css', 
 		handler => 'ep' 
-	) or $self->reply->static(
-			"/$1.html"
 	) or error( $self, @_ );
 }
 

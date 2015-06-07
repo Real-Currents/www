@@ -82,11 +82,27 @@ sub startup {
 		);
 
 	# Normal route to controller
-	$r->get('/product')
-	  ->to( %page_params );
-	  
 	$r->get('/product/(:product_page)')
-	  ->to( %page_params );
+	  ->to(%page_params);
+	  
+	$r->get('/product*')
+	  ->to(%page_params);
+	
+	$r->get('/product')
+	  ->to(cb => sub {
+		my $self = shift;
+		$self->render(text => <<HTML);
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+  <title>Default Index</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="refresh" content="0;URL='product/'" />
+</head>
+<body>	
+</body></html>
+HTML
+
+	});
 	
 	$self->SUPER::startup(@_); #Contenticious::startup(@_);
 

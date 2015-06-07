@@ -11,6 +11,7 @@ sub load {
 		if( $self->stash('product_page') eq "welcome" );
 		
 	if( $self->stash('product_page') =~ /([\w|\-]+)/ ) {
+		error( $self, @_ ) if(! $1 );
 		$self->render_maybe( 
 			msg => $msg,
 			template => $1 
