@@ -8,9 +8,9 @@ sub load {
 	
 	# Render template "welcome" with message
 	$msg = 'Welcome to the Mojolicious real-time web framework!' 
-		if( $self->stash('product_page') eq "welcome" );
+		if( $self->stash('product_page') && ($self->stash('product_page') eq "welcome") );
 		
-	if( $self->stash('product_page') =~ /([\w|\-]+)/ ) {
+	if( $self->stash('product_page') && ($self->stash('product_page') =~ /([\w|\-]+)/) ) {
 		error( $self, @_ ) if(! $1 );
 		$self->render_maybe( 
 			msg => $msg,
