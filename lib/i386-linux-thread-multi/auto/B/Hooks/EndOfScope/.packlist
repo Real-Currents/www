@@ -1,8 +1,0 @@
-/home/revlin/perl5/lib/perl5/B/Hooks/EndOfScope.pm
-/home/revlin/perl5/lib/perl5/B/Hooks/EndOfScope/PP.pm
-/home/revlin/perl5/lib/perl5/B/Hooks/EndOfScope/PP/FieldHash.pm
-/home/revlin/perl5/lib/perl5/B/Hooks/EndOfScope/PP/HintHash.pm
-/home/revlin/perl5/lib/perl5/B/Hooks/EndOfScope/XS.pm
-/home/revlin/perl5/man/man3/B::Hooks::EndOfScope.3
-/home/revlin/perl5/man/man3/B::Hooks::EndOfScope::PP.3
-/home/revlin/perl5/man/man3/B::Hooks::EndOfScope::XS.3

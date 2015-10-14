@@ -14,25 +14,22 @@ sub load {
 		error( $self, @_ ) if(! $1 );
 		$self->render_maybe( 
 			msg => $msg,
-			template => $1 
+			template => 'product/'.$1 
 		) or $self->reply->static(
 			"/$1.html"
 		) or error( $self, @_ );
 		
-	} 
-#	else {
-#		$self->render_maybe( 
-#			template => 'arpeggio_intro'
-#		);
-#	}
+	} else {
+		$self->render_maybe( 
+			template => 'product/arpeggio_intro'
+		);
+	}
 }
 
 sub error {
 	my $self = shift;
-	
-	# Render an error page
-#	$self->reply->static('.errordocs/missing.html');
-	$self->render(text => "404");
+	$self->reply->static('.errordocs/missing.html');
+#	$self->render(text => "404");
 }
 
 1;

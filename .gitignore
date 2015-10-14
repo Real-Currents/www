@@ -1,6 +1,7 @@
 bin
 man
 log
+lib.bak
 libs
 t/heroku.t
 .net-heroku

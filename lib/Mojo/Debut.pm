@@ -8,18 +8,18 @@ my $content; # Handle for the content dir
 # This method will run once at server start
 sub startup {
 	my $self = shift;
-	
+
 	my $log = $self->log;
 	my @content_items;
 	my @pages;
 	my @header_links;
 	$content = new IO::Handle;
-	
+
     $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
-	
+
 	$log->debug( "Check for content dir: " );
 	opendir $content, 'public/content' or die "'content' dir does not exist: $!\n";
-	
+
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
 		$log->debug( "$content_item \n" );
@@ -30,20 +30,20 @@ sub startup {
 			@header_links = (@header_links, $content_item) unless( $content_item eq 'Home' );
 		}
 	}
-	
+
 	$log->debug( "Close content dir" );
-	closedir $content or die "$!";
-	
+	closedir $content or die "$!\n";
+
 	# Check (& clean) request path
 	my $reqCheck = sub {
 		my $self = shift;
 		my $req = $self->req;
 		my $path = $req->url->path;
-    	$log->debug( "Requested resource is ". $req->url );
-		
-		# Remove route heading for these types if more than one node in path 
-		if( $path =~ /(product|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
-			$path =~ s/(?:product|scripts|styles)//;
+	    	$log->debug( "Requested resource is ". $req->url );
+
+		# Remove route heading for these types if more than one node in path
+		if( $path =~ /(products|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
+			$path =~ s/(?:products)//;
 			$path =~ s/(\/\/)/\//;
 			$log->debug( "Modified request is ". $req->url->path($path) );
 		}
@@ -73,22 +73,36 @@ sub startup {
 		pages => \@pages,
 		header_links => \@header_links
 	);
-	
+
+	# Route to javascript templates before pages
+	$r->get('/scripts/(:javascript).js')
+	  ->to(controller => 'JavaScript', action => 'load');
+
 	# Route to stylesheet templates before pages
 	$r->get('/styles/(:stylesheet).css')
-	  ->to(
-			controller => 'Stylesheet',
-			action	=> 'load'
-		);
+	  ->to(controller => 'Stylesheet', action => 'load');
+
+	# Default route to site index if default page exists
+	$log->debug( "Check for default page: " );
+	opendir $content, 'public' or die "$!\n";
+	while( my $page = readdir $content ) {
+		my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
+		$r->get('/')->to(cb => sub {
+			my $self = shift;
+			$log->debug( "Get default route..." );
+			$self->reply->static($default);
+		}) if( $default );
+	}
+	closedir $content or die "$!\n";
 
 	# Normal route to controller
-	$r->get('/product/(:product_page)')
+	$r->get('/products/(:product_page)')
 	  ->to(%page_params);
-	  
-	$r->get('/product*')
+
+	$r->get('/products*')
 	  ->to(%page_params);
-	
-	$r->get('/product')
+
+	$r->get('/products')
 	  ->to(cb => sub {
 		my $self = shift;
 		$self->render(text => <<HTML);
@@ -96,22 +110,15 @@ sub startup {
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
   <title>Default Index</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta http-equiv="refresh" content="0;URL='product/'" />
+  <meta http-equiv="refresh" content="0;URL='products/'" />
 </head>
-<body>	
+<body>
 </body></html>
 HTML
 
 	});
-	
-	$self->SUPER::startup(@_); #Contenticious::startup(@_);
 
-	# Default route to site index
-	$r->get('/')->to(cb => sub {
-		my $self = shift;
-		$self->reply->static('default.html');
-	});
-
+	$self->Contenticious::startup(@_); #SUPER::startup(@_);
 
 	# Error handling for non-routable URLs
 	$r->any('/*')

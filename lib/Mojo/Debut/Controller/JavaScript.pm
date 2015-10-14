@@ -1,14 +1,14 @@
-package Mojo::Debut::Controller::Stylesheet;
+package Mojo::Debut::Controller::JavaScript;
 use Mojo::Base 'Mojolicious::Controller';
 
 # This action will render a template
 sub load {
 	my $self = shift;
-	if( $self->stash('stylesheet') ) {
-		my $stylesheet = $self->stash('stylesheet');
+	if( $self->stash('javascript') ) {
+		my $javascript = $self->stash('javascript');
 		$self->render_maybe( 
-			template => "styles/$stylesheet", 
-			format => 'css', 
+			template => "scripts/$javascript", 
+			format => 'js', 
 			handler => 'ep' 
 		) or error( $self, @_ );
 	} else {
