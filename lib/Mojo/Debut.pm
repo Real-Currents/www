@@ -11,6 +11,7 @@ sub startup {
 
 	my $log = $self->log;
 	my @content_items;
+	my @content_dirs;
 	my @pages;
 	my @header_links;
 	$content = new IO::Handle;
@@ -28,6 +29,8 @@ sub startup {
 			@pages = (@pages, $content_item);
 			($content_item) =$1 ;
 			@header_links = (@header_links, $content_item) unless( $content_item eq 'Home' );
+		} else {
+			@content_dirs = (@content_dirs, $content_item);
 		}
 	}
 
@@ -40,6 +43,15 @@ sub startup {
 		my $req = $self->req;
 		my $path = $req->url->path;
 	    	$log->debug( "Requested resource is ". $req->url );
+
+		# Match request path to content path for content resources (images, audio, video, etc.)
+		for my $cpath (@content_dirs) {
+			if( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
+				$path =~ s/($cpath)/content\/$cpath/;
+				#$path =~ s/(\/\/)/\//;
+				$log->debug( "Modified request is ". $req->url->path($path) );
+			}
+		}
 
 		# Remove route heading for these types if more than one node in path
 		if( $path =~ /(products|scripts|styles)(\/[\w|\-]+)\/.+/ ) {
@@ -83,15 +95,18 @@ sub startup {
 	  ->to(controller => 'Stylesheet', action => 'load');
 
 	# Default route to site index if default page exists
-	$log->debug( "Check for default page: " );
+	$log->debug( "Checking for default page... " );
 	opendir $content, 'public' or die "$!\n";
 	while( my $page = readdir $content ) {
 		my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
-		$r->get('/')->to(cb => sub {
-			my $self = shift;
-			$log->debug( "Get default route..." );
-			$self->reply->static($default);
-		}) if( $default );
+		if( $default ) {
+			$r->get('/')->to(cb => sub {
+				my $self = shift;
+				$log->debug( "Get default route..." );
+				$self->reply->static($default);
+			});
+			$log->debug( "Found default: "+ $default);
+		}
 	}
 	closedir $content or die "$!\n";
 
