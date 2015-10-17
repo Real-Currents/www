@@ -86,6 +86,10 @@ sub startup {
 		header_links => \@header_links
 	);
 
+	# Route to save contact
+	$r->post('/contact')
+	  ->to(controller => 'Contact', action => 'save');
+
 	# Route to javascript templates before pages
 	$r->get('/scripts/(:javascript).js')
 	  ->to(controller => 'JavaScript', action => 'load');
