@@ -19,45 +19,53 @@ sub unlock {
 sub save {
 	my $self = shift;
 	my $date = localtime(time);
-	my $email = '';
+	my $error;
 	my $fh;
 	my @contact_list;
 	my $log = Mojo::Log->new;
-	
+
 	if( $self->param('email') && ($self->param('email') =~ /([\w|\-]+[@][\w|\-|\.]+)/) ) {
-		my $error;
 		my $email = $1;
 		my $saved = { Date => $date, Email => $email };
-		
-		open $fh, '+<', 'data/contact_list.json' or $error = "Could not open contact list: $!";
-		lock $fh or $error = "Could not lock filehandle to contact list: $!";
-		tie @contact_list, 'Tie::File', $fh;
-		my $idx = 0;
-		for ( @contact_list ) {
-			$log->debug( $_ );
-			if( $_ =~ /(??{$email})/ ) {
-				$error = "$email is already on our list. Thank you.";
-				last;
-			}
-			if( $_ =~ /^\]/ ) {
-				$contact_list[($idx - 1)] = $contact_list[($idx - 1)] .",";
-				$contact_list[$idx] = "\t". &encode_json($saved) ."\n]";
-				$log->debug( encode_json($saved) );
-			}
-			$idx++;
-		}
-		unlock $fh or $error = "Could not unlock filehandle to contact list: $!";
-		close $fh or $error = "Could not close contact list: $!";
-		
-		unless( $error ) {
-			$self->render_maybe( json => $saved )
-		} else {
-			error( $self, $error );
-		}
-		
-	} else {
-		error( $self, 'Invalid Email!' ) if(! $1 );
+
+        unless( -e -r -w 'data/contact_list.json' ) {
+        	open $fh, '>', 'data/contact_list.json' or $error = "Could not create contact list: $!";
+            $fh->print("[\n]\n");
+            close $fh or $error = "Could not close contact list: $!";
+        }
+
+        unless( $error ) {
+    		open $fh, '+<', 'data/contact_list.json' or $error = "Could not open contact list: $!";
+    		lock $fh or $error = "Could not lock filehandle to contact list: $!";
+    		tie @contact_list, 'Tie::File', $fh;
+    		my $idx = 0;
+    		for ( @contact_list ) {
+    			$log->debug( $_ );
+    			if( $_ =~ /(??{$email})/ ) {
+    				$error = "$email is already on our list. Thank you.";
+    				last;
+    			}
+    			if( $_ =~ /^\]/ ) {
+    				$contact_list[($idx - 1)] = $contact_list[($idx - 1)] .","
+                        unless( $contact_list[($idx - 1)] =~ /\[/ );
+    				$contact_list[$idx] = "\t". &encode_json($saved) ."\n]";
+    				$log->debug( encode_json($saved) );
+    			}
+    			$idx++;
+    		}
+    		unlock $fh or $error = "Could not unlock filehandle to contact list: $!";
+    		close $fh or $error = "Could not close contact list: $!";
+
+    		unless( $error ) {
+    			$self->render_maybe( json => $saved ) or $error = "$!";
+                return 1;
+    		}
+        }
+
+        return error( $self, $error ) if( $error );
 	}
+
+    return error($self, 'Invalid Email!');
 }
 
 sub error {
