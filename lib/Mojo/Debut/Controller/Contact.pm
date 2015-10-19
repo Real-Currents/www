@@ -15,40 +15,50 @@ sub unlock {
   flock($fh, LOCK_UN) or die "Cannot unlock data file - $!\n";
 }
 
-# This action will save an email parameter to the contact list
+# Return full contact list to requester
+sub list {
+	my $self = shift;
+	$self->reply->static('../data/contacts_list.json')
+        if( -e -r -w 'data/contacts_list.json'
+            or return error($self, "No contact email have been recorded: $!") );
+
+    return 1;
+}
+
+# Save an email entry to the contact list
 sub save {
 	my $self = shift;
 	my $date = localtime(time);
 	my $error;
 	my $fh;
-	my @contact_list;
+	my @contacts_list;
 	my $log = Mojo::Log->new;
 
 	if( $self->param('email') && ($self->param('email') =~ /([\w|\-]+[@][\w|\-|\.]+)/) ) {
 		my $email = $1;
 		my $saved = { Date => $date, Email => $email };
 
-        unless( -e -r -w 'data/contact_list.json' ) {
-        	open $fh, '>', 'data/contact_list.json' or $error = "Could not create contact list: $!";
+        unless( -e -r -w 'data/contacts_list.json' ) {
+        	open $fh, '>', 'data/contacts_list.json' or $error = "Could not create contact list: $!";
             $fh->print("[\n]\n");
             close $fh or $error = "Could not close contact list: $!";
         }
 
         unless( $error ) {
-    		open $fh, '+<', 'data/contact_list.json' or $error = "Could not open contact list: $!";
+    		open $fh, '+<', 'data/contacts_list.json' or $error = "Could not open contact list: $!";
     		lock $fh or $error = "Could not lock filehandle to contact list: $!";
-    		tie @contact_list, 'Tie::File', $fh;
+    		tie @contacts_list, 'Tie::File', $fh;
     		my $idx = 0;
-    		for ( @contact_list ) {
+    		for ( @contacts_list ) {
     			$log->debug( $_ );
     			if( $_ =~ /(??{$email})/ ) {
     				$error = "$email is already on our list. Thank you.";
     				last;
     			}
     			if( $_ =~ /^\]/ ) {
-    				$contact_list[($idx - 1)] = $contact_list[($idx - 1)] .","
-                        unless( $contact_list[($idx - 1)] =~ /\[/ );
-    				$contact_list[$idx] = "\t". &encode_json($saved) ."\n]";
+    				$contacts_list[($idx - 1)] = $contacts_list[($idx - 1)] .","
+                        unless( $contacts_list[($idx - 1)] =~ /\[/ );
+    				$contacts_list[$idx] = "\t". &encode_json($saved) ."\n]";
     				$log->debug( encode_json($saved) );
     			}
     			$idx++;
@@ -58,6 +68,7 @@ sub save {
 
     		unless( $error ) {
     			$self->render_maybe( json => $saved ) or $error = "$!";
+
                 return 1;
     		}
         }
@@ -73,6 +84,8 @@ sub error {
 	my $error = shift;
 #	$self->reply->static('.errordocs/missing.html');
 	$self->render(json => { Error => $error }, status => 500);
+
+    return 1;
 }
 
 1;
