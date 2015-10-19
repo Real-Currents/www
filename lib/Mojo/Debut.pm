@@ -72,6 +72,7 @@ sub startup {
 			my $stash = $c->stash;
 			$stash->{style} = shift if @_;
 			$c->stash(@_) if @_;
+
 			return $stash->{style};
 		}
 	);
@@ -86,8 +87,12 @@ sub startup {
 		header_links => \@header_links
 	);
 
+	# Route to list contacts
+	$r->get('/contacts/list')
+	  ->to(controller => 'Contact', action => 'list');
+
 	# Route to save contact
-	$r->post('/contact')
+	$r->post('/contacts')
 	  ->to(controller => 'Contact', action => 'save');
 
 	# Route to javascript templates before pages
