@@ -42,14 +42,25 @@ sub startup {
 		my $self = shift;
 		my $req = $self->req;
 		my $path = $req->url->path;
-	    	$log->debug( "Requested resource is ". $req->url );
+	    
+		$log->debug( "Requested resource is ". $req->url );
 
 		# Match request path to content path for content resources (images, audio, video, etc.)
 		for my $cpath (@content_dirs) {
 			if( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
 				$path =~ s/($cpath)/content\/$cpath/;
-				#$path =~ s/(\/\/)/\//;
 				$log->debug( "Modified request is ". $req->url->path($path) );
+				
+			} elsif( $path =~ /\/$cpath$/ ) {
+				$path =~ s/($cpath)/$1\//;
+				$log->debug( "Modified request is ". $req->url->path($path) );
+				$self->redirect_to($path);
+				
+			} elsif( $path =~ /\/$cpath\.html$/ ) {
+				$path =~ s/($cpath)\.html/$1\//;
+				$log->debug( "Modified request is ". $req->url->path($path) );
+				$self->redirect_to($path);
+				
 			}
 		}
 
@@ -107,15 +118,28 @@ sub startup {
 	$log->debug( "Checking for default page... " );
 	opendir $content, 'public' or die "$!\n";
 	while( my $page = readdir $content ) {
+		my $index = undef;
 		my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
 		if( $default ) {
-			$r->get('/')->to(cb => sub {
+			$index = sub {
 				my $self = shift;
+				$log->debug( "Found default: "+ $default);
 				$log->debug( "Get default route..." );
 				$self->reply->static($default);
-			});
-			$log->debug( "Found default: "+ $default);
+			};
+			$r->get('/')->to(cb => $index);
+		
+		} else {
+			$index = sub {
+				my $self = shift;
+				$log->debug( "No default");
+				$log->debug( "Get default route..." );
+				$self->reply->static('../index.html');
+			};
 		}
+		$r->get('/default')->to(cb => $index);
+		$r->get('/index')->to(cb => $index);
+		$r->get('/index.html')->to(cb => $index);
 	}
 	closedir $content or die "$!\n";
 

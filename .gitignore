@@ -1,8 +1,8 @@
 bin
-contacts_list.json
-man
 log
-lib.bak
-libs
-t/heroku.t
+man
 .net-heroku
+lib/contenticious
+t/heroku.t
+contact_list.json
+contacts_list.json
