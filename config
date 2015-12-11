@@ -1,12 +1,12 @@
 {
     pages_dir   => app->home->rel_dir('public/content'),
     dump_dir    => app->home->rel_dir('public'),
-    name        => 'Mojo::Debut Content Provisor',
+    name        => 'Real~Currents => Integrative Web Services',
     copyright   => '',
     cached      => 0,
     perldoc     => 1,
 	hypnotoad   => {
-		listen  => ['http://*:3000'], 
+		listen  => ['http://*:'.$ENV{PORT}], 
 		workers => 10,  
 		proxy   => 1
 	}
