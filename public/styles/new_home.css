@@ -1,5 +1,5 @@
 /* 
-File: main.css
+File: new_home.css
 Note: uni-sol.ca default style sheet 
 */
 
@@ -19,12 +19,8 @@ Note: uni-sol.ca default style sheet
     url("../fonts/comfortaa-regular-webfont.ttf") format("truetype");
 }
 
-html, body {
-  min-width:			460px;
-  background-color:		#000;
-}
-
 body {
+  background-color:		transparent;
   width:				100%;
   margin: 				0 0 0 0;
   padding: 				0 0 0 0;
@@ -47,34 +43,34 @@ body {
 
 * h1 {
   margin-bottom: 		8px;
-  font-size: 			4.25em;
+  font-size: 			2.8em;
   font-weight: 			bold;
   color:  				#7f7fff;
   line-height: 			105%;
 }
 
-* h2, #content h2 {
+* h2 {
   margin-bottom: 		6px;
-  font-size: 			1.5em;
+  font-size: 			2.3em;
   font-weight: 			bold;
   line-height: 			75%;
 }
 
-* h3, #content h3 {
+* h3 {
   margin-bottom: 		4px;
-  font-size: 			1.5em;
+  font-size: 			1.6em;
   font-weight: 			bold;
   line-height: 			85%;
 }
 
-* h4, #content h4 {
+* h4 {
   margin-bottom: 		2px;
-  font-size: 			1.25em;
+  font-size: 			1.3em;
   font-weight: 			bold;
   line-height: 			75%;
 }
 
-* h5, #content h5 {
+* h5 {
   margin-bottom: 		0;
   font-size: 			1em;
   font-weight: 			bold;
@@ -82,20 +78,19 @@ body {
 }
 
 
-* p, #content * p {
+* p {
   color: 				#e3ddff;
   padding-left: 		2px;
   padding-right: 		2px;
 }
 
-* a , * a:visited, #content * a {
-  color: 				#7f7fff;
+* a {
   font-weight: 			bold;
   text-decoration: 		none;
- }
+  color: 				#a277ff;
+}
 
-
-* pre, #content * pre {
+* pre {
     display: block;
     max-width: 480px;
     overflow-x: auto;
@@ -125,13 +120,12 @@ div#home_screen {
 
 div#trademark {
   float: 				left;
-  min-width: 			82px;
-  max-width: 			82px;
+  min-width: 			80px;
+  max-width: 			80px;
   height: 				80px;
   max-height: 			80px;
   margin-right: 		10px;
   color:  				#7f7fff;
-  font-size:			15px;
   text-align: 			right;
   line-height: 			155%;
   padding-right: 		4px;
@@ -143,7 +137,7 @@ div#title {
   min-width: 			360px;
   max-width: 			460px;
   height: 				80px;
-  max-height: 			72px;
+  max-height: 			80px;
   margin: 				0 0 0 80px;
   /*border-bottom: 		1px solid #fff;*/
 }
@@ -153,7 +147,7 @@ div.titles * {
 }
 
 div#title h1 {
-  margin-top: 			-16px;
+  margin-top: 			-2px;
   margin-left:			10px;
   margin-bottom:		-12px;
   font-variant: 		small-caps; 
@@ -172,7 +166,7 @@ div#content {
 }
 
 div#content * img {
-  margin:               8px -4px 0px 0px;   
+  margin:               8px -4px 12px 0px;   
 }
 div#content * img[alt^="Stymaps"] {
   width:                226px;
@@ -207,11 +201,6 @@ div#content div.revlin h3 {
 div#content div.revlin p {
 	margin-top: 	-10px;
 	margin-bottom:	60px;
-}
-div#content div.revlin a {
-  font-weight: 			bold;
-  text-decoration: 		none;
-  color: 				#a277ff;
 }
 div#content div.revlin * img {
 	position:		relative;
@@ -250,16 +239,42 @@ div#control #toggle_control {
 	overflow:		hidden;
 }
 
-<% 
-for( my $i = 0; $i<10; $i++ ) { %>
-<%= "* #layer$i {"; %>
+* #layer0 {
 	width:			100%;
-<%= "}\n"; %>
-<%
-} %>
+}
 
-* #uni-sol #built_with {
-    position:		fixed;
-	bottom:			0;
-	right:			0;
+* #layer1 {
+	width:			100%;
+}
+
+* #layer2 {
+	width:			100%;
+}
+
+* #layer3 {
+	width:			100%;
+}
+
+* #layer4 {
+	width:			100%;
+}
+
+* #layer5 {
+	width:			100%;
+}
+
+* #layer6 {
+	width:			100%;
+}
+
+* #layer7 {
+	width:			100%;
+}
+
+* #layer8 {
+	width:			100%;
+}
+
+* #layer9 {
+	width:			100%;
 }

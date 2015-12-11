@@ -1,41 +1,205 @@
-<!doctype html>
-<html>
-<head>
-    % my $t = join ' - ' => grep { $_ } stash('title'), config('name');
-    <title><%= $t || 'contenticious!' %></title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/styles/contenticious.css" />
-    <link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+	% my $t = join ' - ' => grep { $_ } stash('title'), config('name');
+	<title><%= $t || 'contenticious!' %></title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	
+  	<link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
+	<link rel='stylesheet' type='text/css' href='/styles/contenticious.css' />
+	<link rel='stylesheet' type='text/css' href='/styles/main.css' />
+  	<link rel='stylesheet' type='text/css' href='/styles/width.css' />
 	
 </head>
 <body>
-<div id="top">
-    <div id="inner">
-        <p id="name"><a href="<%= rel_url_for 'content', cpath => '' %>">
-            <%= config('name') // 'contenticious!' %>
-        </a></p>
-%= include 'navi', only => 1
-    </div><!-- inner -->
-</div><!-- top -->
-<div id="main">
-%= include 'navi', only_not => 1
-<div id="content">
+  <div id="uni-sol" style="min-width:460px">
+  	<div <%
+		{ no strict 'vars'; 
+			if( (defined $svgApp) ){ 
+		%>class="cycle-slideshow" style="z-index: -1" data-cycle-speed="1500" data-cycle-loop="1" data-cycle-allow-wrap="false" data-cycle-reverse="false">
+  		<img id="layer0" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer2" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer3" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer4" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer5" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer6" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer7" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer8" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  		<img id="layer9" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" /><%
+			} else {
+		%> >
+  		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" /><% 
+			}
+		}
+		%>
+  	</div>
+
+	% if (config 'copyright') {
+	<p id="copyright">
+		&copy;
+		<%= 1900 + (localtime)[5] %>
+		<%= config 'copyright' %>
+	</p>
+	% }
+	<p id="built_with">
+		Mojo::Debut => built with
+		<a href="http://memowe.github.com/contenticious">contenticious</a>,
+		on top of <a href="http://mojolicio.us/">Mojolicious</a>.
+	</p><!--footer -->
+  </div>
+
+  <div id="transparent_background" style="min-width:460px"></div>
+  <div id="home_screen" style="min-width:460px">
+	  <div id="trademark">
+					 Integrative:<br />
+					   &nbsp;Web:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Services:<br />     
+	  </div>
+	  
+	  <div id="title" class="titles" style="min-width:460px">
+		<h1><%
+	{ 
+		no strict 'vars';
+		if( defined $header ) {
+			%><%= $header %><%
+		} else { 
+			%><span style="color:#00FF00">Real</span><span style="color:rgb(17,187,255)">~Currents</span><%
+		}
+	}	
+		%></h1><br />
+			<!--span id='mode'>reading: </span><a id='read_site' href=''></a-->
+		</div>
+
+		<div id="content" style="min-width:460px">
 %= content
-</div><!-- content -->
-</div><!-- main -->
-<div id="footer">
-    % if (config 'copyright') {
-    <p id="copyright">
-        &copy;
-        <%= 1900 + (localtime)[5] %>
-        <%= config 'copyright' %>
-    </p>
-    % }
-    <p id="built_with">
-        Mojo::Debut => built with
-        <a href="http://memowe.github.com/contenticious">contenticious</a>,
-        on top of <a href="http://mojolicio.us/">Mojolicious</a>.
-    </p>
-</div><!-- footer -->
+<% 
+{ 
+	no strict 'vars';
+  	if( defined $canvasApp ){ 
+	# If URI for a Canvas app is provided, initialize "uni-sol">"layer1"
+%><a id="js-demos" href="https://github.com/Revlin/js-demos#readme"></a>
+  <script type="text/javascript" id="cvSrc" src="<%= $canvasApp %>"></script>
+  <script type="text/javascript">
+	function load() {
+		
+		if (typeof Debugger === "function") { 
+			//Debugger.on = false;
+		} else {
+			window.Debugger = {
+				log: function() {
+					/* no debugger.js */
+				}
+			};
+		}
+		
+		/* Find the developer heading and update the value */
+		jQuery('h1').each(function(idx) {
+			if( this.innerHTML.match(/developer/) !== null ) {
+				this.innerHTML = ( window.location.toString().match(/uni-sol/) !== null )?
+								"Revlin John":
+								"John Hall";
+			}
+		} );
+		var canvas=document.createElement("canvas");
+		canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
+		canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+		document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
+		canvas.addEventListener( "click", function(evt) {
+			var git_link = document.getElementById("js-demos");
+			git_link.target = "_blank";
+			event = document.createEvent( "MouseEvent" );
+			event.initEvent( evt.type, true, true );
+			for( var e
+			in evt ){
+				event[e] = evt[e];
+			}
+			evt.preventDefault();
+			git_link.dispatchEvent(event, true);
+		}, false );
+		canvasApp(canvas);
+		if( typeof jQuery === "function" ) {
+			jQuery('.cycle-slideshow').cycle('goto', 1);
+			jQuery('.cycle-slideshow').cycle('pause');
+		}
+		
+
+<%
+	} elsif( defined $svgApp ) { 
+	# If URI for an SVG file is provided, initialize "uni-sol">"layer1"
+%>
+  	<script type="text/javascript">
+	function load() {
+		
+		if (typeof Debugger === "function") { 
+			//Debugger.on = false;
+		} else {
+			window.Debugger = {
+				log: function() {
+					/* no debugger.js */
+				}
+			};
+		}
+		
+		/* Find the developer heading and update the value */
+		jQuery('h1').each(function(idx) {
+			if( this.innerHTML.match(/developer/) !== null ) {
+				this.innerHTML = ( window.location.toString().match(/uni-sol/) !== null )?
+								"Revlin John":
+								"John Hall";
+			}
+		} );
+		
+		if( typeof jQuery === "function" && (window.navigator.userAgent.match(/Android/) === null) ) {
+			document.getElementById("layer1").src = "<%= $svgApp %>";
+			jQuery('.cycle-slideshow').cycle('goto', 1);
+			jQuery('.cycle-slideshow').cycle('pause');
+		}
+		
+		return;
+		
+	
+<%
+	} else {
+%>
+  	<script type="text/javascript">
+	function load() {
+		
+		if (typeof Debugger === "function") { 
+			//Debugger.on = false;
+		} else {
+			window.Debugger = {
+				log: function() {
+					/* no debugger.js */
+				}
+			};
+		}
+		
+		/* Find the developer heading and update the value */
+		jQuery('h1').each(function(idx) {
+			Debugger.log( this.innerHTML.match(/developer/) );
+			if( this.innerHTML.match(/developer/) !== null ) {
+				this.innerHTML = ( window.location.toString().match(/uni-sol/) !== null )?
+								"Revlin John":
+								"John Hall";
+			}
+		} );
+<%
+	}
+%>
+	}
+  	</script>
+<%
+} 
+%>
+			<div id='mojo-version'>
+				<p><img src="/images/triad.png" /></p>
+				<a href="/mojolicious">Mojolicious</a><br /> 
+			</div>
+			<br /><br /><br />
+		</div><!-- content -->
+  </div>
+  
 </body>
 </html>
