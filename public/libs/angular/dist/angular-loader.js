@@ -1,6 +1,6 @@
 /**
- * @license AngularJS v1.3.9-local+sha.4a66fd2
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.4.4-local+sha.ef2ad06
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
 
@@ -38,46 +38,34 @@
 
 function minErr(module, ErrorConstructor) {
   ErrorConstructor = ErrorConstructor || Error;
-  return function () {
-    var code = arguments[0],
-      prefix = '[' + (module ? module + ':' : '') + code + '] ',
-      template = arguments[1],
-      templateArgs = arguments,
-      stringify = function (obj) {
-        if (typeof obj === 'function') {
-          return obj.toString().replace(/ \{[\s\S]*$/, '');
-        } else if (typeof obj === 'undefined') {
-          return 'undefined';
-        } else if (typeof obj !== 'string') {
-          return JSON.stringify(obj);
-        }
-        return obj;
-      },
-      message, i;
+  return function() {
+    var SKIP_INDEXES = 2;
 
-    message = prefix + template.replace(/\{\d+\}/g, function (match) {
-      var index = +match.slice(1, -1), arg;
+    var templateArgs = arguments,
+      code = templateArgs[0],
+      message = '[' + (module ? module + ':' : '') + code + '] ',
+      template = templateArgs[1],
+      paramPrefix, i;
 
-      if (index + 2 < templateArgs.length) {
-        arg = templateArgs[index + 2];
-        if (typeof arg === 'function') {
-          return arg.toString().replace(/ ?\{[\s\S]*$/, '');
-        } else if (typeof arg === 'undefined') {
-          return 'undefined';
-        } else if (typeof arg !== 'string') {
-          return toJson(arg);
-        }
-        return arg;
+    message += template.replace(/\{\d+\}/g, function(match) {
+      var index = +match.slice(1, -1),
+        shiftedIndex = index + SKIP_INDEXES;
+
+      if (shiftedIndex < templateArgs.length) {
+        return toDebugString(templateArgs[shiftedIndex]);
       }
+
       return match;
     });
 
-    message = message + '\nhttp://errors.angularjs.org/1.3.9-local+sha.4a66fd2/' +
+    message += '\nhttp://errors.angularjs.org/1.4.4-local+sha.ef2ad06/' +
       (module ? module + '/' : '') + code;
-    for (i = 2; i < arguments.length; i++) {
-      message = message + (i == 2 ? '?' : '&') + 'p' + (i-2) + '=' +
-        encodeURIComponent(stringify(arguments[i]));
+
+    for (i = SKIP_INDEXES, paramPrefix = '?'; i < templateArgs.length; i++, paramPrefix = '&') {
+      message += paramPrefix + 'p' + (i - SKIP_INDEXES) + '=' +
+        encodeURIComponent(toDebugString(templateArgs[i]));
     }
+
     return new ErrorConstructor(message);
   };
 }
@@ -378,7 +366,7 @@ function setupModuleLoader(window) {
           config(configFn);
         }
 
-        return  moduleInstance;
+        return moduleInstance;
 
         /**
          * @param {string} provider

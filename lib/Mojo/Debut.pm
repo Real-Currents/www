@@ -114,6 +114,9 @@ sub startup {
 	$r->get('/styles/(:stylesheet).css')
 	  ->to(controller => 'Stylesheet', action => 'load');
 
+	# Normal route to controller
+	$r->get('/')->to(cb => sub{ +shift->render(template => 'index', format => 'html') });
+
 	# Default route to site index if default page exists
 	$log->debug( "Checking for default page... " );
 	opendir $content, 'public' or die "$!\n";

@@ -1,6 +1,6 @@
 /**
- * @license AngularJS v1.3.9-local+sha.4a66fd2
- * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.4.4-local+sha.ef2ad06
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
@@ -75,7 +75,7 @@
  *
  * However, including generic messages may not be useful enough to match all input fields, therefore,
  * `ngMessages` provides the ability to override messages defined in the remote template by redefining
- * then within the directive container.
+ * them within the directive container.
  *
  * ```html
  * <!-- a generic template of error messages known as "my-custom-messages" -->
@@ -114,7 +114,7 @@
  *
  * Whenever the `ngMessages` directive contains one or more visible messages then the `.ng-active` CSS
  * class will be added to the element. The `.ng-inactive` CSS class will be applied when there are no
- * animations present. Therefore, CSS transitions and keyframes as well as JavaScript animations can
+ * messages present. Therefore, CSS transitions and keyframes as well as JavaScript animations can
  * hook into the animations whenever these classes are added/removed.
  *
  * Let's say that our HTML code for our messages container looks like so:
@@ -178,7 +178,7 @@ angular.module('ngMessages', [])
     * at a time and this depends on the prioritization of the messages within the template. (This can
     * be changed by using the ng-messages-multiple on the directive container.)
     *
-    * A remote template can also be used to promote message reuseability and messages can also be
+    * A remote template can also be used to promote message reusability and messages can also be
     * overridden.
     *
     * {@link module:ngMessages Click here} to learn more about `ngMessages` and `ngMessage`.
@@ -245,12 +245,12 @@ angular.module('ngMessages', [])
 
         var messages = [];
         this.registerMessage = function(index, message) {
-          for(var i = 0; i < messages.length; i++) {
-            if(messages[i].type == message.type) {
-              if(index != i) {
+          for (var i = 0; i < messages.length; i++) {
+            if (messages[i].type == message.type) {
+              if (index != i) {
                 var temp = messages[index];
                 messages[index] = messages[i];
-                if(index < messages.length) {
+                if (index < messages.length) {
                   messages[i] = temp;
                 } else {
                   messages.splice(0, i); //remove the old one (and shift left)
@@ -267,7 +267,7 @@ angular.module('ngMessages', [])
 
           var found;
           angular.forEach(messages, function(message) {
-            if((!found || multiple) && truthyVal(values[message.type])) {
+            if ((!found || multiple) && truthyVal(values[message.type])) {
               message.attach();
               found = true;
             } else {
@@ -300,7 +300,7 @@ angular.module('ngMessages', [])
         });
 
         var tpl = $attrs.ngMessagesInclude || $attrs.include;
-        if(tpl) {
+        if (tpl) {
           $templateRequest(tpl)
             .then(function processTemplate(html) {
               var after, container = angular.element('<div/>').html(html);
@@ -364,10 +364,10 @@ angular.module('ngMessages', [])
 
         var commentNode = $element[0];
         var parentNode = commentNode.parentNode;
-        for(var i = 0, j = 0; i < parentNode.childNodes.length; i++) {
+        for (var i = 0, j = 0; i < parentNode.childNodes.length; i++) {
           var node = parentNode.childNodes[i];
-          if(node.nodeType == COMMENT_NODE && node.nodeValue.indexOf('ngMessage') >= 0) {
-            if(node === commentNode) {
+          if (node.nodeType == COMMENT_NODE && node.nodeValue.indexOf('ngMessage') >= 0) {
+            if (node === commentNode) {
               index = j;
               break;
             }
@@ -376,17 +376,17 @@ angular.module('ngMessages', [])
         }
 
         ngMessages.registerMessage(index, {
-          type : $attrs.ngMessage || $attrs.when,
-          attach : function() {
-            if(!element) {
+          type: $attrs.ngMessage || $attrs.when,
+          attach: function() {
+            if (!element) {
               $transclude($scope, function(clone) {
                 $animate.enter(clone, null, $element);
                 element = clone;
               });
             }
           },
-          detach : function(now) {
-            if(element) {
+          detach: function() {
+            if (element) {
               $animate.leave(element);
               element = null;
             }

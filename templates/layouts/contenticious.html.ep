@@ -7,33 +7,18 @@
 	<meta name="viewport" content="width=device-width,user-scalable=no" />
 	
   	<link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
-	<link rel='stylesheet' type='text/css' href='/styles/contenticious.css' />
 	<link rel='stylesheet' type='text/css' href='/styles/main.css' />
   	<link rel='stylesheet' type='text/css' href='/styles/width.css' />
+  
+  	<!--script type="text/javascript" src="/libs/angular/dist/angular.min.js"></script-->
+  	<!--script type="text/javascript" src="/libs/jquery/dist/jquery.min.js"></script-->
+  	<!--script type="text/javascript" src="/libs/jquery-cycle/build/jquery.cycle2.min.js"></script-->
 	
 </head>
 <body>
   <div id="uni-sol" style="min-width:460px">
-  	<div <%
-		{ no strict 'vars'; 
-			if( (defined $svgApp) ){ 
-		%>class="cycle-slideshow" style="z-index: -1" data-cycle-speed="1500" data-cycle-loop="1" data-cycle-allow-wrap="false" data-cycle-reverse="false">
-  		<img id="layer0" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  	<div>
   		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer2" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer3" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer4" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer5" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer6" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer7" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer8" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
-  		<img id="layer9" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" /><%
-			} else {
-		%> >
-  		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" /><% 
-			}
-		}
-		%>
   	</div>
 
 	% if (config 'copyright') {
@@ -44,18 +29,17 @@
 	</p>
 	% }
 	<p id="built_with">
-		Mojo::Debut => built with
-		<a href="http://memowe.github.com/contenticious">contenticious</a>,
-		on top of <a href="http://mojolicio.us/">Mojolicious</a>.
+		...built with
+		<a href="http://memowe.github.com/contenticious">contenticious</a>.
 	</p><!--footer -->
   </div>
 
   <div id="transparent_background" style="min-width:460px"></div>
   <div id="home_screen" style="min-width:460px">
 	  <div id="trademark">
-					 Integrative:<br />
-					   &nbsp;Web:<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Services:<br />     
+							Integrative:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Apps:<br />     
 	  </div>
 	  
 	  <div id="title" class="titles" style="min-width:460px">
@@ -65,7 +49,9 @@
 		if( defined $header ) {
 			%><%= $header %><%
 		} else { 
-			%><span style="color:#00FF00">Real</span><span style="color:rgb(17,187,255)">~Currents</span><%
+			%><a href="/">
+				<span style="color:#00FF00">Real</span><span style="color:rgb(17,187,255)">~Currents</span>
+			</a><%
 		}
 	}	
 		%></h1><br />
@@ -74,14 +60,19 @@
 
 		<div id="content" style="min-width:460px">
 %= content
+
+
+  
+<script type="text/javascript" src="/scripts/Debugger.js"></script>
+<script type="text/javascript" src="/scripts/control.js"></script>
 <% 
 { 
 	no strict 'vars';
   	if( defined $canvasApp ){ 
 	# If URI for a Canvas app is provided, initialize "uni-sol">"layer1"
 %><a id="js-demos" href="https://github.com/Revlin/js-demos#readme"></a>
-  <script type="text/javascript" id="cvSrc" src="<%= $canvasApp %>"></script>
-  <script type="text/javascript">
+<script type="text/javascript" id="cvSrc" src="<%= $canvasApp %>"></script>
+<script type="text/javascript">
 	function load() {
 		
 		if (typeof Debugger === "function") { 
@@ -129,7 +120,7 @@
 	} elsif( defined $svgApp ) { 
 	# If URI for an SVG file is provided, initialize "uni-sol">"layer1"
 %>
-  	<script type="text/javascript">
+<script type="text/javascript">
 	function load() {
 		
 		if (typeof Debugger === "function") { 
@@ -163,7 +154,7 @@
 <%
 	} else {
 %>
-  	<script type="text/javascript">
+<script type="text/javascript">
 	function load() {
 		
 		if (typeof Debugger === "function") { 
@@ -189,13 +180,13 @@
 	}
 %>
 	}
-  	</script>
+</script>
 <%
 } 
 %>
 			<div id='mojo-version'>
 				<p><img src="/images/triad.png" /></p>
-				<a href="/mojolicious">Mojolicious</a><br /> 
+				<a href="http://Mojolicio.us">Mojolicious</a><br /> 
 			</div>
 			<br /><br /><br />
 		</div><!-- content -->
