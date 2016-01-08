@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
     % my $t = join ' - ' => grep { $_ } stash('title'), config('name');
     <title><%= $t || 'contenticious!' %></title>
-    <meta charset="UTF-8">
-    <meta http-equiv="content-type" content="text/html">
+    <meta charset="UTF-8"></meta>
+    <meta http-equiv="content-type" content="text/html"></meta>
     <link rel="stylesheet" type="text/css" href="/styles/contenticious.css" />
     <link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" />
 	
