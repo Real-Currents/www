@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
-    % my $t = join ' - ' => grep { $_ } stash('title'), config('name');
+    <!--% my $t = join ' - ' => grep { $_ } stash('title'), config('name'); %-->
     <title><%= $t || 'contenticious!' %></title>
-    <meta charset="UTF-8"></meta>
-    <meta http-equiv="content-type" content="text/html"></meta>
+    <meta charset="UTF-8" />
+    <meta http-equiv="content-type" content="text/html" />
     <link rel="stylesheet" type="text/css" href="/styles/contenticious.css" />
     <link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" />
 	
@@ -22,13 +22,13 @@
   		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
   	</div>
 
-	% if (config 'copyright') {
+	<% if (config 'copyright') { %>
 	<p id="copyright">
 		&copy;
 		<%= 1900 + (localtime)[5] %>
 		<%= config 'copyright' %>
 	</p>
-	% }
+	<% } %>
 	<p id="built_with">
 		...built with
 		<a href="http://memowe.github.com/contenticious">contenticious</a>.
