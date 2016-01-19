@@ -44,7 +44,7 @@ sub startup {
     
     # Add content directory as path to static files
     my $static = $self->static;
-    push @{$static->paths}, ($ENV{PWD});
+    push @{$static->paths}, ($config->{pages_dir});
 
 	$log->debug( "Close content dir" );
 	closedir $content or die "$!\n";
@@ -59,11 +59,12 @@ sub startup {
 
 		# Match request path to content path for content resources (images, audio, video, etc.)
 		for my $cpath (@content_dirs) {
-			if( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
-				$path =~ s/($cpath)/content\/$cpath/;
-				$log->debug( "Modified request is ". $req->url->path($path) );
-				
-			} elsif( $path =~ /\/$cpath$/ ) {
+			#if( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
+			#	$path =~ s/($cpath)/content\/$cpath/;
+			#	$log->debug( "Modified request is ". $req->url->path($path) );
+			#	
+			#} els
+            if( $path =~ /\/$cpath$/ ) {
 				$path =~ s/($cpath)/$1\//;
 				$log->debug( "Modified request is ". $req->url->path($path) );
 				$self->redirect_to($path);
