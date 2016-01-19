@@ -1,7 +1,7 @@
 {
     pages_dir   => app->home->rel_dir('content'),
     dump_dir    => app->home->rel_dir('public'),
-    name        => 'Real~Currents => Integrative Web Services',
+    name        => 'Mojo::Debut',
     copyright   => '',
     cached      => 0,
     perldoc     => 1,

@@ -3,7 +3,8 @@ log
 man
 .gitmodules.save
 .net-heroku
-lib/contenticious
+content/dev
+Contenticious*
 t/heroku.t
 contact_list.json
 contacts_list.json
