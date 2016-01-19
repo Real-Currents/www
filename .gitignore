@@ -1,6 +1,7 @@
 bin
 log
 man
+.gitmodules.save
 .net-heroku
 lib/contenticious
 t/heroku.t
