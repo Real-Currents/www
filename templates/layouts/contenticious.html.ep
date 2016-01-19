@@ -3,7 +3,7 @@
     <% my $t = join ' - ' => grep { $_ } stash('title'), config('name'); %>
     <title><%= $t || 'contenticious!' %></title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="/styles/contenticious.css" />
+    <!--link rel="stylesheet" type="text/css" href="/styles/contenticious.css" /-->
     <link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" />
 	
   	<link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
@@ -57,140 +57,19 @@
 		%></h1><br />
 			<!--span id='mode'>reading: </span><a id='read_site' href=''></a-->
 		</div>
+        <br />
+        <br />
 
 		<div id="content" style="min-width:460px">
 %= content
 
-
-  
-<script type="text/javascript" src="/scripts/Debugger.js"></script>
-<script type="text/javascript" src="/scripts/control.js"></script>
-<% 
-{ 
-	no strict 'vars';
-  	if( defined $canvasApp ){ 
-	# If URI for a Canvas app is provided, initialize "uni-sol">"layer1"
-%><a id="js-demos" href="https://github.com/Revlin/js-demos#readme"></a>
-<script type="text/javascript" id="cvSrc" src="<%= $canvasApp %>"></script>
-<script type="text/javascript">
-	function load() {
-		
-		if (typeof Debugger === "function") { 
-			//Debugger.on = false;
-		} else {
-			window.Debugger = {
-				log: function() {
-					/* no debugger.js */
-				}
-			};
-		}
-		
-		/* Find the developer heading and update the value */
-		jQuery('h1').each(function(idx) {
-			if( this.innerHTML.match(/developer/) !== null ) {
-				this.innerHTML = ( window.location.toString().match(/uni-sol/) !== null )?
-								"Revlin John":
-								"John Hall";
-			}
-		} );
-		var canvas=document.createElement("canvas");
-		canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
-		canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
-		document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
-		canvas.addEventListener( "click", function(evt) {
-			var git_link = document.getElementById("js-demos");
-			git_link.target = "_blank";
-			event = document.createEvent( "MouseEvent" );
-			event.initEvent( evt.type, true, true );
-			for( var e
-			in evt ){
-				event[e] = evt[e];
-			}
-			evt.preventDefault();
-			git_link.dispatchEvent(event, true);
-		}, false );
-		canvasApp(canvas);
-		if( typeof jQuery === "function" ) {
-			jQuery('.cycle-slideshow').cycle('goto', 1);
-			jQuery('.cycle-slideshow').cycle('pause');
-		}
-		
-
-<%
-	} elsif( defined $svgApp ) { 
-	# If URI for an SVG file is provided, initialize "uni-sol">"layer1"
-%>
-<script type="text/javascript">
-	function load() {
-		
-		if (typeof Debugger === "function") { 
-			//Debugger.on = false;
-		} else {
-			window.Debugger = {
-				log: function() {
-					/* no debugger.js */
-				}
-			};
-		}
-		
-		/* Find the developer heading and update the value */
-		jQuery('h1').each(function(idx) {
-			if( this.innerHTML.match(/developer/) !== null ) {
-				this.innerHTML = ( window.location.toString().match(/uni-sol/) !== null )?
-								"Revlin John":
-								"John Hall";
-			}
-		} );
-		
-		if( typeof jQuery === "function" && (window.navigator.userAgent.match(/Android/) === null) ) {
-			document.getElementById("layer1").src = "<%= $svgApp %>";
-			jQuery('.cycle-slideshow').cycle('goto', 1);
-			jQuery('.cycle-slideshow').cycle('pause');
-		}
-		
-		return;
-		
-	
-<%
-	} else {
-%>
-<script type="text/javascript">
-	function load() {
-		
-		if (typeof Debugger === "function") { 
-			//Debugger.on = false;
-		} else {
-			window.Debugger = {
-				log: function() {
-					/* no debugger.js */
-				}
-			};
-		}
-		
-		/* Find the developer heading and update the value */
-		jQuery('h1').each(function(idx) {
-			Debugger.log( this.innerHTML.match(/developer/) );
-			if( this.innerHTML.match(/developer/) !== null ) {
-				this.innerHTML = ( window.location.toString().match(/uni-sol/) !== null )?
-								"Revlin John":
-								"John Hall";
-			}
-		} );
-<%
-	}
-%>
-	}
-</script>
-<%
-} 
-%>
 			<div id='mojo-version'>
 				<p><img src="/images/triad.png" /></p>
 				<a href="http://Mojolicio.us">Mojolicious</a><br /> 
 			</div>
 			<br /><br /><br />
 		</div><!-- content -->
-  </div>
-  
-</body>
-</html>
+    </div>
+    
+    <script type="text/javascript" src="/scripts/Debugger.js"></script>
+</body></html>

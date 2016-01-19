@@ -20,7 +20,7 @@ File: main.css
 
 html, body {
   min-width:			460px;
-  background-color:		#000;
+  background:		#000;
 }
 
 body {
@@ -46,7 +46,7 @@ body {
 
 * h1 {
   margin-bottom: 		8px;
-  font-size: 			3.5em;
+  font-size:            2.8em;
   font-weight: 			bold;
   color:  				#7f7fff;
   line-height: 			105%;
@@ -125,15 +125,14 @@ div#home_screen {
   min-width: 			460px;
   min-height: 			100%;
   padding-top:			8px;
-  border-top: 			1px solid rgb(60, 60, 60);
-  /*overflow: 			hidden;*/
 }
 
 div#trademark {
   float: 				left;
   min-width: 			82px;
   max-width: 			82px;
-  height: 				80px;
+  height: 				10%;
+  min-height:           68px;
   max-height: 			80px;
   margin-right: 		10px;
   color:  				#7f7fff;
@@ -152,7 +151,10 @@ div#title {
   height: 				80px;
   max-height: 			72px;
   margin: 				0 0 0 80px;
-  /*border-bottom: 		1px solid #fff;*/
+  margin-top: -2px;
+  margin-left: 10px;
+  margin-bottom: -12px;
+  font-variant: small-caps;
 }
 
 div.titles * {
@@ -175,7 +177,10 @@ div#content {
   min-width: 			360px;
   max-height: 			80px;
   margin: 				0 0 0 86px;
-  /*border-bottom: 		1px solid #fff;*/
+  width: 472px;
+  min-width: 360px;
+  max-height: 80px;
+  margin: 0px 0px 0px 86px;
 }
 
 div#content * img {
@@ -206,6 +211,8 @@ div#content div#mojo-version * img {
 }
 
 div#content h3 {
+    width:          480px;
+    min-width:      360px;
 	min-height:		154px;
 	border-top:		2px solid #7f7fff;
 	padding-top:	6px;
@@ -215,11 +222,14 @@ div#content h4 {
 	padding-top:	6px;
 	padding-right:	4px;
 }
-div#content p {
-	margin-top: 	-10px;
+div#content > p, div#content > h4 {
+	margin-top: 	10px;
+	margin-bottom:	30px;
+}
+div#content > ul {
 	margin-bottom:	60px;
 }
-div#content a {
+div#content * a {
   font-weight: 			bold;
   text-decoration: 		none;
   color: 				#a277ff;

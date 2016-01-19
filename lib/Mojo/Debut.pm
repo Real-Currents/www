@@ -3,23 +3,31 @@ use base qw(Contenticious);
 use Mojo::Log;
 use IO::Handle;
 
-my $content; # Handle for the content dir
+my $content = new IO::Handle; # Handle for the content dir
 
 # This method will run once at server start
 sub startup {
 	my $self = shift;
 
+    # find out config file name
+    my $config_file = $ENV{CONTENTICIOUS_CONFIG};
+    $config_file  //= $self->home->rel_file('config');
+
+    # load config
+    my $config = $self->plugin(Config => {file => $config_file});
+    
+	my( @content_items,
+        @content_dirs,
+        @pages, 
+        @header_links 
+    );
+
 	my $log = $self->log;
-	my @content_items;
-	my @content_dirs;
-	my @pages;
-	my @header_links;
-	$content = new IO::Handle;
 
     $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 
 	$log->debug( "Check for content dir: " );
-	opendir $content, 'public/content' or die "'content' dir does not exist: $!\n";
+	opendir $content, $config->{pages_dir} or die "'content' dir does not exist: $!\n";
 
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
@@ -33,6 +41,10 @@ sub startup {
 			@content_dirs = (@content_dirs, $content_item);
 		}
 	}
+    
+    # Add content directory as path to static files
+    my $static = $self->static;
+    push @{$static->paths}, ($ENV{PWD});
 
 	$log->debug( "Close content dir" );
 	closedir $content or die "$!\n";
