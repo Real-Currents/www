@@ -86,7 +86,7 @@ sub startup {
 	$self->hook(before_dispatch => $reqCheck);
 
 	# Helper to browse documentation under "/perldoc"
-	#$self->plugin('PODRenderer');
+	$self->plugin('PODRenderer');
 
 	# Create a new helper for stashing style rules in templates
 	$self->helper(
