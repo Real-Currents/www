@@ -1,6 +1,3 @@
 [submodule "lib/contenticious"]
 	path = lib/contenticious
 	url = https://github.com/Real-Currents/contenticious.git
-[submodule "public/content/dev"]
-	path = public/content/dev
-	url = https://github.com/dancingfrog/dev.git
