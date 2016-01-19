@@ -9,14 +9,17 @@ my $content = new IO::Handle; # Handle for the content dir
 sub startup {
 	my $self = shift;
 
-    # find out config file name
+    # Find out config file name
     my $config_file = $ENV{CONTENTICIOUS_CONFIG};
     $config_file  //= $self->home->rel_file('config');
 
-    # load config
+    # Load config
     my $config = $self->plugin(Config => {file => $config_file});
     
-	my( @content_items,
+    my $content_root = $config->{pages_dir} || 'content';
+    
+	my( $default,
+        @content_items,
         @content_dirs,
         @pages, 
         @header_links 
@@ -27,16 +30,20 @@ sub startup {
     $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 
 	$log->debug( "Check for content dir: " );
-	opendir $content, $config->{pages_dir} or die "'content' dir does not exist: $!\n";
+	opendir $content, $content_root or die "Cannot access content dir: $!\n";
 
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
 		$log->debug( "$content_item \n" );
+        
+        $log->debug( "Checking for default page... " );
+        ($default) = $content_item =~ /(?:default|index|readme)\.(?:html|md)/i;
+        
 		@content_items = (@content_items, $content_item);
 		if( $content_item =~ m/(\w+)\.md/ ){
 			@pages = (@pages, $content_item);
 			($content_item) =$1 ;
-			@header_links = (@header_links, $content_item) unless( $content_item eq 'Home' );
+			@header_links = (@header_links, $content_item) unless( $content_item =~ /Home/ );
 		} else {
 			@content_dirs = (@content_dirs, $content_item);
 		}
@@ -44,7 +51,7 @@ sub startup {
     
     # Add content directory as path to static files
     my $static = $self->static;
-    push @{$static->paths}, ($config->{pages_dir});
+    push @{$static->paths}, ($content_root);
 
 	$log->debug( "Close content dir" );
 	closedir $content or die "$!\n";
@@ -89,7 +96,7 @@ sub startup {
 	# Helper to browse documentation under "/perldoc"
 	$self->plugin('PODRenderer');
 
-	# Create a new helper for stashing style rules in templates
+	# Create a new helper for stashing names of style templates in content/layout templates
 	$self->helper(
 		'style' => sub {
 			my $c     = shift;
@@ -127,37 +134,39 @@ sub startup {
 	$r->get('/styles/(:stylesheet).css')
 	  ->to(controller => 'Stylesheet', action => 'load');
 
-	# Normal route to controller
-	$r->get('/')->to(cb => sub{ +shift->render(template => 'index', format => 'html') });
+	# Default route to site index if no default in content adn default page/template exists
+    unless( $default ) {
+        # Normal route to controller
+        #$r->get('/')->to(cb => sub{ +shift->render(template => 'index', format => 'html') });
+        
+        opendir $content, 'public' or die "$!\n";
+        while( my $page = readdir $content ) {
+            my $index = undef;
+            my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
+            if( $default ) {
+                $index = sub {
+                    my $self = shift;
+                    $log->debug( "Found default: "+ $default);
+                    $log->debug( "Get default route..." );
+                    $self->reply->static($default);
+                };
+                
+                $r->get('/')->to(cb => $index);
+                $r->get('/default')->to(cb => $index);
+                $r->get('/index')->to(cb => $index);
+                $r->get('/index.html')->to(cb => $index);
 
-	# Default route to site index if default page exists
-	$log->debug( "Checking for default page... " );
-	opendir $content, 'public' or die "$!\n";
-	while( my $page = readdir $content ) {
-		my $index = undef;
-		my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
-		if( $default ) {
-			$index = sub {
-				my $self = shift;
-				$log->debug( "Found default: "+ $default);
-				$log->debug( "Get default route..." );
-				$self->reply->static($default);
-			};
-			$r->get('/')->to(cb => $index);
-		
-		} else {
-			$index = sub {
-				my $self = shift;
-				$log->debug( "No default");
-				$log->debug( "Get default route..." );
-				$self->reply->static('../index.html');
-			};
-		}
-		$r->get('/default')->to(cb => $index);
-		$r->get('/index')->to(cb => $index);
-		$r->get('/index.html')->to(cb => $index);
-	}
-	closedir $content or die "$!\n";
+            } else {
+                $index = sub {
+                    my $self = shift;
+                    $log->debug( "No default");
+                    $log->debug( "Get default route..." );
+                    $self->reply->static('../index.html');
+                };
+            }
+        }
+        closedir $content or die "$!\n";
+    }
 
 	# Normal route to controller
 	$r->get('/products/(:product_page)')
@@ -172,7 +181,7 @@ sub startup {
 		$self->render(text => <<HTML);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
-  <title>Default Index</title>
+  <title>$config->{title}</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="refresh" content="0;URL='products/'" />
 </head>
