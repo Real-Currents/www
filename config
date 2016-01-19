@@ -1,5 +1,5 @@
 {
-    pages_dir   => app->home->rel_dir('public/content'),
+    pages_dir   => app->home->rel_dir('content'),
     dump_dir    => app->home->rel_dir('public'),
     name        => 'Real~Currents => Integrative Web Services',
     copyright   => '',
