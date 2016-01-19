@@ -61,27 +61,28 @@ sub startup {
 		my $self = shift;
 		my $req = $self->req;
 		my $path = $req->url->path;
-	    
+	     
 		$log->debug( "Requested resource is ". $req->url );
 
 		# Match request path to content path for content resources (images, audio, video, etc.)
 		for my $cpath (@content_dirs) {
-			#if( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
+            next if( $cpath =~ /\.$/ );
+              
+            if( ($path =~ /$cpath$/) and !($cpath =~ /\.[\w|\+]+$/) ) {              
+				$path =~ s/(\/$cpath)/$1\// unless( $path =~ /$cpath\.[\w|\+]+$/ );
+				$log->debug( "Modified request is ". $req->url->path($path) );
+				$self->redirect_to($path);
+				
+			} #elsif( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
 			#	$path =~ s/($cpath)/content\/$cpath/;
 			#	$log->debug( "Modified request is ". $req->url->path($path) );
 			#	
-			#} els
-            if( $path =~ /\/$cpath$/ ) {
-				$path =~ s/($cpath)/$1\//;
-				$log->debug( "Modified request is ". $req->url->path($path) );
-				$self->redirect_to($path);
-				
-			} elsif( $path =~ /\/$cpath\.html$/ ) {
-				$path =~ s/($cpath)\.html/$1\//;
-				$log->debug( "Modified request is ". $req->url->path($path) );
-				$self->redirect_to($path);
-				
-			}
+			#} elsif( $path =~ /\/$cpath\.html$/ ) {
+			#	$path =~ s/($cpath)\.html/$1\//;
+			#	$log->debug( "Modified request is ". $req->url->path($path) );
+			#	$self->redirect_to($path);
+			#	
+			#}
 		}
 
 		# Remove route heading for these types if more than one node in path
