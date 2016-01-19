@@ -66,12 +66,13 @@ sub startup {
 
 		# Match request path to content path for content resources (images, audio, video, etc.)
 		for my $cpath (@content_dirs) {
-            #if( $path =~ /\/$cpath$/ ) {
-			#	$path =~ s/($cpath)/$1\// unless( $path =~ /\/$cpath\.[\w|\+]+$/ );
-			#	$log->debug( "Modified request is ". $req->url->path($path) );
-			#	$self->redirect_to($path);
-			#	
-			#} #elsif( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
+            if( $path =~ /\/$cpath$/ ) {
+				$log->debug( "Cpath in request is ". $cpath );                
+				$path =~ s/($cpath)/$1\// unless( $path =~ /\/$cpath\.[\w|\+]+$/ );
+				$log->debug( "Modified request is ". $req->url->path($path) );
+				$self->redirect_to($path);
+				
+			} #elsif( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
 			#	$path =~ s/($cpath)/content\/$cpath/;
 			#	$log->debug( "Modified request is ". $req->url->path($path) );
 			#	
