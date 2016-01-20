@@ -1,10 +1,11 @@
+.gitmodules.save
+.net-heroku
+t/heroku.t
+
 bin
 log
 man
-.gitmodules.save
-.net-heroku
-content/dev
+
 Contenticious*
-t/heroku.t
-contact_list.json
-contacts_list.json
+content/dev
+content/js-demos
