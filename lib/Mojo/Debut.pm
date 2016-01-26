@@ -1,5 +1,6 @@
 package Mojo::Debut;
 use base qw(Contenticious);
+use Cwd qw(chdir cwd getcwd);
 use Mojo::Log;
 use IO::Handle;
 
@@ -13,8 +14,8 @@ sub startup {
     my $config_file = $ENV{CONTENTICIOUS_CONFIG};
     $config_file  //= $self->home->rel_file('config');
 
-    # Load config
-    my $config = $self->plugin(Config => {file => $config_file});
+    # Config
+    our $config = $self->plugin(Config => {file => $config_file});
     
     my $content_root = $config->{pages_dir} || 'content';
     
@@ -25,8 +26,9 @@ sub startup {
         @header_links 
     );
 
-	my $log = $self->log;
-
+    # Logger
+	our $log = $self->log;
+    
     $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 
 	$log->debug( "Check for content dir: " );
@@ -74,15 +76,16 @@ sub startup {
 				$self->redirect_to($path);
 				
 			} #elsif( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
-			#	$path =~ s/($cpath)/content\/$cpath/;
-			#	$log->debug( "Modified request is ". $req->url->path($path) );
-			#	
-			#} elsif( $path =~ /\/$cpath\.html$/ ) {
-			#	$path =~ s/($cpath)\.html/$1\//;
-			#	$log->debug( "Modified request is ". $req->url->path($path) );
-			#	$self->redirect_to($path);
-			#	
-			#}
+#				$path =~ s/($cpath)/content\/$cpath/;
+#				$log->debug( "Modified request is ". $req->url->path($path) );
+#				$self->redirect_to($path);
+#				
+#			} #elsif( $path =~ /\/$cpath\.html$/ ) {
+#				$path =~ s/($cpath)\.html/$1\//;
+#				$log->debug( "Modified request is ". $req->url->path($path) );
+#				$self->redirect_to($path);
+#				
+#			}
 		}
 
 		# Remove route heading for these types if more than one node in path
@@ -110,7 +113,7 @@ sub startup {
 	);
 
 	# Router
-	my $r = $self->routes;
+	our $r = $self->routes;
 	my %page_params = (
 		controller => 'Product',
 		action	=> 'load',
@@ -118,6 +121,9 @@ sub startup {
 		pages => \@pages,
 		header_links => \@header_links
 	);
+      
+    # Handle some special routes for the developer profile links
+    do 'content/dev/index.pl';
 
 	# Route to list contacts
 	$r->get('/contacts/list')
