@@ -1,41 +1,75 @@
-<!doctype html>
-<html>
-<head>
-    % my $t = join ' - ' => grep { $_ } stash('title'), config('name');
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <% my $t = join ' - ' => grep { $_ } stash('title'), config('name'); %>
     <title><%= $t || 'contenticious!' %></title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/styles/contenticious.css" />
+    <meta charset="UTF-8" />
+    <!--link rel="stylesheet" type="text/css" href="/styles/contenticious.css" /-->
     <link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" />
+	
+  	<link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
+	<link rel='stylesheet' type='text/css' href='/styles/main.css' />
+  	<link rel='stylesheet' type='text/css' href='/styles/width.css' />
+  
+  	<!--script type="text/javascript" src="/libs/angular/dist/angular.min.js"></script-->
+  	<!--script type="text/javascript" src="/libs/jquery/dist/jquery.min.js"></script-->
+  	<!--script type="text/javascript" src="/libs/jquery-cycle/build/jquery.cycle2.min.js"></script-->
 	
 </head>
 <body>
-<div id="top">
-    <div id="inner">
-        <p id="name"><a href="<%= rel_url_for 'content', cpath => '' %>">
-            <%= config('name') // 'contenticious!' %>
-        </a></p>
-%= include 'navi', only => 1
-    </div><!-- inner -->
-</div><!-- top -->
-<div id="main">
-%= include 'navi', only_not => 1
-<div id="content">
+  <div id="uni-sol" style="min-width:460px">
+  	<div>
+  		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+  	</div>
+
+	<% if (config 'copyright') { %>
+	<p id="copyright">
+		&copy;
+		<%= 1900 + (localtime)[5] %>
+		<%= config 'copyright' %>
+	</p>
+	<% } %>
+	<p id="built_with">
+		...built with
+		<a href="http://memowe.github.com/contenticious">contenticious</a>.
+	</p><!--footer -->
+  </div>
+
+  <div id="transparent_background" style="min-width:460px"></div>
+  <div id="home_screen" style="min-width:460px">
+	  <div id="trademark">
+							Integrative:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Apps:<br />     
+	  </div>
+	  
+	  <div id="title" class="titles" style="min-width:460px">
+		<h1><%
+	{ 
+		no strict 'vars';
+		if( defined $header ) {
+			%><%= $header %><%
+		} else { 
+			%><a href="/">
+				<span style="color:#00FF00">Real</span><span style="color:rgb(17,187,255)">~Currents</span>
+			</a><%
+		}
+	}	
+		%></h1><br />
+			<!--span id='mode'>reading: </span><a id='read_site' href=''></a-->
+		</div>
+        <br />
+        <br />
+
+		<div id="content" style="min-width:460px">
 %= content
-</div><!-- content -->
-</div><!-- main -->
-<div id="footer">
-    % if (config 'copyright') {
-    <p id="copyright">
-        &copy;
-        <%= 1900 + (localtime)[5] %>
-        <%= config 'copyright' %>
-    </p>
-    % }
-    <p id="built_with">
-        Mojo::Debut => built with
-        <a href="http://memowe.github.com/contenticious">contenticious</a>,
-        on top of <a href="http://mojolicio.us/">Mojolicious</a>.
-    </p>
-</div><!-- footer -->
-</body>
-</html>
+
+			<div id='mojo-version'>
+				<p><img src="/images/triad.png" /></p>
+				<a href="/perldoc" target="_blank">Mojolicious</a><br /> 
+			</div>
+			<br /><br /><br />
+		</div><!-- content -->
+    </div>
+    
+    <script type="text/javascript" src="/scripts/Debugger.js"></script>
+</body></html>
