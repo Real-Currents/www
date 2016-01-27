@@ -4,31 +4,34 @@ use Cwd qw(chdir cwd getcwd);
 use Mojo::Log;
 use IO::Handle;
 
-my $content = new IO::Handle; # Handle for the content dir
+our($config, $content);
 
 # This method will run once at server start
 sub startup {
 	my $self = shift;
 
-    # Find out config file name
-    my $config_file = $ENV{CONTENTICIOUS_CONFIG};
-    $config_file  //= $self->home->rel_file('config');
+	# Find out config file name
+	my $config_file = $ENV{CONTENTICIOUS_CONFIG};
+	$config_file  //= $self->home->rel_file('config');
 
-    # Config
-    our $config = $self->plugin(Config => {file => $config_file});
-    
+	# Config
+	our $config = $self->plugin(Config => {file => $config_file});
+
+	# Handle for the content dir
+	$content = new IO::Handle;
+
     my $content_root = $config->{pages_dir} || 'content';
-    
+
 	my( $default,
         @content_items,
         @content_dirs,
-        @pages, 
-        @header_links 
+        @pages,
+        @header_links
     );
 
     # Logger
 	our $log = $self->log;
-    
+
     $log->debug( "Running Mojolicious v". Mojolicious->VERSION );
 
 	$log->debug( "Check for content dir: " );
@@ -37,10 +40,10 @@ sub startup {
 	# Loop through files in content dir
 	while( my $content_item = readdir $content ) {
 		$log->debug( "$content_item \n" );
-        
+
         $log->debug( "Checking for default page... " );
         ($default) = $content_item =~ /(?:default|index|readme)\.(?:html|md)/i;
-        
+
 		@content_items = (@content_items, $content_item);
 		if( $content_item =~ m/(\w+)\.md/ ){
 			@pages = (@pages, $content_item);
@@ -50,7 +53,7 @@ sub startup {
 			@content_dirs = (@content_dirs, $content_item);
 		}
 	}
-    
+
     # Add content directory as path to static files
     my $static = $self->static;
     push @{$static->paths}, ($content_root);
@@ -63,28 +66,28 @@ sub startup {
 		my $self = shift;
 		my $req = $self->req;
 		my $path = $req->url->path;
-	     
+
 		$log->debug( "Requested resource is ". $req->url );
 
 		# Match request path to content path for content resources (images, audio, video, etc.)
 		for my $cpath (@content_dirs) {
             next if( $cpath =~ /\.$/ );
-              
-            if( ($path =~ /$cpath$/) and !($cpath =~ /\.[\w|\+]+$/) ) {              
+
+            if( ($path =~ /$cpath$/) and !($cpath =~ /\.[\w|\+]+$/) ) {
 				$path =~ s/(\/$cpath)/$1\// unless( $path =~ /$cpath\.[\w|\+]+$/ );
 				$log->debug( "Modified request is ". $req->url->path($path) );
 				$self->redirect_to($path);
-				
+
 			} #elsif( $path =~ /(\/$cpath\/)(images|audio|video)\/.+/ ) {
 #				$path =~ s/($cpath)/content\/$cpath/;
 #				$log->debug( "Modified request is ". $req->url->path($path) );
 #				$self->redirect_to($path);
-#				
+#
 #			} #elsif( $path =~ /\/$cpath\.html$/ ) {
 #				$path =~ s/($cpath)\.html/$1\//;
 #				$log->debug( "Modified request is ". $req->url->path($path) );
 #				$self->redirect_to($path);
-#				
+#
 #			}
 		}
 
@@ -115,88 +118,82 @@ sub startup {
 	# Router
 	our $r = $self->routes;
 	my %page_params = (
-		controller => 'Product',
-		action	=> 'load',
 		content_items => \@content_items,
 		pages => \@pages,
 		header_links => \@header_links
 	);
-      
+
+  	# Default route to site index if no default in content && default page/template exists
+  	unless( $default ) {
+	  # Normal route to controller
+	  #$r->get('/')->to(cb => sub{ +shift->render(template => 'index', format => 'html') });
+
+	  opendir $content, 'public' or die "$!\n";
+	  while( my $page = readdir $content ) {
+		  my $index = undef;
+		  my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
+		  if( $default ) {
+			  $index = sub {
+				  my $self = shift;
+				  $log->debug( "Found default: "+ $default);
+				  $log->debug( "Get default route..." );
+				  $self->reply->static($default);
+			  };
+
+			  $r->get('/')->to(cb => $index);
+			  $r->get('/default')->to(cb => $index);
+			  $r->get('/index')->to(cb => $index);
+			  $r->get('/index.html')->to(cb => $index);
+
+		  } else {
+			  $index = sub {
+				  my $self = shift;
+				  $log->debug( "No default");
+				  $log->debug( "Get default route..." );
+				  $self->reply->static('../index.html');
+			  };
+		  }
+	  }
+	  closedir $content or die "$!\n";
+  	}
+
     # Handle some special routes for the developer profile links
     do 'content/dev/index.pl';
 
 	# Route to list contacts
 	$r->get('/contacts/list')
-	  ->to(controller => 'Contact', action => 'list');
+	  ->to( controller => 'Contact', action => 'list' );
 
 	# Route to save contact
 	$r->post('/contacts')
-	  ->to(controller => 'Contact', action => 'save');
+	  ->to( controller => 'Contact', action => 'save' );
 
 	# Route to javascript templates before pages
 	$r->get('/scripts/(:javascript).js')
-	  ->to(controller => 'JavaScript', action => 'load');
+	  ->to( controller => 'JavaScript', action => 'load' );
 
 	# Route to stylesheet templates before pages
 	$r->get('/styles/(:stylesheet).css')
-	  ->to(controller => 'Stylesheet', action => 'load');
-
-	# Default route to site index if no default in content adn default page/template exists
-    unless( $default ) {
-        # Normal route to controller
-        #$r->get('/')->to(cb => sub{ +shift->render(template => 'index', format => 'html') });
-        
-        opendir $content, 'public' or die "$!\n";
-        while( my $page = readdir $content ) {
-            my $index = undef;
-            my( $default ) = $page =~ /((?:default|index|readme)\.html)/i;
-            if( $default ) {
-                $index = sub {
-                    my $self = shift;
-                    $log->debug( "Found default: "+ $default);
-                    $log->debug( "Get default route..." );
-                    $self->reply->static($default);
-                };
-                
-                $r->get('/')->to(cb => $index);
-                $r->get('/default')->to(cb => $index);
-                $r->get('/index')->to(cb => $index);
-                $r->get('/index.html')->to(cb => $index);
-
-            } else {
-                $index = sub {
-                    my $self = shift;
-                    $log->debug( "No default");
-                    $log->debug( "Get default route..." );
-                    $self->reply->static('../index.html');
-                };
-            }
-        }
-        closedir $content or die "$!\n";
-    }
+	  ->to( controller => 'Stylesheet', action => 'load' );
 
 	# Normal route to controller
-	$r->get('/products/(:product_page)')
-	  ->to(%page_params);
+	my $products = $r->get('/products')
+	  ->to( controller => 'Product', action => 'default' );
 
-	$r->get('/products*')
-	  ->to(%page_params);
+	$products->get('/')
+ 	  ->to(
+ 	  		controller => 'Product',
+   			action	=> 'load',
+ 			%page_params
+ 		);
 
-	$r->get('/products')
-	  ->to(cb => sub {
-		my $self = shift;
-		$self->render(text => <<HTML);
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-  <title>$config->{title}</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta http-equiv="refresh" content="0;URL='products/'" />
-</head>
-<body>
-</body></html>
-HTML
+	$products->get('/(:product_page)')
+	  ->to(
+	  		controller => 'Product',
+  			action	=> 'load',
+			%page_params
+		);
 
-	});
 
 	$self->Contenticious::startup(@_); #SUPER::startup(@_);
 

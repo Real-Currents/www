@@ -1,10 +1,30 @@
 package Mojo::Debut::Controller::Product;
 use Mojo::Base 'Mojolicious::Controller';
+use Mojo::Log;
+
+sub default {
+	  my $self = shift;
+	  $self->render(text => <<HTML);
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>$Mojo::Debut::config->{title}</title>
+<meta charset="UTF-8" />
+<meta http-equiv="refresh" content="0;URL='/products/'" />
+</head>
+<body>
+</body></html>
+HTML
+
+}
 
 # This action will render a template
 sub load {
 	my $self = shift;
+	my $log = Mojo::Log->new();
 	my $msg = "";
+    my $path = $self->req->url->path;
+
+	$log->debug( "Path to product: ". $path );
 
 	if( $self->stash('product_page') && ($self->stash('product_page') =~ /([\w|\-]+)/) ) {
 		error( $self, @_ ) if(! $1 );
@@ -13,6 +33,10 @@ sub load {
 		) or $self->reply->static(
 			"/$1.html"
 		) or error( $self, @_ );
+
+	} elsif( $path !~ /\/$/ ) {
+		$log->debug( "Path does not end with /" );
+		$self->redirect_to('/products/');
 
 	} else {
 		$self->render_maybe(

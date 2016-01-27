@@ -65,7 +65,7 @@
 
 			<div id='mojo-version'>
 				<p><img src="/images/triad.png" /></p>
-				<a href="/perldoc" target="_blank">Mojolicious</a><br /> 
+				<a href="/perldoc">Mojolicious</a><br /> 
 			</div>
 			<br /><br /><br />
 		</div><!-- content -->
