@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <% my $t = join ' - ' => grep { $_ } stash('title'), config('name'); %>
-    <title><%= $t || 'contenticious!' %></title>
+    <% $t = config('name'); %>
+    <title><%= $t || 'Mojo::Debut' %></title>
     <meta charset="UTF-8" />
     <!--link rel="stylesheet" type="text/css" href="/styles/contenticious.css" /-->
-    <link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" />
+    <!--link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" /-->
 	
   	<link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
 	<link rel='stylesheet' type='text/css' href='/styles/main.css' />
@@ -46,8 +47,8 @@
 		<h1><%
 	{ 
 		no strict 'vars';
-		if( defined $header ) {
-			%><%= $header %><%
+		if( defined $t and ($t !~ /Real~Currents/) ) {
+			%><%= $t || 'Mojo::Debut' %><%
 		} else { 
 			%><a href="/">
 				<span style="color:#00FF00">Real</span><span style="color:rgb(17,187,255)">~Currents</span>
