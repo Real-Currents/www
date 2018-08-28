@@ -6,4 +6,4 @@
 	url = https://github.com/dancingfrog/README.git
 [submodule "content/js-demos"]
 	path = content/js-demos
-	url = http://real-currents.com:7990/scm/uni/js-demos.git
+	url = https://github.com/Real-Currents/js-demos.git
