@@ -4,3 +4,6 @@
 [submodule "content/dev"]
 	path = content/dev
 	url = https://github.com/dancingfrog/README.git
+[submodule "content/js-demos"]
+	path = content/js-demos
+	url = https://github.com/Real-Currents/js-demos.git
