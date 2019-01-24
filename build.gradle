@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+description = 'Real~Currents'
+group = 'com.real-currents'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'com.fizzed', name: 'rocker-compiler', version:'1.0.0'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version:'2.2.12'
+    compile group: 'io.netty', name: 'netty-transport-native-kqueue', version:'4.1.27.Final', classifier:'osx-x86_64'
+    compile group: 'io.netty', name: 'netty-transport-native-epoll', version:'4.1.27.Final', classifier:'linux-x86_64'
+    compile group: 'io.reactiverse', name: 'reactive-pg-client', version:'0.10.7'
+    compile group: 'io.vertx', name: 'vertx-core', version:'3.6.0.CR1'
+}
