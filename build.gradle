@@ -1,3 +1,19 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.fizzed:rocker-gradle-plugin:1.2.1"
+    }
+}
+
+plugins {
+    id "com.fizzed.rocker" version "1.2.1"
+}
+
+apply plugin: "com.fizzed.rocker"
 apply plugin: 'java'
 apply plugin: 'maven'
 
@@ -9,10 +25,48 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-     maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
+    maven { url "http://repo.maven.apache.org/maven2" }
 }
+
+rocker {
+    // (All settings are shown with their defaults)
+    // 
+    // Skips building templates all together
+    skip false
+    // Base directory for generated java sources, actual target is sub directory 
+    // with the name of the source set. The value is passed through project.file(). 
+    outputBaseDirectory = "$buildDir/generated-src/rocker"
+    // Base directory for the directory where the hot reload feature 
+    // will (re)compile classes to at runtime (and where `rocker-compiler.conf`
+    // is generated, which is used by RockerRuntime.getInstance().setReloading(true)).
+    // The actual target is a sub directory with the name of the source set. 
+    // The value is passed through project.file().
+    classBaseDirectory = "$buildDir/classes"
+    failOnError true
+    skipTouch true
+    // must not be empty when skipTouch is equal to false
+    touchFile ""
+    javaVersion '1.8'
+    extendsClass null
+    extendsModelClass null
+    optimize null
+    discardLogicWhitespace null
+    targetCharset null
+    suffixRegex null
+    postProcessing null
+}
+
+sourceSets {
+    main {
+        rocker {
+            srcDir('src/main/java')
+        }
+    }
+}
+
 dependencies {
-    compile group: 'com.fizzed', name: 'rocker-compiler', version:'1.0.0'
+    compile group: 'com.fizzed', name: 'rocker-runtime', version: '1.2.1'
     compile group: 'javax.xml.bind', name: 'jaxb-api', version:'2.2.12'
     compile group: 'io.netty', name: 'netty-transport-native-kqueue', version:'4.1.27.Final', classifier:'osx-x86_64'
     compile group: 'io.netty', name: 'netty-transport-native-epoll', version:'4.1.27.Final', classifier:'linux-x86_64'
