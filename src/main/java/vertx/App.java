@@ -27,11 +27,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class App extends AbstractVerticle implements Handler<HttpServerRequest> {
 
@@ -56,7 +54,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
   }
 
-  static Logger logger = LoggerFactory.getLogger(App.class.getName());
+  private static Logger logger = LoggerFactory.getLogger(App.class);
 
   private static final String PATH_PLAINTEXT = "/plaintext";
   private static final String PATH_JSON = "/json";
@@ -70,7 +68,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final CharSequence RESPONSE_TYPE_JSON = HttpHeaders.createOptimized("application/json");
 
   private static final String HELLO_WORLD = "Hello, world!";
-  private static final Buffer HELLO_WORLD_BUFFER = Buffer.factory.directBuffer(HELLO_WORLD, "UTF-8");
+//  private static final Buffer HELLO_WORLD_BUFFER = Buffer.factory.directBuffer(HELLO_WORLD, "UTF-8");
 
   private static final CharSequence HEADER_SERVER = HttpHeaders.createOptimized("server");
   private static final CharSequence HEADER_DATE = HttpHeaders.createOptimized("date");
@@ -102,6 +100,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   @Override
   public void start() throws Exception {
     int port = 8080;
+    Map<String, String> env = System.getenv();
     server = vertx.createHttpServer(new HttpServerOptions());
     server.requestHandler(App.this).listen(port);
     dateString = createDateHeader();
@@ -110,17 +109,9 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
         HEADER_SERVER, SERVER,
         HEADER_DATE, dateString,
         HEADER_CONTENT_LENGTH, HELLO_WORLD_LENGTH };
-    JsonObject config = config();
     vertx.setPeriodic(1000, id -> plaintextHeaders[5] = dateString = createDateHeader());
-    PgPoolOptions options = new PgPoolOptions();
-    options.setDatabase(config.getString("database"));
-    options.setHost(config.getString("host"));
-    options.setPort(config.getInteger("port", 5432));
-    options.setUser(config.getString("username"));
-    options.setPassword(config.getString("password"));
-    options.setCachePreparedStatements(true);
-    client = PgClient.pool(vertx, new PgPoolOptions(options).setMaxSize(1));
-    pool = PgClient.pool(vertx, new PgPoolOptions(options).setMaxSize(4));
+    client = PgClient.pool(vertx, env.get("DATABASE_URL") + "?sslmode=require&ssl=true");
+    pool = PgClient.pool(vertx, env.get("DATABASE_URL") + "?sslmode=require&ssl=true");
   }
 
   @Override
@@ -162,7 +153,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     for (int i = 0;i < plaintextHeaders.length; i+= 2) {
       headers.add(plaintextHeaders[i], plaintextHeaders[i + 1]);
     }
-    response.end(HELLO_WORLD_BUFFER);
+    response.end(Buffer.factory.directBuffer(HELLO_WORLD, "UTF-8"));
   }
 
   private void handleJson(HttpServerRequest request) {
@@ -182,7 +173,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
    * @return a random world number
    */
   private static int randomWorld() {
-    return 1 + ThreadLocalRandom.current().nextInt(10000);
+    return 1 + ThreadLocalRandom.current().nextInt(100);
   }
 
   private void handleDb(HttpServerRequest req) {

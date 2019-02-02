@@ -59,6 +59,9 @@ rocker {
 
 sourceSets {
     main {
+        java {
+            srcDir('src/main/java')
+        }
         rocker {
             srcDir('src/main/java')
         }
@@ -68,8 +71,11 @@ sourceSets {
 dependencies {
     compile group: 'com.fizzed', name: 'rocker-runtime', version: '1.2.1'
     compile group: 'javax.xml.bind', name: 'jaxb-api', version:'2.2.12'
-    compile group: 'io.netty', name: 'netty-transport-native-kqueue', version:'4.1.27.Final', classifier:'osx-x86_64'
-    compile group: 'io.netty', name: 'netty-transport-native-epoll', version:'4.1.27.Final', classifier:'linux-x86_64'
-    compile group: 'io.reactiverse', name: 'reactive-pg-client', version:'0.10.7'
-    compile group: 'io.vertx', name: 'vertx-core', version:'3.6.0.CR1'
+    compile group: 'io.netty', name: 'netty-transport-native-kqueue', version:'4.1.33.Final', classifier:'osx-x86_64'
+    compile group: 'io.netty', name: 'netty-transport-native-epoll', version:'4.1.33.Final', classifier:'linux-x86_64'
+    compile group: 'io.reactiverse', name: 'reactive-pg-client', version:'0.11.2'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.13'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.13'
+    compile group: 'io.vertx', name: 'vertx-core', version:'3.6.2'
+    compile group: 'io.vertx', name: 'vertx-lang-kotlin', version:'3.6.2'
 }
