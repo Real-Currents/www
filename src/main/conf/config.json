@@ -1,3 +1,4 @@
 {
-  "maxPoolSize": 64
+  "maxPoolSize": 64,
+  "port": 8088
 }
