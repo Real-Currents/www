@@ -4,18 +4,21 @@
     <% $t = config('name'); %>
     <title><%= $t || 'Mojo::Debut' %></title>
     <meta charset="UTF-8" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width,user-scalable=no" />
     <!--link rel="stylesheet" type="text/css" href="/styles/contenticious.css" /-->
     <!--link rel="stylesheet" type="text/css" href="/styles/mojolicious.css" /-->
 
-  	<link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
-	<link rel='stylesheet' type='text/css' href='/styles/main.css' />
-  	<link rel='stylesheet' type='text/css' href='/styles/width.css' />
+    <link rel='stylesheet' type='text/css' href='/fonts/font-test.b64.css' />
+    <link rel='stylesheet' type='text/css' href='/styles/main.css' />
+    <link rel='stylesheet' type='text/css' href='/styles/width.css' />
 
-  	<!--script type="text/javascript" src="/libs/angular/dist/angular.min.js"></script-->
-  	<!--script type="text/javascript" src="/libs/jquery/dist/jquery.min.js"></script-->
-  	<!--script type="text/javascript" src="/libs/jquery-cycle/build/jquery.cycle2.min.js"></script-->
+    <!--script type="text/javascript" src="/libs/angular/dist/angular.min.js"></script-->
+    <script type="text/javascript" src="/libs/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/libs/jquery-cycle/build/jquery.cycle2.min.js"></script>
 
     <script type="text/javascript" src="/scripts/Debugger.js"></script>
+    <script type="text/javascript" src="/scripts/control.js"></script>
 
 </head>
 <body>
@@ -85,7 +88,6 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
 }
 </script><![endif]-->
 
-    <script type="text/javascript" src="/scripts/control.js"></script>
     <script type="text/javascript">
   	function load() {
 
