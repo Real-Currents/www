@@ -23,20 +23,3 @@
 </p>
 
 <script type="text/javascript" id="cvSrc" src="/js-demos/scripts/interact-visualizer.js"></script>
-<script type="text/javascript">
-(function() {
-	window.onload = function(){
-		canvasApp(window.cv);
-	};
-	if (typeof Debugger === "function") {
-		Debugger.on = false;
-		return;
-	} else {
-		window.Debugger = {
-			log: function() {
-				/* no debugger.js */
-			}
-		};
-	}
-} )();
-</script>
