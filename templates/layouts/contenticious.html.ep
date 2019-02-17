@@ -15,6 +15,8 @@
   	<!--script type="text/javascript" src="/libs/jquery/dist/jquery.min.js"></script-->
   	<!--script type="text/javascript" src="/libs/jquery-cycle/build/jquery.cycle2.min.js"></script-->
 
+    <script type="text/javascript" src="/scripts/Debugger.js"></script>
+
 </head>
 <body>
   <div id="uni-sol" style="min-width:460px">
@@ -72,5 +74,36 @@
 		</div><!-- content -->
     </div>
 
-    <script type="text/javascript" src="/scripts/Debugger.js"></script>
+	<div id="control">
+		<a id="toggle_control" href="."></a>
+	</div>
+
+<!--[if lt IE 9]><script type="text/javascript">
+try{ document.createElement('canvas').getContext('2d');} catch(e){
+document.getElementsByTagName('body')[0].onload='';
+alert("Your browser is missing some essential features and capabilities.\n Please install a recent release of Mozilla Firefox or Google Chrome.");
+}
+</script><![endif]-->
+
+    <script type="text/javascript" src="/scripts/control.js"></script>
+    <script type="text/javascript">
+  	function load() {
+
+  		if (typeof Debugger === "function") {
+  			//Debugger.on = false;
+  		} else {
+  			window.Debugger = {
+  				log: function() {
+  					/* no debugger.js */
+  				}
+  			};
+  		}
+
+  		var canvas=document.createElement("canvas");
+  		canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
+  		canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+  		document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
+
+  		canvasApp(canvas);
+    </script>
 </body></html>
