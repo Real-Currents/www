@@ -21,7 +21,7 @@
     <script type="text/javascript" src="/scripts/control.js"></script>
 
 </head>
-<body>
+<body onload="load();">
   <div id="uni-sol" style="min-width:460px">
   	<div>
   		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
@@ -107,5 +107,6 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   		document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
 
   		canvasApp(canvas);
+    }
     </script>
 </body></html>
