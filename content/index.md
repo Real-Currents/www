@@ -6,12 +6,23 @@
 [Meet the Developer](/dev)
 <br /><br />
 
-<div id="stream" style="text-align: center">
-<br />
-  <audio id="aud1" preload="auto" controls="true">
-    <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/audio/morning-01.mp3" />
-    <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/audio/morning-01.ogg" />
-  </audio>
+<h1 id="text_title" style="display:none;">The Word</h1>
+<p id="text_copy" style="display:none;">
+</p>
+
+<span id="background01" style="display:none; color:hsla(53,8%,37%,0.005)"></span>
+<span id="background02" style="display:none; color:hsla(168,15%,65%,0.025)"></span>
+<span id="background03" style="display:none; color:hsla(0%,0%,0%,1.0)"></span>
+
+<span id="foreground01" style="display:none; color:rgb(255,255,255)"></span>
+<span id="foreground02" style="display:none; color:hsla(210, 100%, 70%, 1.0)"></span>
+<span id="foreground03" style="display:none; color:hsla(150, 100%, 70%, 1.0)"></span>
+
+<div id="stream" style="display:none; text-align:center">
+  <video id="aud1" preload="auto"  controls="true">
+    <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.mp4" />
+    <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.ogx" />
+  </video>
 </div>
 
 <a href="http://www.w3.org/2010/05/video/mediaevents.html" target="_blank">Media Help</a>
