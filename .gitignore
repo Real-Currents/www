@@ -1,9 +1,7 @@
-.gitmodules.save
+.gradle
+.idea
 .net-heroku
-t/heroku.t
 
 bin
 log
 man
-
-Contenticious*
