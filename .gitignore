@@ -1,6 +1,7 @@
+.DS_Store
 .gradle
 .idea
-.net-heroku
+*.iml
 
 bin
 log
