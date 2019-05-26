@@ -77,7 +77,7 @@
     </div>
 
 	<div id="control">
-		<a id="toggle_control" href="." onclick="(function() { aud1.muted=false; this.innerHTML='Now Playing'; } ());"></a>
+		<a id="toggle_control" href="."></a>
 	</div>
 
 <!--[if lt IE 9]><script type="text/javascript">
@@ -91,15 +91,14 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   	function load() {
 
   		if (typeof Debugger === "function") {
-        		Debugger.on = false;
-        		return;
-        } else {
-            window.Debugger = {
-                log: function() {
-                    /* no debugger.js */
-                }
-            };
-        }
+  			//Debugger.on = false;
+  		} else {
+  			window.Debugger = {
+  				log: function() {
+  					/* no debugger.js */
+  				}
+  			};
+  		}
 
   		var canvas=document.createElement("canvas");
   		canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
