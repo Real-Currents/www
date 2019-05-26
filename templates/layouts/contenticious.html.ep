@@ -76,7 +76,7 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control">
+	<div id="control" onclick="(function() { aud1.muted=false; this.innerHTML='Now Playing'; } ());">
 		<a id="toggle_control" href="."></a>
 	</div>
 
@@ -91,7 +91,7 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   	function load() {
 
   		if (typeof Debugger === "function") {
-  			//Debugger.on = false;
+  			Debugger.on = false;
   		} else {
   			window.Debugger = {
   				log: function() {
