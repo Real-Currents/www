@@ -6,7 +6,7 @@
 [Meet the Developer](/dev)
 <br /><br />
 
-<h1 id="text_title" style="display:none;">The Word</h1>
+<h1 id="text_title" style="display:none;"></h1>
 <p id="text_copy" style="display:none;">
 </p>
 
@@ -19,7 +19,7 @@
 <span id="foreground03" style="display:none; color:hsla(150, 100%, 70%, 1.0)"></span>
 
 <div id="stream" style="display:none; text-align:center">
-  <video id="aud1" preload="auto"  controls="true">
+  <video id="aud1" preload="auto" muted="true" controls="true">
     <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.mp4" />
     <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.ogx" />
   </video>

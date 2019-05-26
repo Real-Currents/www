@@ -26,17 +26,17 @@ jQuery(function() {
 		var $this = jQuery(this);
 		$this.unbind();
 		return toggleControl( 'off', $this );
-	} ).html( 
-		"Hide Control" 
+	} ).html(
+		"Hide Control"
 	).attr('href', "#null");
 
 });
-	
+
 function toggleControl( on_off, $this ) {
 	var on_off = on_off || 'off',
 		$background = jQuery('#transparent_background');
 	if( on_off === 'off' ) {
-		$background.animate({ 
+		$background.animate({
 			'height': "0px",
 			'min-height': "0px",
 			'max-height': "0px"
@@ -49,7 +49,7 @@ function toggleControl( on_off, $this ) {
 		} );
 
 	} else {
-		$background.animate({ 
+		$background.animate({
 			'height': "6400px",
 			'min-height': "6400px",
 			'max-height': "6400px"
@@ -58,6 +58,8 @@ function toggleControl( on_off, $this ) {
 		$this.click(function($evt) {
 			var $this = jQuery(this);
 			$this.unbind();
+			aud1.muted=false;
+			this.innerHTML='Now Playing';
 			return toggleControl( 'off', $this );
 		} );
 	}
