@@ -99,11 +99,6 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
                     /* no debugger.js */
                 }
             };
-
-            setTimeout(function () {
-                Debugger.on = false;
-                return;
-            }, 333);
         }
 
   		var canvas=document.createElement("canvas");
