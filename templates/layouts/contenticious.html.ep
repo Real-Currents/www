@@ -91,14 +91,20 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   	function load() {
 
   		if (typeof Debugger === "function") {
-  			//Debugger.on = false;
-  		} else {
-  			window.Debugger = {
-  				log: function() {
-  					/* no debugger.js */
-  				}
-  			};
-  		}
+        		Debugger.on = false;
+        		return;
+        } else {
+            window.Debugger = {
+                log: function() {
+                    /* no debugger.js */
+                }
+            };
+
+            setTimeout(function () {
+                Debugger.on = false;
+                return;
+            }, 333);
+        }
 
   		var canvas=document.createElement("canvas");
   		canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
