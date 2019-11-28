@@ -58,8 +58,9 @@ function toggleControl( on_off, $this ) {
 		$this.click(function($evt) {
 			var $this = jQuery(this);
 			$this.unbind();
+			aud1.currentTime=0;
 			aud1.muted=false;
-			this.innerHTML='Now Playing';
+			$evt.target.innerHTML='Now Playing';
 			return toggleControl( 'off', $this );
 		} );
 	}

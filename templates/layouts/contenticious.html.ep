@@ -76,7 +76,7 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control" onclick="(function() { aud1.muted=false; this.innerHTML='Now Playing'; } ());">
+	<div id="control" onclick="(function(evt) { aud1.currentTime=0; aud1.muted=false; evt.target.innerHTML='Now Playing'; } (event));">
 		<a id="toggle_control" href="."></a>
 	</div>
 
