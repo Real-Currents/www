@@ -78,7 +78,7 @@
     </div>
 
 	<div id="control" onclick="(function(evt) { 
-if (evt.target.parentNode.innerHTML.match(/Now Playing/) === null) { evt.target.parentNode.innerHTML+='<br />Now Playing...'; aud1.currentTime=0; } setTimeout(function () { if (aud1.muted) { aud1.muted=false; } else { aud1.muted=true; } }, 333);
+if (evt.target.parentNode.className!=='playing') { evt.target.parentNode.className='playing'; aud1.currentTime=0; } setTimeout(function () { if (aud1.muted) { aud1.muted=false; } else { aud1.muted=true; } }, 333);
 } (event));" >
 		<a id="toggle_control" href="."></a>
 	</div>
