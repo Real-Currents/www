@@ -15,6 +15,7 @@
 
     <!--script type="text/javascript" src="/libs/angular/dist/angular.min.js"></script-->
     <script type="text/javascript" src="/libs/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/libs/jquery-cycle/build/jquery.cycle2.min.js"></script>
 
     <script type="text/javascript" src="/scripts/Debugger.js"></script>
     <script type="text/javascript" src="/scripts/control.js"></script>
@@ -76,7 +77,7 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control" onclick="(function(evt) { aud1.currentTime=0; aud1.muted=false; evt.target.innerHTML='Now Playing'; } (event));">
+	<div id="control" onclick="(function(evt) { if (evt.target.innerHTML !== 'Now Playing' ) { evt.target.innerHTML='Now Playing'; aud1.currentTime=0; } if (aud1.muted) { aud1.muted=false; } else { aud1.muted=true; } } (event));" >
 		<a id="toggle_control" href="."></a>
 	</div>
 
@@ -91,7 +92,7 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   	function load() {
 
   		if (typeof Debugger === "function") {
-  			Debugger.on = false;
+  			//Debugger.on = false;
   		} else {
   			window.Debugger = {
   				log: function() {
