@@ -77,7 +77,7 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control">
+	<div id="control" onclick="(function(evt) { if (evt.target.innerHTML !== 'Now Playing' ) { evt.target.innerHTML='Now Playing'; aud1.currentTime=0; } if (aud1.muted) { aud1.muted=false; } else { aud1.muted=true; } } (event));" >
 		<a id="toggle_control" href="."></a>
 	</div>
 
