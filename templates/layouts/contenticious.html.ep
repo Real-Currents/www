@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+d<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <% my $t = join ' - ' => grep { $_ } stash('title'), config('name'); %>
     <% $t = config('name'); %>
@@ -77,10 +77,8 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control" onclick="(function(evt) { 
-if (evt.target.parentNode.className!=='playing') { evt.target.parentNode.className='playing'; aud1.currentTime=0; } setTimeout(function () { if (aud1.muted) { aud1.muted=false; } else { aud1.muted=true; } }, 333);
-} (event));" >
-		<a id="toggle_control" href="."></a>
+	<div id="control" onclick="(function(evt) { if (evt.target.parentNode.className!=='playing' && aud1.muted===true) { evt.target.parentNode.className='playing'; aud1.currentTime=0; } } (event))" >
+		<a id="toggle_control" href="." onclick="setTimeout(function () { if (aud1.muted) aud1.muted=false; else aud1.muted=true; }, 533);"></a>
 	</div>
 
 <!--[if lt IE 9]><script type="text/javascript">
