@@ -19,6 +19,30 @@
 
     <script type="text/javascript" src="/scripts/Debugger.js"></script>
     <script type="text/javascript" src="/scripts/control.js"></script>
+    <script type="text/javascript">
+  	var canvas = (window.document.querySelector('canvas#cv') !== null) ?
+            window.document.querySelector('canvas#cv') :
+            window.document.createElement('canvas');
+
+  	function load() {
+            canvas.id = 'cv';
+  	    canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
+  	    canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+            document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
+
+  	    if (typeof Debugger === "function") {
+  	    	//Debugger.on = false;
+  	    } else {
+  		window.Debugger = {
+  		    log: function() {
+  		    /* no debugger.js */
+  		    }
+  		};
+  	    }
+
+  	    if (!!window.canvasApp) canvasApp(canvas);
+        }
+    </script>
 
 </head>
 <body onload="load();">
@@ -87,26 +111,4 @@ document.getElementsByTagName('body')[0].onload='';
 alert("Your browser is missing some essential features and capabilities.\n Please install a recent release of Mozilla Firefox or Google Chrome.");
 }
 </script><![endif]-->
-
-    <script type="text/javascript">
-  	function load() {
-
-  		if (typeof Debugger === "function") {
-  			//Debugger.on = false;
-  		} else {
-  			window.Debugger = {
-  				log: function() {
-  					/* no debugger.js */
-  				}
-  			};
-  		}
-
-  		var canvas=document.createElement("canvas");
-  		canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
-  		canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
-  		document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
-
-  		if (!!window.canvasApp) canvasApp(canvas);
-    }
-    </script>
 </body></html>
