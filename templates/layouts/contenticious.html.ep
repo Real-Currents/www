@@ -1,4 +1,4 @@
-d<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <% my $t = join ' - ' => grep { $_ } stash('title'), config('name'); %>
     <% $t = config('name'); %>
