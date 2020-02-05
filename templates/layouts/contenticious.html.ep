@@ -78,6 +78,7 @@
     </div>
 
 	<div id="control" onclick="(function(evt) { if (evt.target.parentNode.className!=='playing' && aud1.muted===true) { evt.target.parentNode.className='playing'; aud1.currentTime=0; setTimeout(function () { if (aud1.muted) aud1.muted=false; }, 533); } } (event))" >
+            <a id="toggle_control" href="#" onclick="(function(evt) { if (!!window.playVideo) window.playVideo(); aud1.currentTime=0; aud1.muted=false; window.userTriggered=true; } (event));">Hide Control</a>
 	</div>
 
 <!--[if lt IE 9]><script type="text/javascript">
