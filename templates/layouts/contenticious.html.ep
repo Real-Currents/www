@@ -77,8 +77,7 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control" onclick="(function(evt) { if (evt.target.parentNode.className!=='playing' && aud1.muted===true) { evt.target.parentNode.className='playing'; aud1.currentTime=0; } } (event))" >
-		<a id="toggle_control" href="." onclick="setTimeout(function () { if (aud1.muted) aud1.muted=false; else aud1.muted=true; }, 533);"></a>
+	<div id="control" onclick="(function(evt) { if (evt.target.parentNode.className!=='playing' && aud1.muted===true) { evt.target.parentNode.className='playing'; aud1.currentTime=0; setTimeout(function () { if (aud1.muted) aud1.muted=false; }, 533); } } (event))" >
 	</div>
 
 <!--[if lt IE 9]><script type="text/javascript">
