@@ -106,7 +106,7 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   		canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
   		document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
 
-  		canvasApp(canvas);
+  		if (!!window.canvasApp) canvasApp(canvas);
     }
     </script>
 </body></html>
