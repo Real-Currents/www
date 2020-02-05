@@ -96,11 +96,13 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
 
     function load() {
         canvas.id = 'cv';
-        canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
-  	canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+        if (window.innerWidth < 1024) {
+            canvas.width = window.innerWidth; //document.getElementById("layer1").getAttribute('width');
+            canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+        }
         document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
 
-  	if (typeof Debugger === "function") {
+        if (typeof Debugger === "function") {
   	    //Debugger.on = false;
   	} else {
   	    window.Debugger = {
@@ -110,7 +112,7 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   	    };
   	}
 
-  	if (!!window.canvasApp) canvasApp(canvas);
+        if (!!window.canvasApp) canvasApp(canvas);
     }
 </script>
 </body></html>
