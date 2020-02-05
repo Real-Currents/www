@@ -99,7 +99,20 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
         if (window.innerWidth < 1024) {
             canvas.width = window.innerWidth; //document.getElementById("layer1").getAttribute('width');
             canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.style.display = 'block';
+            canvas.style.margin = 'auto';
+            canvas.style.width = window.outerWidth + 'px';
+            if (window.outerWidth * 0.99 * canvas.height / canvas.width < window.innerHeight) {
+                canvas.style.height = window.outerWidth * canvas.height / canvas.width + 'px';
+            } else {
+                canvas.style.height = window.outerHeight * 0.99 + 'px';
+                canvas.style.width = window.outerHeight * canvas.width / canvas.height + 'px';
+            }
         }
+
         document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
 
         if (typeof Debugger === "function") {
