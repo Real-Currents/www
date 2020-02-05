@@ -113,6 +113,8 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
   	}
 
         if (!!window.canvasApp) canvasApp(canvas);
+
+        setTimeout(function () { window.document.body.style += ' overflow-y: scroll;'; }, 533);
     }
 </script>
 </body></html>
