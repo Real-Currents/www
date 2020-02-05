@@ -19,36 +19,13 @@
 
     <script type="text/javascript" src="/scripts/Debugger.js"></script>
     <script type="text/javascript" src="/scripts/control.js"></script>
-    <script type="text/javascript">
-  	var canvas = (window.document.querySelector('canvas#cv') !== null) ?
-            window.document.querySelector('canvas#cv') :
-            window.document.createElement('canvas');
-
-  	function load() {
-            canvas.id = 'cv';
-  	    canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
-  	    canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
-            document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
-
-  	    if (typeof Debugger === "function") {
-  	    	//Debugger.on = false;
-  	    } else {
-  		window.Debugger = {
-  		    log: function() {
-  		    /* no debugger.js */
-  		    }
-  		};
-  	    }
-
-  	    if (!!window.canvasApp) canvasApp(canvas);
-        }
-    </script>
 
 </head>
 <body onload="load();">
   <div id="uni-sol" style="min-width:460px">
   	<div>
   		<img id="layer1" alt="Blue Earth from Space" width="100%" src="/images/PlanetEarthBluePlanet.png" />
+		<canvas id='cv' width='1280' height='720'  style="display:none; image-rendering:optimizespeed ! important;">
   	</div>
 
 	<% if (config 'copyright') { %>
@@ -111,4 +88,29 @@ document.getElementsByTagName('body')[0].onload='';
 alert("Your browser is missing some essential features and capabilities.\n Please install a recent release of Mozilla Firefox or Google Chrome.");
 }
 </script><![endif]-->
+
+<script type="text/javascript">
+    var canvas = (window.document.querySelector('canvas#cv') !== null) ?
+        window.document.querySelector('canvas#cv') :
+        window.document.createElement('canvas');
+
+    function load() {
+        canvas.id = 'cv';
+        canvas.width = ( window.innerWidth > 1024 )? 1024: window.innerWidth; //document.getElementById("layer1").getAttribute('width');
+  	canvas.height = 9*canvas.width/16; //document.getElementById("layer1").getAttribute('height');
+        document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
+
+  	if (typeof Debugger === "function") {
+  	    //Debugger.on = false;
+  	} else {
+  	    window.Debugger = {
+  	        log: function() {
+  		    /* no debugger.js */
+  		}
+  	    };
+  	}
+
+  	if (!!window.canvasApp) canvasApp(canvas);
+    }
+</script>
 </body></html>
