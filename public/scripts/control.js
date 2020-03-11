@@ -41,12 +41,14 @@ function toggleControl( on_off, $this ) {
             'min-height': "0px",
             'max-height': "0px"
         }, 1100);
-        $this.html( "Show Control" );
-        $this.click(function($evt) {
-            var $this = jQuery(this);
-            $this.unbind();
-            return toggleControl( 'on', $this );
-        } );
+        window.setTimeout(function () {
+            $this.html( "Show Control" );
+            $this.click(function($evt) {
+                var $this = jQuery(this);
+                $this.unbind();
+                return toggleControl( 'on', $this );
+            } );
+        }, 533);
 
     } else {
         $background.animate({
