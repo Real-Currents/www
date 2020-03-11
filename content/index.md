@@ -30,7 +30,7 @@
 <p id="vstatus"></p>
 <p id="license" style="color:#fff">
 	<img src="http://i.creativecommons.org/l/by-sa/3.0/nz/88x31.png"  style="width: 88px;" alt="Creative Commons Licence"><br />
-	<em>These demos by <a href="mailto:john@real-currents.com">John</a> are licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/nz/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 License, 2009-2016</a></em>
+	<em>These demos by <a href="mailto:john@real-currents.com">John</a> are licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/nz/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 License, 2009-2020</a></em>
 </p>
 
 <script type="text/javascript" id="cvSrc" src="/js-demos/scripts/interact-visualizer.js"></script>
