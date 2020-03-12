@@ -56,13 +56,16 @@ function toggleControl( on_off, $this ) {
             'min-height': "6400px",
             'max-height': "6400px"
         }, 1100);
+        setTimeout(function () {
+            document.scrollingElement.scrollTop = 0;
+        }, 1200);
         $this.html( "Hide Control" );
         $this.click(function($evt) {
             var $this = jQuery(this);
             $this.unbind();
             aud1.currentTime=0;
             aud1.muted=false;
-            $evt.target.innerHTML='Now Playing';
+            $evt.target.innerHTML='Show Control';
             return toggleControl( 'off', $this );
         } );
     }
