@@ -78,8 +78,8 @@
 		</div><!-- content -->
     </div>
 
-	<div id="control" onclick="(function(evt) { if (evt.target.innerHTML=='Play') { evt.target.parentNode.className='playing'; setTimeout(function () { if (aud1.muted) aud1.muted=false; }, 533); } } (event))" >
-        <a id="toggle_control" href="#" onclick="(function(evt) { if (!!window.playVideo) window.playVideo(); window.userTriggered=true; window.document.querySelector('canvas#fathers').style='image-rendering: optimizespeed !important; width: 800px; height: 480px; margin-left: -160px; position: fixed; top: 25%;' } (event));">Hide Control</a>
+	<div id="control" onclick="(function(evt) { if (evt.target.innerHTML=='Play') { if (!!window.playVideo) { window.playVideo(); evt.target.parentNode.className='playing'; } setTimeout(function () { if (aud1.muted) aud1.muted=false; }, 533); } } (event))" >
+        <a id="toggle_control" href="#" onclick="(function(evt) { window.userTriggered=true; window.document.querySelector('canvas#fathers').style='image-rendering: optimizespeed !important; width: 960px; height: 540px; margin-left: -240px; position: fixed; top: 25%;' } (event));">Hide Control</a>
 	</div>
 
 <!--[if lt IE 9]><script type="text/javascript">
