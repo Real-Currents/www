@@ -1,13 +1,25 @@
 ## Revealing the Invisible
 ... with Interactive Web Visualizations built by conscientious developers who enjoy participating in the creative process with other heart-motivated souls ❤
 <br /><br />
-[Please email us](mailto:info@real-currents.com) if you have an idea for the web or mobile devices that you would like to bring to life.
+
+<div id="stream" style="text-align: center" onclick="(function(evt) { playVideo(); aud1.currentTime=0; aud1.muted=false; evt.target.innerHTML='Now Playing'; userTriggered=true; var control=window.document.querySelector('div#control'); control.onclick=''; control.children[0].innerHTML='Hide Control'; } (event));">
+<video id="aud1" preload="auto" muted="true" controls="true">
+<source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.mp4" />
+<source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.ogx" />
+</video>
+<a id="aud1_play" href="#">Play</a><br />
+<a href="http://www.w3.org/2010/05/video/mediaevents.html" target="_blank">Media Help</a>
 <br /><br />
+</div>
+
 [Meet the Developer](/dev)
 <br /><br />
+[Please email us](mailto:info@real-currents.com) if you have an idea for the web or mobile devices that you would like to bring to life.
+<br /><br />
 
-<h1 id="text_title" style="display:none;">The Word</h1>
+<h1 id="text_title" style="display:none;"></h1>
 <p id="text_copy" style="display:none;">
+Copy
 </p>
 
 <span id="background01" style="display:none; color:hsla(53,8%,37%,0.005)"></span>
@@ -17,15 +29,6 @@
 <span id="foreground01" style="display:none; color:rgb(255,255,255)"></span>
 <span id="foreground02" style="display:none; color:hsla(210, 100%, 70%, 1.0)"></span>
 <span id="foreground03" style="display:none; color:hsla(150, 100%, 70%, 1.0)"></span>
-
-<div id="stream" style="display:none; text-align:center">
-  <video id="aud1" preload="auto"  controls="true">
-    <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.mp4" />
-    <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.ogx" />
-  </video>
-</div>
-
-<a href="http://www.w3.org/2010/05/video/mediaevents.html" target="_blank">Media Help</a>
 
 <p id="vstatus"></p>
 <p id="license" style="color:#fff">
