@@ -2,8 +2,8 @@
 ... with Interactive Web Visualizations built by conscientious developers who enjoy participating in the creative process with other heart-motivated souls ❤
 <br /><br />
 
-<div id="stream" style="text-align: center" onclick="(function(evt) { playVideo(); aud1.currentTime=0; aud1.muted=false; evt.target.innerHTML='Now Playing'; userTriggered=true; var control=window.document.querySelector('div#control'); control.onclick=''; control.children[0].innerHTML='Hide Control'; } (event));">
-<video id="aud1" preload="auto" muted="true" controls="true">
+<div id="stream" style="text-align: center" onclick="(function(evt) { aud1.play(); aud1.currentTime=0; aud1.muted=false; evt.target.innerHTML='Now Playing'; userTriggered=true; var control=window.document.querySelector('div#control'); control.onclick=''; control.children[0].innerHTML='Hide Control'; } (event));">
+<video id="aud1" preload="auto" muted="true" controls="true" style="width:480px;">
 <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.mp4" />
 <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.ogx" />
 </video>
