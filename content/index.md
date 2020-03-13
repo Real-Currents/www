@@ -17,9 +17,33 @@
 [Please email us](mailto:info@real-currents.com) if you have an idea for the web or mobile devices that you would like to bring to life.
 <br /><br />
 
-<h1 id="text_title" style="display:none;"></h1>
+<h1 id="text_title" style="display:none;">The Word</h1>
 <p id="text_copy" style="display:none;">
-Copy
+"The Word has quietly advanced it's agenda..."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            - Terence McKenna
 </p>
 
 <span id="background01" style="display:none; color:hsla(53,8%,37%,0.005)"></span>
