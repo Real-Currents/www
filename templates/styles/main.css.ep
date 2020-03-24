@@ -274,10 +274,11 @@ div#control #toggle_control {
 <%
 for( my $i = 0; $i<10; $i++ ) { %>
 <%= "* #layer$i {"; %>
-	width:			100%;
-	position: absolute;
-    transition-property: opacity;
-    transition-duration: 1.5s;
+	 width:			100%;
+     position: fixed;
+     transition-property: opacity;
+     transition-duration: 1.5s;
+     transition-delay: 2.5s;
 <%= "}\n"; %>
 <%
 } %>
@@ -289,3 +290,13 @@ for( my $i = 0; $i<10; $i++ ) { %>
 	right:			0;
 	font-size:		10pt;
 }
+
+.controls.svelte-1lna7uf.svelte-1lna7uf{position:absolute;top:0;margin:8px;margin-left:200px;width:300px;height:128px;padding:1em;background-color:rgba(255,255,255,0.7);border-radius:2px;z-index:2}.keys.svelte-1lna7uf.svelte-1lna7uf{position:absolute;width:256px;height:256px;top:calc(50vh - (100vw / 5.75));padding:24px;background-color:transparent}.keys.svelte-1lna7uf .svelte-1lna7uf{padding:24px}
+canvas.svelte-10c35ml{width:100%;height:100%;background-color:#666;-webkit-mask:url("../images/svelte-logo-mask.svg") 50% 50% content-box view-box no-repeat;mask:url("../images/svelte-logo-mask.svg") 50% 50% content-box view-box no-repeat}#view.svelte-10c35ml{text-align:center}
+.controls.svelte-10g9fcv.svelte-10g9fcv{float:right;position:relative;margin:8px;margin-top:-160px;width:300px;height:128px;padding:1em;background-color:rgba(255,255,255,0.7);border-radius:2px;z-index:2}@media screen and (max-width: 480px){.controls.svelte-10g9fcv.svelte-10g9fcv{margin-top:8px}}.controls.svelte-10g9fcv label input[type="color"].svelte-10g9fcv{clear:both;margin:100px;margin-top:2px;margin-bottom:10px}
+.keypad.svelte-el36x5{display:grid;grid-template-columns:repeat(3, 5em);grid-template-rows:repeat(4, 3em);grid-gap:0.5em
+}button.svelte-el36x5{margin:0
+ }
+.overlay.svelte-1l5epy8{position:absolute;left:0;top:0;user-select:none;-moz-user-select:none;will-change:transform}
+.container.svelte-6pzapg,canvas.svelte-6pzapg{position:relative;width:100%;height:100%;display:block;overflow:hidden}
+.layer.svelte-qsggnw{position:absolute;top:0;left:0}
