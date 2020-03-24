@@ -113,7 +113,8 @@ alert("Your browser is missing some essential features and capabilities.\n Pleas
             }
         }
 
-        document.getElementById('uni-sol').children[0].replaceChild( canvas, document.getElementById("layer1") );
+        document.getElementById('uni-sol').appendChild(canvas);
+        document.getElementById("layer1").style.opacity = "0";
 
         if (typeof Debugger === "function") {
   	    //Debugger.on = false;

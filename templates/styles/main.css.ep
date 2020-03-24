@@ -275,6 +275,9 @@ div#control #toggle_control {
 for( my $i = 0; $i<10; $i++ ) { %>
 <%= "* #layer$i {"; %>
 	width:			100%;
+	position: absolute;
+    transition-property: opacity;
+    transition-duration: 1.5s;
 <%= "}\n"; %>
 <%
 } %>
