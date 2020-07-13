@@ -58,7 +58,7 @@
     "q-io": "^1.10.9",
     "qq": "^0.3.5",
     "rewire": "~2.1.0",
-    "semver": "~4.0.3",
+    "semver": "~7.3.2",
     "shelljs": "~0.3.0",
     "sorted-object": "^1.0.0",
     "stringmap": "^0.2.2"
