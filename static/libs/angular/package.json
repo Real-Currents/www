@@ -49,7 +49,7 @@
     "karma-sauce-launcher": "0.2.10",
     "karma-script-launcher": "0.1.0",
     "load-grunt-tasks": "~0.6.0",
-    "lodash": "~2.4.1",
+    "lodash": "~4.17.19",
     "marked": "~0.3.0",
     "node-html-encoder": "0.0.2",
     "promises-aplus-tests": "~2.1.0",
