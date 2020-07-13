@@ -6,4 +6,5 @@
 bin
 log
 man
+node_modules
 public
