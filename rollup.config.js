@@ -1,6 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 import commonjs from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy'
+import del from 'rollup-plugin-delete'
 import livereload from 'rollup-plugin-livereload';
 import resolve from 'rollup-plugin-node-resolve';
 import postcss from "rollup-plugin-postcss";
@@ -46,8 +47,23 @@ export default {
 
 		commonjs(),
 
+		del({
+			targets: [
+				'public/fonts',
+				'public/images',
+				'public/js-demos',
+				'public/libs',
+				'public/scripts',
+				'public/styles',
+				'public/stymaps'
+			],
+			verbose: true
+		}),
+
 		copy({
 			targets: [
+				{ src: 'content/js-demos', dest: 'public/' },
+				{ src: 'content/js-dmeos/stymaps', dest: 'public/' },
 				{ src: 'src/images', dest: 'public/' },
 				{ src: 'static/*', dest: 'public/' }
 			]
