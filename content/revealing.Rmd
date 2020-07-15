@@ -16,11 +16,11 @@ tags:
 [Meet the Developer](dev)
 &nbsp;<br /><br />
 
-<a id="aud1_play" href="revealing/#"  onclick="(function(evt) { evt.target.innerHTML='Now Playing'; evt.target.onclick = null; window.userTriggered=true; }) (event || window.event)">Play</a><br />
+<div id="stream" style="text-align:center" onclick="(function(evt) { evt.target.innerHTML='Now Playing'; evt.target.parentElement.style.display='none'; evt.target.onclick = null; window.userTriggered=true; }) (event || window.event)">
+<a id="aud1_play" href="revealing/#">Play</a>
+&nbsp;<br /><br />
 <!--a href="http://www.w3.org/2010/05/video/mediaevents.html" target="_blank">Media Help</a-->
-
-<div id="stream" style="display: none; text-align:center">
-<video id="aud1" preload="auto" muted="true" controls="true" style="width:480px;">
+<video id="aud1" preload="auto" muted="true" style="width:480px; border-radius: 20px; opacity: 0.75">
 <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.mp4" />
 <source src="https://s3-us-west-1.amazonaws.com/real-currents/js-demos/video/the_word.ogx" />
 </video>

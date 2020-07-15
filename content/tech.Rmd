@@ -75,6 +75,7 @@ plot(pressure)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
+<div class="r-mapping">
 Use R's geospatial packages to plot data on maps. For the following example, you will need to have installed the following native libraries on the host operating system:
 pandoc gdal geos proj udunits2:
 
@@ -118,6 +119,7 @@ if (!require("maptools")) {
   plot(wrld_simpl) + plot(spointsdf,add=T,col=c('red','blue'),pch=16)
 }
 ```
+</div>
 
 ## Embedding JSON data in HTML
 

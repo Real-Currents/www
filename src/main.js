@@ -1,6 +1,6 @@
 import './styles/global.css';
 import App from './apps/App.svelte';
-import GLApp from './apps/GLApp.svelte';
+import TerrainApp from './apps/TerrainApp.svelte';
 import GLSLApp from './apps/GLSLApp.svelte';
 import TechApp from './apps/TechApp.svelte';
 import VizRApp from './apps/VizRApp.svelte';
@@ -29,7 +29,7 @@ export const glApp = (
     (glAppElement.constructor.name === 'HTMLElement' ||
         glAppElement.constructor.name === 'HTMLDivElement')
 ) ?
-    new GLApp({
+    new TerrainApp({
         target: glAppElement,
         props: {
             title: "🦊 Hello SvelteGL!"
