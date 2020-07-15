@@ -175,17 +175,17 @@ div#content * img[src$="svg"] {
   width:                480px;
 }
 
-div#content div#mojo-version {
+div#content div#version {
   position:			fixed;
   left:				2px;
   bottom:			2px;
   font-size:		10pt;
 }
-div#content div#mojo-version * {
+div#content div#version * {
   font-size:		10pt;
 	margin-left:	8px;
 }
-div#content div#mojo-version * img {
+div#content div#version * img {
 	width:			72px;
 	height:			72px;
 	margin-left:	-4px;

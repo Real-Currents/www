@@ -24,7 +24,7 @@ for( my $i=639; $i>320; $i-- ) { %>
 	  <%= "width: ".($i-20)."px;" %>
 	  <%= "min-width: ".($i-40)."px;" %>
 	 }
-	 div#content div#mojo-version {
+	 div#content div#version {
   	  	left:	-84px;
 	}
 }
