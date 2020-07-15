@@ -2,7 +2,7 @@
   "name": "real-currents",
   "private": true,
   "version": "1.0.0",
-  "description": "A showcase of possibilities in the space of Information Experience Design (IxD)",
+  "description": "A showcase of experiments in Information Experience Design (IxD)",
   "repository": "Real-Currents/www",
   "main": "index.js",
   "scripts": {

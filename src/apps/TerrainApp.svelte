@@ -10,7 +10,7 @@
     export let color = '#F7C77B';
 
     let w = 1;
-    let h = 1;
+    let h = 1.25;
     let d = 1;
 
     const light = {
