@@ -66,8 +66,8 @@
  <br /><br /></p>
 <p><a href="dev">Meet the Developer</a>
  <br /><br /></p>
-<div id="stream" style="text-align:center" onclick="(function(evt) { evt.target.innerHTML=&#39;Now Playing&#39;; evt.target.parentElement.style.display=&#39;none&#39;; evt.target.onclick = null; window.userTriggered=true; }) (event || window.event)">
-<p><a id="aud1_play" href="revealing/#">Play</a>
+<div id="stream" style="text-align:center">
+<p><a id="aud1_play" href="revealing/#" onclick="(function(evt) { evt.target.innerHTML='Now Playing'; evt.target.parentElement.style.display='none'; evt.target.onclick = null; window.userTriggered=true; }) (event || window.event)">Play</a>
  <br /><br />
 <!--a href="http://www.w3.org/2010/05/video/mediaevents.html" target="_blank">Media Help</a-->
 <video id="aud1" preload="auto" muted="true" style="width:480px; border-radius: 20px; opacity: 0.75">
