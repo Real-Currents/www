@@ -39,7 +39,7 @@
 	statsBox.style.left = 0;
 	statsBox.innerHTML = ( location.pathname.match(/(\.html)/)!==null )?
 			'<img src="images/bw-loader.gif" /><br />Loading... ':
-			'<img src="js-demos/images/bw-loader.gif" /><br />Loading... ';
+			'<img src="images/bw-loader.gif" /><br />Loading... ';
 
 	function canvasApp (cv) {
 		window.canvasApp = canvasApp;
