@@ -4,10 +4,11 @@ on:
   release:
     branches:
       - master
+    types: [published]
   pull_request:
-    types: [opened, synchronize, reopened, closed]
     branches:
       - master
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   build_and_deploy_job:
