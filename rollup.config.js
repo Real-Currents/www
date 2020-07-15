@@ -47,16 +47,16 @@ export default {
 
 		commonjs(),
 
-		del({
-			targets: [
-				'public/fonts',
-				'public/images',
-				'public/libs',
-				'public/scripts',
-				'public/styles'
-			],
-			verbose: true
-		}),
+		// del({
+		// 	targets: [
+		// 		'public/fonts',
+		// 		'public/images',
+		// 		'public/libs',
+		// 		'public/scripts',
+		// 		'public/styles'
+		// 	],
+		// 	verbose: true
+		// }),
 
 		copy({
 			targets: [
