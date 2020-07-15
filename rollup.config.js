@@ -62,10 +62,12 @@ export default {
 
 		copy({
 			targets: [
-				{ src: 'content/js-demos', dest: 'public/' },
-				{ src: 'content/js-dmeos/stymaps', dest: 'public/' },
+				{ src: 'content/js-demos/data', dest: 'public/' },
+				{ src: 'content/js-demos/images', dest: 'public/' },
+				{ src: 'content/js-demos/scripts', dest: 'public/' },
+				{ src: 'content/js-demos/stymaps', dest: 'public/' },
 				{ src: 'src/images', dest: 'public/' },
-				{ src: 'static/*', dest: 'public/' }
+				{ src: 'src/styles/imports', dest: 'public/' }
 			]
 		}),
 
