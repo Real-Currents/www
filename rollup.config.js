@@ -51,11 +51,9 @@ export default {
 			targets: [
 				'public/fonts',
 				'public/images',
-				'public/js-demos',
 				'public/libs',
 				'public/scripts',
-				'public/styles',
-				'public/stymaps'
+				'public/styles'
 			],
 			verbose: true
 		}),
