@@ -70,7 +70,7 @@
 		<div id="content" style="min-width:460px">
 %= content
 
-			<div id='mojo-version'>
+			<div id='version'>
 				<p><img src="/images/triad.png" /></p>
 				<a href="/perldoc">Mojolicious</a><br />
 			</div>

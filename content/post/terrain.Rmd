@@ -39,7 +39,8 @@ if (!require("png")) {
 library(png)
 ```
 
-If the output target is HTML, R has some methods for turning R data (the same height map data as used in the [Visualizing R Data](post/visualize-r) post):
+If the output target is HTML, R has some methods for turning R data... (the same height map data as used in the [Visualizing R Data](post/visualize-r) post):
+<div class="r-data">
 
 ```{r data, echo = FALSE}
 options(warn = -1)
@@ -51,10 +52,11 @@ if (print(file.exists("data/heightmap-small.png"))) {
     is.num <- sapply(heightmap, is.numeric)     # for all numeric values...
     heightmap[is.num] <- lapply(heightmap[is.num], round, 6)  # ... lower precision to 6 decimals
     head(heightmap)
-    # length(heightmap)
-    # str(heightmap)
 }
+
 ```
+</div>
+
 
 ... into JavaScript or JSON data and printing the results within HTML tags:
 ```{r data_in_html, results='asis'}
