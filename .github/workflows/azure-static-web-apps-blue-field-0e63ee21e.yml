@@ -1,7 +1,7 @@
 name: Azure Static Web Apps CI/CD
 
 on:
-  push:
+  release:
     branches:
       - master
   pull_request:
