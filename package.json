@@ -6,7 +6,7 @@
   "repository": "Real-Currents/www",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build:_rollup",
+    "build": "npm run build:_rollup && npm run build:blogdown",
     "build:preview": "npm run build:_rollup && npm run build:_preview",
     "build:blogdown": "Rscript src/build.R; echo 'done'",
     "build:_preview": "Rscript src/build_preview.R; echo 'done'",
