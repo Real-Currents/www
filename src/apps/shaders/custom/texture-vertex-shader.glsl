@@ -1,5 +1,5 @@
 /* The following builtins are prepended to
- * every custom vertex shader in @svelte/gl:
+ * every custom vertex shader in @sveltejs/gl:
  */
 /* start builtins */
 //precision highp float;

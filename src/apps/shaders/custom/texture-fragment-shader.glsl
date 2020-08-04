@@ -1,5 +1,5 @@
 /* The following builtins are prepended to
- * every custom fragment shader in @svelte/gl:
+ * every custom fragment shader in @sveltejs/gl:
  */
 /* start builtins */
 //#extension GL_OES_standard_derivatives : enable

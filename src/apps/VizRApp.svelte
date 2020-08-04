@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import * as GL from '@sveltejs/gl';
-    import NavigationControls from './components/NavigationControls.svelte';
+    import NavigationControls from './components/Controls.svelte';
 
     export let title;
 
