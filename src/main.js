@@ -22,21 +22,6 @@ export default ( // Check if app id exists in DOM
     }) : {};
 
 
-const glAppId = "gl-app";
-const glAppElement = document.getElementById(glAppId);
-export const glApp = (
-    glAppElement !== null &&
-    (glAppElement.constructor.name === 'HTMLElement' ||
-        glAppElement.constructor.name === 'HTMLDivElement')
-) ?
-    new TerrainApp({
-        target: glAppElement,
-        props: {
-            title: "🦊 Hello SvelteGL!"
-        }
-    }) : {};
-
-
 const glslAppId = "glsl-app";
 const glslAppElement = document.getElementById(glslAppId);
 export const glslApp = (
@@ -46,6 +31,21 @@ export const glslApp = (
 ) ?
     new GLSLApp({
         target: glslAppElement,
+        props: {
+            title: "🦊 Hello SvelteGL!"
+        }
+    }) : {};
+
+
+const terrainAppId = "terrain-app";
+const terrainAppElement = document.getElementById(terrainAppId);
+export const terrainApp = (
+    terrainAppElement !== null &&
+    (terrainAppElement.constructor.name === 'HTMLElement' ||
+        terrainAppElement.constructor.name === 'HTMLDivElement')
+) ?
+    new TerrainApp({
+        target: terrainAppElement,
         props: {
             title: "🦊 Hello SvelteGL!"
         }

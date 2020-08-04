@@ -1,5 +1,5 @@
 /* The following builtins are prepended to
- * every custom vertex shader in @svelte/gl:
+ * every custom vertex shader in @sveltejs/gl:
  */
 /* start builtins */
 //
@@ -29,12 +29,14 @@
 #define C_HALF 0.5
 #define C_ONE 1.0
 
+#define DISPLACE_MULTIPLY 0.5
+
 // texture containing elevation data
 //uniform sampler2D heightMap;
 //uniform sampler2D bumpmap;
 uniform sampler2D normalmap;
 
-uniform float displace_multiply;
+uniform float height_adjustment;
 
 in vec3 position;
 
@@ -65,7 +67,7 @@ vec3 directional_light_shading (vec3 normal) {
 	float ndotH; // dot product of nomral and & half-plane vector
 
 	ndotL = max(C_ZERO, dot(normal, nlight_direction));
-	computed_shade += light_ambient_color * vec3(C_QUARTER, C_QUARTER, C_QUARTER);
+	computed_shade += light_ambient_color * vec3(C_HALF, C_HALF, C_HALF);
 	computed_shade += ndotL * light_diffuse_color * vec3(C_ONE, C_ONE, C_ONE);
 
 	// The resolution of the vertex shader is not fine enough
@@ -81,13 +83,17 @@ vec3 directional_light_shading (vec3 normal) {
 void main() {
 	vec3 displacement = texture(normalmap, uv).rgb;
 
-	vec3 displace_along_verticle = vec3(C_ZERO, C_ZERO, normal.z) * displacement * (displace_multiply * C_HALF);
+	vec3 displace_along_verticle = normal * displacement * (DISPLACE_MULTIPLY * height_adjustment);
 
 	vec3 displaced_position = position + displace_along_verticle;
 
 	vec3 displace_along_normal = vec3(normal * displacement);
 
-	v_normal = displace_multiply * displace_along_normal;
+	v_normal = DISPLACE_MULTIPLY * normal;
+
+	#if defined(has_normalmap)
+	v_normal = DISPLACE_MULTIPLY * displace_along_normal;
+	#endif
 
 	v_textureCoords = uv;
 

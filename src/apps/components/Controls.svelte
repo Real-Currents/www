@@ -19,7 +19,7 @@
     let sinceLastMovementEvent = 0;
 
     export const init = function () {
-        console.log("Initializing Navigation Controls...");
+        console.log("Initializing Controls...");
 
         document.querySelectorAll('.controls h4').forEach(c => {
             console.log(c);
@@ -59,7 +59,7 @@
                     }
                 }
 
-                wheelEvent.preventDefault();
+                // wheelEvent.preventDefault();
             });
         })
 
