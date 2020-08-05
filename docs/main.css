@@ -6,9 +6,9 @@ canvas.svelte-10c35ml{width:100%;height:100%;background-color:#666;-webkit-mask:
 .keys.svelte-p9x91x.svelte-p9x91x{top:calc(50vh - (100vw / 5.75));right:0;margin:8px;margin-top:128px;position:absolute;width:256px;height:256px;padding:24px;background-color:transparent;z-index:2}.keys.svelte-p9x91x .svelte-p9x91x{padding:24px}
 .controls.svelte-12v0mf9{width:256px}
 .controls.svelte-1tt45l5{margin-top:-160px;height:128px}
+.controls.svelte-snplat h2.svelte-snplat{color:black;cursor:pointer;pointer-events:all}
 .keypad.svelte-el36x5{display:grid;grid-template-columns:repeat(3, 5em);grid-template-rows:repeat(4, 3em);grid-gap:0.5em
 	}button.svelte-el36x5{margin:0
 	}
-.controls.svelte-snplat h2.svelte-snplat{color:black;cursor:pointer;pointer-events:all}
 
 /*# sourceMappingURL=main.css.map */

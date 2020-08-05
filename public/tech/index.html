@@ -72,7 +72,7 @@
 </div>
 <div id="enjoy" class="section level2">
 <h2>Enjoy!! 🦊</h2>
-<p>This page is the product of an R Markdown document and an embedded Svelte app. The <code>&lt;div id=&quot;test-app&quot;&gt;&lt;/div&gt;</code> HTML tag embedded in this page contains the “test-app” id attribute which is a DOM element id that <code>TestApp.svelte</code> has been instructed to find in order to instantiate the interactive graphics above. To learn more about developing Svelte applications see <a href="https://svelte.dev/tutorial/basics" class="uri">https://svelte.dev/tutorial/basics</a>. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>This page is the product of an R Markdown document and an embedded Svelte app. The <code>&lt;div id="test-app"&gt;&lt;/div&gt;</code> HTML tag embedded in this page contains the “test-app” id attribute which is a DOM element id that <code>TestApp.svelte</code> has been instructed to find in order to instantiate the interactive graphics above. To learn more about developing Svelte applications see <a href="https://svelte.dev/tutorial/basics" class="uri">https://svelte.dev/tutorial/basics</a>. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
 <p>You can embed an R code chunk like this:</p>
 <pre class="r"><code>print(mean(1 : 5))</code></pre>
 <pre><code>## [1] 3</code></pre>
@@ -135,7 +135,7 @@ pandoc gdal geos proj udunits2:</p>
 ## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 ## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
 ## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
-The mtcars sample dataset printed above has been serialized to JSON and added to a <code>&lt;script&gt;</code> tag contained within a <code>&lt;div id=&quot;car_data_in_html&quot;&gt;</code>.
+The mtcars sample dataset printed above has been serialized to JSON and added to a <code>&lt;script&gt;</code> tag contained within a <code>&lt;div id="car_data_in_html"&gt;</code>.
 <div class="r-data">
 <pre><code>## Loading required package: jsonlite</code></pre>
 <div id="car_data_in_html">
@@ -147,7 +147,7 @@ The mtcars sample dataset printed above has been serialized to JSON and added to
     &lt;/script&gt;
 &lt;/div&gt;</code></pre>
 </div>
-<p>Note the specification of the <code>type=&quot;application/json&quot;</code> attribute, which prevents the browser from evaluating the contents of the <code>&lt;script&gt;</code> tag as JavaScript (if that is intended) and allows some other code block to call:</p>
+<p>Note the specification of the <code>type="application/json"</code> attribute, which prevents the browser from evaluating the contents of the <code>&lt;script&gt;</code> tag as JavaScript (if that is intended) and allows some other code block to call:</p>
 <pre><code>&lt;script&gt;
   var data = JSON.parse(document.getElementById(&#39;car_data_in_html&#39;).children[0].innerHTML);
 &lt;/script&gt;</code></pre>
