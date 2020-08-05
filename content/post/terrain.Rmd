@@ -51,7 +51,7 @@ if (file.exists("data/terrain-small.png")) {
 
 image <- data.frame(png::readPNG(small_input))
 
-cat(paste0('<img src="/post/', small_input, '" style="float: right; width:256px; margin-top: -128px; padding: 1%;" />'))
+cat(paste0('<img src="/post/', small_input, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
 <div class="r-data">

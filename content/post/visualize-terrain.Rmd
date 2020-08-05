@@ -47,7 +47,7 @@ if (file.exists("data/heightmap-small.png")) {
 
 image <- data.frame(png::readPNG(input))
 
-cat(paste0('<img id="heightmap" src="/post/', input, '" style="float: right; width:256px; margin-top: -128px; padding: 1%;" />'))
+cat(paste0('<img id="heightmap" src="/post/', input, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
 If the output target is HTML, R has some methods for turning R data... (the same height map data as used in the [Visualizing R Data](post/visualize-r) post):
