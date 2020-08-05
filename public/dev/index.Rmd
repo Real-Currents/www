@@ -89,9 +89,9 @@ Copyright © PixOasis 2013
 <br />
 
 <div id="stream" style="display:none; text-align:center">
-<video id="aud1" poster="js-demos/images/fathers.jpg" preload="auto" muted="true" controls="true">
-<source src="js-demos/video/fathers.mp4" />
-<source src="js-demos/video/fathers.ogv" />
+<video id="aud1" poster="images/fathers.jpg" preload="auto" muted="true" controls="true">
+<source src="video/fathers.mp4" />
+<source src="video/fathers.ogv" />
 </video>
 </div>
 
