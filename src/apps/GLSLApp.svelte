@@ -333,18 +333,14 @@
 
 <div class="controls">
     <label>
-        <input type="color" style="height: 40px" bind:value={color}>
+        <input type="range" bind:value={w} min={0.1} max={5} step={0.1} /><br /> width ({w})
     </label>
 
     <label>
-        <input type="range" bind:value={w} min={0.1} max={5} step={0.1}> width ({w})
+        <input type="range" bind:value={h} min={0.1} max={5} step={0.1} /><br /> height ({h})
     </label>
 
     <label>
-        <input type="range" bind:value={h} min={0.1} max={5} step={0.1}> height ({h})
-    </label>
-
-    <label>
-        <input type="range" bind:value={d} min={0.1} max={5} step={0.1}> depth ({d})
+        <input type="range" bind:value={d} min={0.1} max={5} step={0.1} /><br /> depth ({d})
     </label>
 </div>

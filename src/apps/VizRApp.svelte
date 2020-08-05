@@ -1,13 +1,36 @@
 <script>
     import { onMount } from 'svelte';
     import * as GL from '@sveltejs/gl';
-    import NavigationControls from './components/Controls.svelte';
+    import Controls from './components/Controls.svelte';
 
     export let title;
+
+    const color = { value: '#ff3e00' };
+
+    const light = {};
+
+    const w = { value: 1 };
+    const h = { value: 1 };
+    const d = { value: 1 };
+
+    let webgl;
+
+    export let colors = {
+        labels: [ "" ],
+        values: [ color ]
+    };
 
     export let options = {
         labels: [],
         values: []
+    };
+
+    export let ranges = {
+        labels: [ "width", "height", "depth" ],
+        min: [ 0.1, 0.1, 0.1 ],
+        max: [ 5.0, 5.0 , 5.0 ],
+        step: [ 0.1, 0.1, 0.1 ],
+        values: [ w, h, d ]
     };
 
     // initial view
@@ -18,8 +41,6 @@
         console.log("location: ", loc, "\n", "target: ", tgt);
         return "";
     };
-
-    export let color = '#ff3e00';
 
     function adjustColor (clr, height = 1) {
         const r = parseInt('0x' + clr.substr(1, 2), 16),
@@ -45,14 +66,6 @@
     }
 
     console.log(heightmap);
-
-    let w = 1;
-    let h = 1;
-    let d = 1;
-
-    const light = {};
-
-    let webgl;
 
 
     /* This is a helper callback to bind custom uniforms/attributes
@@ -100,7 +113,7 @@
 </style>
 
 <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
-    <GL.Target id="center" location={[0, h/2, 0]}/>
+    <GL.Target id="center" location={[0, h.value/2, 0]}/>
 
     <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>
         {captureViewDirection(location, target)}
@@ -116,13 +129,13 @@
             <GL.Mesh geometry={GL.box({ x: 0, y: 0, z: 0 , w: (gridSizeX / heightmap[i].length), h: (1 * heightmap[k][i]), d: (gridSizeZ / heightmap.length) })}
                      location={[ (-(gridSizeX / 2) + (i * (gridSizeX / heightmap[0].length))), 0, (-(gridSizeZ / 2) + (k * (gridSizeZ / heightmap.length))) ]}
                      rotation={[ 0, 0, 0]}
-                     scale={[ w, h, d]}
-                     uniforms={{ color: adjustColor(color, heightmap[k][i]) }}
+                     scale={[ w.value, h.value, d.value]}
+                     uniforms={{ color: adjustColor(color.value, heightmap[k][i]) }}
             />
         {/each}
     {/each}
 
-    <!-- moving light -->
+        <!-- moving light -->
     <GL.Group location={[light.x,light.y,light.z]}>
         <GL.Mesh
                 geometry={GL.sphere({ turns: 36, bands: 36 })}
@@ -139,28 +152,12 @@
     </GL.Group>
 </GL.Scene>
 
-<NavigationControls
+<Controls
         bind:init={navControlInit}
-        bind:optionFlags={options}
+        bind:colorOptions={colors}
+        bind:booleanOptions={options}
+        bind:rangeOptions={ranges}
         bind:viewLocation={location}
         bind:viewTarget={target}
         title={title}
         on:move={(event) => updateWorld(event)}/>
-
-<div class="controls">
-    <label>
-        <input type="color" style="height: 40px" bind:value={color}>
-    </label>
-
-    <label>
-        <input type="range" bind:value={w} min={0.1} max={5} step={0.1}> width ({w})
-    </label>
-
-    <label>
-        <input type="range" bind:value={h} min={0.1} max={5} step={0.1}> height ({h})
-    </label>
-
-    <label>
-        <input type="range" bind:value={d} min={0.1} max={5} step={0.1}> depth ({d})
-    </label>
-</div>
