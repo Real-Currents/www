@@ -50,7 +50,7 @@ There are also multiple levels of precision:
     highp
 
 
-To create custom shaders for use with `@svelte/gl`, I had to make some changes to the `gl` source, beginning by adding a declaration to all shaders compile by `Material.mjs`:
+I've had to [make some changes](https://github.com/sveltejs/gl/pull/28) to [`@sveltejs/gl`](https://github.com/Real-Currents/SvelteGL/tree/real/currents), in order to create custom shaders, beginning by adding a declaration to all shaders compiled by `Material.mjs`:
 
         const { program, uniforms, attributes } = compile(
 			gl,
@@ -84,4 +84,4 @@ The final output varying in the fragment shader also had to be changed because t
 	fragColor.rgb *= mix(AMBIENT_LIGHT, vec3(1.0, 1.0, 1.0), lighting);
 	fragColor.rgb += spec_amount;
 
-With these changes in place I can now use all of the latest shader features within GL-powered SveltR apps and pages.
+With these changes in place I can now use all the latest shader features within GL-powered <a href="https://github.com/Real-Currents/SveltR" target="_blank">SveltR</a> apps and pages.

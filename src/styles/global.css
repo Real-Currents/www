@@ -225,7 +225,7 @@ body {
     font-size: 			1em;
     color: 				#e3ddff;
     text-align: 			left;
-    line-height: 			115%;
+    line-height: 			125%;
     overflow-y: 			scroll;
 }
 
@@ -433,7 +433,7 @@ div#content * .r-data pre {
     max-width: 800px;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 15;
+    -webkit-line-clamp: 9;
     -webkit-box-orient: vertical;
 }
 
