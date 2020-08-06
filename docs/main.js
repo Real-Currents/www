@@ -11571,7 +11571,7 @@ var app = (function (exports) {
     			const gl_orbitcontrols_changes = {};
     			if (dirty & /*location*/ 32) gl_orbitcontrols_changes.location = /*location*/ ctx[5];
 
-    			if (dirty & /*$$scope, location*/ 524320) {
+    			if (dirty & /*$$scope, location*/ 262176) {
     				gl_orbitcontrols_changes.$$scope = { dirty, ctx };
     			}
 
@@ -11589,7 +11589,7 @@ var app = (function (exports) {
     			const gl_group_changes = {};
     			if (dirty & /*light*/ 16) gl_group_changes.location = [/*light*/ ctx[4].x, /*light*/ ctx[4].y, /*light*/ ctx[4].z];
 
-    			if (dirty & /*$$scope*/ 524288) {
+    			if (dirty & /*$$scope*/ 262144) {
     				gl_group_changes.$$scope = { dirty, ctx };
     			}
 
@@ -11667,33 +11667,33 @@ var app = (function (exports) {
     	let div;
     	let label0;
     	let input0;
+    	let input0_min_value;
+    	let input0_max_value;
+    	let input0_step_value;
+    	let br0;
     	let t1;
+    	let t2;
+    	let t3;
+    	let t4;
     	let label1;
     	let input1;
     	let input1_min_value;
     	let input1_max_value;
     	let input1_step_value;
-    	let t2;
-    	let t3;
-    	let t4;
+    	let br1;
     	let t5;
+    	let t6;
+    	let t7;
+    	let t8;
     	let label2;
     	let input2;
     	let input2_min_value;
     	let input2_max_value;
     	let input2_step_value;
-    	let t6;
-    	let t7;
-    	let t8;
+    	let br2;
     	let t9;
-    	let label3;
-    	let input3;
-    	let input3_min_value;
-    	let input3_max_value;
-    	let input3_step_value;
     	let t10;
     	let t11;
-    	let t12;
     	let current;
     	let mounted;
     	let dispose;
@@ -11723,47 +11723,45 @@ var app = (function (exports) {
     			div = element("div");
     			label0 = element("label");
     			input0 = element("input");
-    			t1 = space();
+    			br0 = element("br");
+    			t1 = text(" width (");
+    			t2 = text(/*w*/ ctx[1]);
+    			t3 = text(")");
+    			t4 = space();
     			label1 = element("label");
     			input1 = element("input");
-    			t2 = text(" width (");
-    			t3 = text(/*w*/ ctx[1]);
-    			t4 = text(")");
-    			t5 = space();
+    			br1 = element("br");
+    			t5 = text(" height (");
+    			t6 = text(/*h*/ ctx[2]);
+    			t7 = text(")");
+    			t8 = space();
     			label2 = element("label");
     			input2 = element("input");
-    			t6 = text(" height (");
-    			t7 = text(/*h*/ ctx[2]);
-    			t8 = text(")");
-    			t9 = space();
-    			label3 = element("label");
-    			input3 = element("input");
-    			t10 = text(" depth (");
-    			t11 = text(/*d*/ ctx[3]);
-    			t12 = text(")");
-    			attr_dev(input0, "type", "color");
-    			set_style(input0, "height", "40px");
-    			attr_dev(input0, "class", "svelte-1wtc1bv");
+    			br2 = element("br");
+    			t9 = text(" depth (");
+    			t10 = text(/*d*/ ctx[3]);
+    			t11 = text(")");
+    			attr_dev(input0, "type", "range");
+    			attr_dev(input0, "min", input0_min_value = 0.1);
+    			attr_dev(input0, "max", input0_max_value = 5);
+    			attr_dev(input0, "step", input0_step_value = 0.1);
     			add_location(input0, file$5, 335, 8, 12016);
+    			add_location(br0, file$5, 335, 74, 12082);
     			add_location(label0, file$5, 334, 4, 12000);
     			attr_dev(input1, "type", "range");
     			attr_dev(input1, "min", input1_min_value = 0.1);
     			attr_dev(input1, "max", input1_max_value = 5);
     			attr_dev(input1, "step", input1_step_value = 0.1);
-    			add_location(input1, file$5, 339, 8, 12111);
-    			add_location(label1, file$5, 338, 4, 12095);
+    			add_location(input1, file$5, 339, 8, 12135);
+    			add_location(br1, file$5, 339, 74, 12201);
+    			add_location(label1, file$5, 338, 4, 12119);
     			attr_dev(input2, "type", "range");
     			attr_dev(input2, "min", input2_min_value = 0.1);
     			attr_dev(input2, "max", input2_max_value = 5);
     			attr_dev(input2, "step", input2_step_value = 0.1);
-    			add_location(input2, file$5, 343, 8, 12222);
-    			add_location(label2, file$5, 342, 4, 12206);
-    			attr_dev(input3, "type", "range");
-    			attr_dev(input3, "min", input3_min_value = 0.1);
-    			attr_dev(input3, "max", input3_max_value = 5);
-    			attr_dev(input3, "step", input3_step_value = 0.1);
-    			add_location(input3, file$5, 347, 8, 12334);
-    			add_location(label3, file$5, 346, 4, 12318);
+    			add_location(input2, file$5, 343, 8, 12255);
+    			add_location(br2, file$5, 343, 74, 12321);
+    			add_location(label2, file$5, 342, 4, 12239);
     			attr_dev(div, "class", "controls svelte-1wtc1bv");
     			add_location(div, file$5, 333, 0, 11973);
     		},
@@ -11776,39 +11774,37 @@ var app = (function (exports) {
     			insert_dev(target, div, anchor);
     			append_dev(div, label0);
     			append_dev(label0, input0);
-    			set_input_value(input0, /*color*/ ctx[0]);
-    			append_dev(div, t1);
+    			set_input_value(input0, /*w*/ ctx[1]);
+    			append_dev(label0, br0);
+    			append_dev(label0, t1);
+    			append_dev(label0, t2);
+    			append_dev(label0, t3);
+    			append_dev(div, t4);
     			append_dev(div, label1);
     			append_dev(label1, input1);
-    			set_input_value(input1, /*w*/ ctx[1]);
-    			append_dev(label1, t2);
-    			append_dev(label1, t3);
-    			append_dev(label1, t4);
-    			append_dev(div, t5);
+    			set_input_value(input1, /*h*/ ctx[2]);
+    			append_dev(label1, br1);
+    			append_dev(label1, t5);
+    			append_dev(label1, t6);
+    			append_dev(label1, t7);
+    			append_dev(div, t8);
     			append_dev(div, label2);
     			append_dev(label2, input2);
-    			set_input_value(input2, /*h*/ ctx[2]);
-    			append_dev(label2, t6);
-    			append_dev(label2, t7);
-    			append_dev(label2, t8);
-    			append_dev(div, t9);
-    			append_dev(div, label3);
-    			append_dev(label3, input3);
-    			set_input_value(input3, /*d*/ ctx[3]);
-    			append_dev(label3, t10);
-    			append_dev(label3, t11);
-    			append_dev(label3, t12);
+    			set_input_value(input2, /*d*/ ctx[3]);
+    			append_dev(label2, br2);
+    			append_dev(label2, t9);
+    			append_dev(label2, t10);
+    			append_dev(label2, t11);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[11]),
+    					listen_dev(input0, "change", /*input0_change_input_handler*/ ctx[11]),
+    					listen_dev(input0, "input", /*input0_change_input_handler*/ ctx[11]),
     					listen_dev(input1, "change", /*input1_change_input_handler*/ ctx[12]),
     					listen_dev(input1, "input", /*input1_change_input_handler*/ ctx[12]),
     					listen_dev(input2, "change", /*input2_change_input_handler*/ ctx[13]),
-    					listen_dev(input2, "input", /*input2_change_input_handler*/ ctx[13]),
-    					listen_dev(input3, "change", /*input3_change_input_handler*/ ctx[14]),
-    					listen_dev(input3, "input", /*input3_change_input_handler*/ ctx[14])
+    					listen_dev(input2, "input", /*input2_change_input_handler*/ ctx[13])
     				];
 
     				mounted = true;
@@ -11817,7 +11813,7 @@ var app = (function (exports) {
     		p: function update(ctx, [dirty]) {
     			const gl_scene_changes = {};
 
-    			if (dirty & /*$$scope, light, h, w, d, color, location*/ 524351) {
+    			if (dirty & /*$$scope, light, h, w, d, color, location*/ 262207) {
     				gl_scene_changes.$$scope = { dirty, ctx };
     			}
 
@@ -11829,27 +11825,23 @@ var app = (function (exports) {
 
     			gl_scene.$set(gl_scene_changes);
 
-    			if (dirty & /*color*/ 1) {
-    				set_input_value(input0, /*color*/ ctx[0]);
-    			}
-
     			if (dirty & /*w*/ 2) {
-    				set_input_value(input1, /*w*/ ctx[1]);
+    				set_input_value(input0, /*w*/ ctx[1]);
     			}
 
-    			if (!current || dirty & /*w*/ 2) set_data_dev(t3, /*w*/ ctx[1]);
+    			if (!current || dirty & /*w*/ 2) set_data_dev(t2, /*w*/ ctx[1]);
 
     			if (dirty & /*h*/ 4) {
-    				set_input_value(input2, /*h*/ ctx[2]);
+    				set_input_value(input1, /*h*/ ctx[2]);
     			}
 
-    			if (!current || dirty & /*h*/ 4) set_data_dev(t7, /*h*/ ctx[2]);
+    			if (!current || dirty & /*h*/ 4) set_data_dev(t6, /*h*/ ctx[2]);
 
     			if (dirty & /*d*/ 8) {
-    				set_input_value(input3, /*d*/ ctx[3]);
+    				set_input_value(input2, /*d*/ ctx[3]);
     			}
 
-    			if (!current || dirty & /*d*/ 8) set_data_dev(t11, /*d*/ ctx[3]);
+    			if (!current || dirty & /*d*/ 8) set_data_dev(t10, /*d*/ ctx[3]);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -12178,22 +12170,17 @@ var app = (function (exports) {
     		$$invalidate(6, webgl);
     	}
 
-    	function input0_input_handler() {
-    		color = this.value;
-    		$$invalidate(0, color);
-    	}
-
-    	function input1_change_input_handler() {
+    	function input0_change_input_handler() {
     		w = to_number(this.value);
     		$$invalidate(1, w);
     	}
 
-    	function input2_change_input_handler() {
+    	function input1_change_input_handler() {
     		h = to_number(this.value);
     		$$invalidate(2, h);
     	}
 
-    	function input3_change_input_handler() {
+    	function input2_change_input_handler() {
     		d = to_number(this.value);
     		$$invalidate(3, d);
     	}
@@ -12254,10 +12241,9 @@ var app = (function (exports) {
     		title,
     		gl_perspectivecamera_location_binding,
     		gl_scene_gl_binding,
-    		input0_input_handler,
+    		input0_change_input_handler,
     		input1_change_input_handler,
-    		input2_change_input_handler,
-    		input3_change_input_handler
+    		input2_change_input_handler
     	];
     }
 
@@ -13127,8 +13113,8 @@ var app = (function (exports) {
     			add_location(div0, file$7, 165, 0, 3228);
     			set_style(h4, "color", /*pin*/ ctx[1] ? "#999" : "#fff");
     			attr_dev(h4, "class", "svelte-p9x91x");
-    			add_location(h4, file$7, 184, 1, 3668);
-    			attr_dev(div1, "class", "controls keys svelte-p9x91x");
+    			add_location(h4, file$7, 184, 1, 3674);
+    			attr_dev(div1, "class", "controls keys right svelte-p9x91x");
     			add_location(div1, file$7, 183, 0, 3639);
     		},
     		l: function claim(nodes) {
@@ -13452,16 +13438,315 @@ var app = (function (exports) {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[15] = list[i];
-    	child_ctx[16] = list;
-    	child_ctx[17] = i;
+    	child_ctx[21] = list[i];
+    	child_ctx[22] = list;
+    	child_ctx[23] = i;
     	return child_ctx;
     }
 
-    // (138:4) {#if (optionFlags['labels'].length > 0 && optionFlags['values'].length > 0)}
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[21] = list[i];
+    	child_ctx[24] = list;
+    	child_ctx[23] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[21] = list[i];
+    	child_ctx[25] = list;
+    	child_ctx[23] = i;
+    	return child_ctx;
+    }
+
+    // (157:4) {#if (booleanOptions['labels'].length > 0 && booleanOptions['values'].length > 0)}
+    function create_if_block_2(ctx) {
+    	let each_1_anchor;
+    	let each_value_2 = /*booleanOptions*/ ctx[0]["values"];
+    	validate_each_argument(each_value_2);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*booleanOptions*/ 1) {
+    				each_value_2 = /*booleanOptions*/ ctx[0]["values"];
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_2.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(157:4) {#if (booleanOptions['labels'].length > 0 && booleanOptions['values'].length > 0)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (158:8) {#each booleanOptions['values'] as option, o}
+    function create_each_block_2(ctx) {
+    	let label;
+    	let input;
+    	let t0;
+    	let t1_value = /*booleanOptions*/ ctx[0]["labels"][/*o*/ ctx[23]] + "";
+    	let t1;
+    	let t2;
+    	let br;
+    	let mounted;
+    	let dispose;
+
+    	function input_change_handler() {
+    		/*input_change_handler*/ ctx[10].call(input, /*each_value_2*/ ctx[25], /*o*/ ctx[23]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			label = element("label");
+    			input = element("input");
+    			t0 = space();
+    			t1 = text(t1_value);
+    			t2 = space();
+    			br = element("br");
+    			attr_dev(input, "type", "checkbox");
+    			add_location(input, file$8, 159, 16, 4839);
+    			add_location(label, file$8, 158, 12, 4815);
+    			add_location(br, file$8, 160, 20, 4943);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, label, anchor);
+    			append_dev(label, input);
+    			input.checked = /*option*/ ctx[21].value;
+    			append_dev(label, t0);
+    			append_dev(label, t1);
+    			append_dev(label, t2);
+    			insert_dev(target, br, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "change", input_change_handler);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (dirty & /*booleanOptions*/ 1) {
+    				input.checked = /*option*/ ctx[21].value;
+    			}
+
+    			if (dirty & /*booleanOptions*/ 1 && t1_value !== (t1_value = /*booleanOptions*/ ctx[0]["labels"][/*o*/ ctx[23]] + "")) set_data_dev(t1, t1_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(label);
+    			if (detaching) detach_dev(br);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(158:8) {#each booleanOptions['values'] as option, o}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (165:4) {#if (colorOptions['labels'].length > 0 && colorOptions['values'].length > 0)}
+    function create_if_block_1(ctx) {
+    	let each_1_anchor;
+    	let each_value_1 = /*colorOptions*/ ctx[1]["values"];
+    	validate_each_argument(each_value_1);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*colorOptions*/ 2) {
+    				each_value_1 = /*colorOptions*/ ctx[1]["values"];
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_1.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(165:4) {#if (colorOptions['labels'].length > 0 && colorOptions['values'].length > 0)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (166:8) {#each colorOptions['values'] as option, o}
+    function create_each_block_1(ctx) {
+    	let label;
+    	let input;
+    	let br0;
+    	let t0;
+    	let t1_value = /*colorOptions*/ ctx[1]["labels"][/*o*/ ctx[23]] + "";
+    	let t1;
+    	let t2;
+    	let br1;
+    	let mounted;
+    	let dispose;
+
+    	function input_input_handler() {
+    		/*input_input_handler*/ ctx[11].call(input, /*each_value_1*/ ctx[24], /*o*/ ctx[23]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			label = element("label");
+    			input = element("input");
+    			br0 = element("br");
+    			t0 = space();
+    			t1 = text(t1_value);
+    			t2 = space();
+    			br1 = element("br");
+    			attr_dev(input, "type", "color");
+    			set_style(input, "height", "40px");
+    			add_location(input, file$8, 167, 16, 5148);
+    			add_location(br0, file$8, 167, 85, 5217);
+    			add_location(label, file$8, 166, 12, 5124);
+    			add_location(br1, file$8, 169, 20, 5288);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, label, anchor);
+    			append_dev(label, input);
+    			set_input_value(input, /*option*/ ctx[21].value);
+    			append_dev(label, br0);
+    			append_dev(label, t0);
+    			append_dev(label, t1);
+    			append_dev(label, t2);
+    			insert_dev(target, br1, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "input", input_input_handler);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (dirty & /*colorOptions*/ 2) {
+    				set_input_value(input, /*option*/ ctx[21].value);
+    			}
+
+    			if (dirty & /*colorOptions*/ 2 && t1_value !== (t1_value = /*colorOptions*/ ctx[1]["labels"][/*o*/ ctx[23]] + "")) set_data_dev(t1, t1_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(label);
+    			if (detaching) detach_dev(br1);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(166:8) {#each colorOptions['values'] as option, o}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (174:4) {#if (rangeOptions['labels'].length > 0 && rangeOptions['values'].length > 0)}
     function create_if_block$1(ctx) {
     	let each_1_anchor;
-    	let each_value = /*optionFlags*/ ctx[0]["values"];
+    	let each_value = /*rangeOptions*/ ctx[2]["values"];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -13485,8 +13770,8 @@ var app = (function (exports) {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*optionFlags*/ 1) {
-    				each_value = /*optionFlags*/ ctx[0]["values"];
+    			if (dirty & /*rangeOptions*/ 4) {
+    				each_value = /*rangeOptions*/ ctx[2]["values"];
     				validate_each_argument(each_value);
     				let i;
 
@@ -13519,70 +13804,104 @@ var app = (function (exports) {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(138:4) {#if (optionFlags['labels'].length > 0 && optionFlags['values'].length > 0)}",
+    		source: "(174:4) {#if (rangeOptions['labels'].length > 0 && rangeOptions['values'].length > 0)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (139:8) {#each optionFlags['values'] as option, o}
+    // (175:8) {#each rangeOptions['values'] as option, o}
     function create_each_block(ctx) {
     	let label;
     	let input;
+    	let input_min_value;
+    	let input_max_value;
+    	let input_step_value;
+    	let br0;
     	let t0;
-    	let t1_value = /*optionFlags*/ ctx[0]["labels"][/*o*/ ctx[17]] + "";
+    	let t1_value = /*rangeOptions*/ ctx[2]["labels"][/*o*/ ctx[23]] + "";
     	let t1;
     	let t2;
-    	let br;
+    	let t3_value = /*option*/ ctx[21].value + "";
+    	let t3;
+    	let t4;
+    	let br1;
     	let mounted;
     	let dispose;
 
-    	function input_change_handler() {
-    		/*input_change_handler*/ ctx[6].call(input, /*each_value*/ ctx[16], /*o*/ ctx[17]);
+    	function input_change_input_handler() {
+    		/*input_change_input_handler*/ ctx[12].call(input, /*each_value*/ ctx[22], /*o*/ ctx[23]);
     	}
 
     	const block = {
     		c: function create() {
     			label = element("label");
     			input = element("input");
+    			br0 = element("br");
     			t0 = space();
     			t1 = text(t1_value);
-    			t2 = space();
-    			br = element("br");
-    			attr_dev(input, "type", "checkbox");
-    			add_location(input, file$8, 140, 12, 4016);
-    			add_location(label, file$8, 139, 8, 3996);
-    			add_location(br, file$8, 141, 16, 4107);
+    			t2 = text("(");
+    			t3 = text(t3_value);
+    			t4 = text(")\n            ");
+    			br1 = element("br");
+    			attr_dev(input, "type", "range");
+    			attr_dev(input, "min", input_min_value = /*rangeOptions*/ ctx[2]["min"][/*o*/ ctx[23]]);
+    			attr_dev(input, "max", input_max_value = /*rangeOptions*/ ctx[2]["max"][/*o*/ ctx[23]]);
+    			attr_dev(input, "step", input_step_value = /*rangeOptions*/ ctx[2]["step"][/*o*/ ctx[23]]);
+    			add_location(input, file$8, 176, 16, 5493);
+    			add_location(br0, file$8, 176, 153, 5630);
+    			add_location(label, file$8, 175, 12, 5469);
+    			add_location(br1, file$8, 178, 20, 5717);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			append_dev(label, input);
-    			input.checked = /*option*/ ctx[15];
+    			set_input_value(input, /*option*/ ctx[21].value);
+    			append_dev(label, br0);
     			append_dev(label, t0);
     			append_dev(label, t1);
     			append_dev(label, t2);
-    			insert_dev(target, br, anchor);
+    			append_dev(label, t3);
+    			append_dev(label, t4);
+    			insert_dev(target, br1, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "change", input_change_handler);
+    				dispose = [
+    					listen_dev(input, "change", input_change_input_handler),
+    					listen_dev(input, "input", input_change_input_handler)
+    				];
+
     				mounted = true;
     			}
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*optionFlags*/ 1) {
-    				input.checked = /*option*/ ctx[15];
+    			if (dirty & /*rangeOptions*/ 4 && input_min_value !== (input_min_value = /*rangeOptions*/ ctx[2]["min"][/*o*/ ctx[23]])) {
+    				attr_dev(input, "min", input_min_value);
     			}
 
-    			if (dirty & /*optionFlags*/ 1 && t1_value !== (t1_value = /*optionFlags*/ ctx[0]["labels"][/*o*/ ctx[17]] + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*rangeOptions*/ 4 && input_max_value !== (input_max_value = /*rangeOptions*/ ctx[2]["max"][/*o*/ ctx[23]])) {
+    				attr_dev(input, "max", input_max_value);
+    			}
+
+    			if (dirty & /*rangeOptions*/ 4 && input_step_value !== (input_step_value = /*rangeOptions*/ ctx[2]["step"][/*o*/ ctx[23]])) {
+    				attr_dev(input, "step", input_step_value);
+    			}
+
+    			if (dirty & /*rangeOptions*/ 4) {
+    				set_input_value(input, /*option*/ ctx[21].value);
+    			}
+
+    			if (dirty & /*rangeOptions*/ 4 && t1_value !== (t1_value = /*rangeOptions*/ ctx[2]["labels"][/*o*/ ctx[23]] + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*rangeOptions*/ 4 && t3_value !== (t3_value = /*option*/ ctx[21].value + "")) set_data_dev(t3, t3_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(label);
-    			if (detaching) detach_dev(br);
+    			if (detaching) detach_dev(br1);
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -13590,7 +13909,7 @@ var app = (function (exports) {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(139:8) {#each optionFlags['values'] as option, o}",
+    		source: "(175:8) {#each rangeOptions['values'] as option, o}",
     		ctx
     	});
 
@@ -13599,54 +13918,131 @@ var app = (function (exports) {
 
     function create_fragment$i(ctx) {
     	let div;
-    	let h2;
+    	let h4;
     	let t0;
     	let t1;
-    	let if_block = /*optionFlags*/ ctx[0]["labels"].length > 0 && /*optionFlags*/ ctx[0]["values"].length > 0 && create_if_block$1(ctx);
+    	let t2;
+    	let t3;
+    	let t4;
+    	let label;
+    	let button;
+    	let t5_value = (/*isFullscreen*/ ctx[4] ? "minimize" : "maximize") + "";
+    	let t5;
+    	let mounted;
+    	let dispose;
+    	let if_block0 = /*booleanOptions*/ ctx[0]["labels"].length > 0 && /*booleanOptions*/ ctx[0]["values"].length > 0 && create_if_block_2(ctx);
+    	let if_block1 = /*colorOptions*/ ctx[1]["labels"].length > 0 && /*colorOptions*/ ctx[1]["values"].length > 0 && create_if_block_1(ctx);
+    	let if_block2 = /*rangeOptions*/ ctx[2]["labels"].length > 0 && /*rangeOptions*/ ctx[2]["values"].length > 0 && create_if_block$1(ctx);
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			h2 = element("h2");
-    			t0 = text(/*title*/ ctx[1]);
+    			h4 = element("h4");
+    			t0 = text(/*title*/ ctx[3]);
     			t1 = space();
-    			if (if_block) if_block.c();
-    			attr_dev(h2, "class", "svelte-snplat");
-    			add_location(h2, file$8, 135, 4, 3836);
-    			attr_dev(div, "class", "controls svelte-snplat");
-    			add_location(div, file$8, 133, 0, 3808);
+    			if (if_block0) if_block0.c();
+    			t2 = space();
+    			if (if_block1) if_block1.c();
+    			t3 = space();
+    			if (if_block2) if_block2.c();
+    			t4 = space();
+    			label = element("label");
+    			button = element("button");
+    			t5 = text(t5_value);
+    			attr_dev(h4, "class", "svelte-1ll3lt3");
+    			add_location(h4, file$8, 154, 4, 4642);
+    			add_location(button, file$8, 183, 8, 5771);
+    			add_location(label, file$8, 182, 4, 5755);
+    			attr_dev(div, "class", "controls right svelte-1ll3lt3");
+    			add_location(div, file$8, 152, 0, 4608);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
-    			append_dev(div, h2);
-    			append_dev(h2, t0);
+    			append_dev(div, h4);
+    			append_dev(h4, t0);
     			append_dev(div, t1);
-    			if (if_block) if_block.m(div, null);
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*title*/ 2) set_data_dev(t0, /*title*/ ctx[1]);
+    			if (if_block0) if_block0.m(div, null);
+    			append_dev(div, t2);
+    			if (if_block1) if_block1.m(div, null);
+    			append_dev(div, t3);
+    			if (if_block2) if_block2.m(div, null);
+    			append_dev(div, t4);
+    			append_dev(div, label);
+    			append_dev(label, button);
+    			append_dev(button, t5);
 
-    			if (/*optionFlags*/ ctx[0]["labels"].length > 0 && /*optionFlags*/ ctx[0]["values"].length > 0) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block$1(ctx);
-    					if_block.c();
-    					if_block.m(div, null);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			if (!mounted) {
+    				dispose = listen_dev(
+    					button,
+    					"click",
+    					function () {
+    						if (is_function(/*toggleFullscreen*/ ctx[5])) /*toggleFullscreen*/ ctx[5].apply(this, arguments);
+    					},
+    					false,
+    					false,
+    					false
+    				);
+
+    				mounted = true;
     			}
+    		},
+    		p: function update(new_ctx, [dirty]) {
+    			ctx = new_ctx;
+    			if (dirty & /*title*/ 8) set_data_dev(t0, /*title*/ ctx[3]);
+
+    			if (/*booleanOptions*/ ctx[0]["labels"].length > 0 && /*booleanOptions*/ ctx[0]["values"].length > 0) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+    				} else {
+    					if_block0 = create_if_block_2(ctx);
+    					if_block0.c();
+    					if_block0.m(div, t2);
+    				}
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (/*colorOptions*/ ctx[1]["labels"].length > 0 && /*colorOptions*/ ctx[1]["values"].length > 0) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_1(ctx);
+    					if_block1.c();
+    					if_block1.m(div, t3);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (/*rangeOptions*/ ctx[2]["labels"].length > 0 && /*rangeOptions*/ ctx[2]["values"].length > 0) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+    				} else {
+    					if_block2 = create_if_block$1(ctx);
+    					if_block2.c();
+    					if_block2.m(div, t4);
+    				}
+    			} else if (if_block2) {
+    				if_block2.d(1);
+    				if_block2 = null;
+    			}
+
+    			if (dirty & /*isFullscreen*/ 16 && t5_value !== (t5_value = (/*isFullscreen*/ ctx[4] ? "minimize" : "maximize") + "")) set_data_dev(t5, t5_value);
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			if (if_block) if_block.d();
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
+    			if (if_block2) if_block2.d();
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -13665,12 +14061,19 @@ var app = (function (exports) {
     	let { title } = $$props;
     	let { color = "#ff3e00" } = $$props;
     	let navContext;
-    	let { optionFlags = [] } = $$props;
+    	let { booleanOptions = [] } = $$props;
+    	let { colorOptions = [] } = $$props;
+    	let { rangeOptions = [] } = $$props;
     	let { viewLocation } = $$props, { viewTarget } = $$props;
     	let dispatch = createEventDispatcher();
     	let formatPlayTime = time => "" + new Date(time).toString();
     	let mouse_x = 0, mouse_y = 0, mouse_down = false, mouse_disabled = false;
     	let sinceLastMovementEvent = 0;
+    	let isFullscreen = false;
+
+    	let toggleFullscreen = function () {
+    		
+    	};
 
     	const init = function () {
     		console.log("Initializing Controls...");
@@ -13702,23 +14105,23 @@ var app = (function (exports) {
     		document.querySelectorAll("canvas").forEach(c => {
     			console.log(c);
 
-    			c.addEventListener("wheel", function (event) {
-    				const wheelEvent = event || window["event"];
+    			$$invalidate(5, toggleFullscreen = () => {
+    				if (!isFullscreen) {
+    					$$invalidate(4, isFullscreen = true);
+    					c.parentElement.className += " fullscreen";
 
-    				if (new Date().getTime() - sinceLastMovementEvent > 66) {
-    					sinceLastMovementEvent = new Date().getTime();
+    					for (const control of document.getElementsByClassName("controls")) {
+    						control.className += " fullscreen";
+    					}
+    				} else {
+    					$$invalidate(4, isFullscreen = false);
+    					c.parentElement.className = c.parentElement.className.replace("fullscreen", "");
 
-    					if (wheelEvent.deltaY < 0) {
-    						dispatch("up");
-    					} else if (wheelEvent.deltaY > 0) {
-    						dispatch("down");
+    					for (const control of document.getElementsByClassName("controls")) {
+    						control.className = control.className.replace("fullscreen", "");
     					}
     				}
-    			}); // wheelEvent.preventDefault();
-    		});
-
-    		document.querySelectorAll("canvas").forEach(c => {
-    			console.log(c);
+    			});
 
     			c.addEventListener("keydown", function (event) {
     				const kbEvent = event || window["event"]; // cross-browser shenanigans
@@ -13762,10 +14165,32 @@ var app = (function (exports) {
     					}
     				}
     			});
+
+    			c.addEventListener("wheel", function (event) {
+    				const wheelEvent = event || window["event"];
+
+    				if (new Date().getTime() - sinceLastMovementEvent > 66) {
+    					sinceLastMovementEvent = new Date().getTime();
+
+    					if (wheelEvent.deltaY < 0) {
+    						dispatch("up");
+    					} else if (wheelEvent.deltaY > 0) {
+    						dispatch("down");
+    					}
+    				}
+    			}); // wheelEvent.preventDefault();
     		});
     	};
 
-    	const writable_props = ["title", "color", "optionFlags", "viewLocation", "viewTarget"];
+    	const writable_props = [
+    		"title",
+    		"color",
+    		"booleanOptions",
+    		"colorOptions",
+    		"rangeOptions",
+    		"viewLocation",
+    		"viewTarget"
+    	];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<Controls> was created with unknown prop '${key}'`);
@@ -13774,17 +14199,29 @@ var app = (function (exports) {
     	let { $$slots = {}, $$scope } = $$props;
     	validate_slots("Controls", $$slots, []);
 
-    	function input_change_handler(each_value, o) {
-    		each_value[o] = this.checked;
-    		$$invalidate(0, optionFlags);
+    	function input_change_handler(each_value_2, o) {
+    		each_value_2[o].value = this.checked;
+    		$$invalidate(0, booleanOptions);
+    	}
+
+    	function input_input_handler(each_value_1, o) {
+    		each_value_1[o].value = this.value;
+    		$$invalidate(1, colorOptions);
+    	}
+
+    	function input_change_input_handler(each_value, o) {
+    		each_value[o].value = to_number(this.value);
+    		$$invalidate(2, rangeOptions);
     	}
 
     	$$self.$set = $$props => {
-    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
-    		if ("color" in $$props) $$invalidate(2, color = $$props.color);
-    		if ("optionFlags" in $$props) $$invalidate(0, optionFlags = $$props.optionFlags);
-    		if ("viewLocation" in $$props) $$invalidate(3, viewLocation = $$props.viewLocation);
-    		if ("viewTarget" in $$props) $$invalidate(4, viewTarget = $$props.viewTarget);
+    		if ("title" in $$props) $$invalidate(3, title = $$props.title);
+    		if ("color" in $$props) $$invalidate(6, color = $$props.color);
+    		if ("booleanOptions" in $$props) $$invalidate(0, booleanOptions = $$props.booleanOptions);
+    		if ("colorOptions" in $$props) $$invalidate(1, colorOptions = $$props.colorOptions);
+    		if ("rangeOptions" in $$props) $$invalidate(2, rangeOptions = $$props.rangeOptions);
+    		if ("viewLocation" in $$props) $$invalidate(7, viewLocation = $$props.viewLocation);
+    		if ("viewTarget" in $$props) $$invalidate(8, viewTarget = $$props.viewTarget);
     	};
 
     	$$self.$capture_state = () => ({
@@ -13792,7 +14229,9 @@ var app = (function (exports) {
     		title,
     		color,
     		navContext,
-    		optionFlags,
+    		booleanOptions,
+    		colorOptions,
+    		rangeOptions,
     		viewLocation,
     		viewTarget,
     		dispatch,
@@ -13802,16 +14241,20 @@ var app = (function (exports) {
     		mouse_down,
     		mouse_disabled,
     		sinceLastMovementEvent,
+    		isFullscreen,
+    		toggleFullscreen,
     		init
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
-    		if ("color" in $$props) $$invalidate(2, color = $$props.color);
+    		if ("title" in $$props) $$invalidate(3, title = $$props.title);
+    		if ("color" in $$props) $$invalidate(6, color = $$props.color);
     		if ("navContext" in $$props) navContext = $$props.navContext;
-    		if ("optionFlags" in $$props) $$invalidate(0, optionFlags = $$props.optionFlags);
-    		if ("viewLocation" in $$props) $$invalidate(3, viewLocation = $$props.viewLocation);
-    		if ("viewTarget" in $$props) $$invalidate(4, viewTarget = $$props.viewTarget);
+    		if ("booleanOptions" in $$props) $$invalidate(0, booleanOptions = $$props.booleanOptions);
+    		if ("colorOptions" in $$props) $$invalidate(1, colorOptions = $$props.colorOptions);
+    		if ("rangeOptions" in $$props) $$invalidate(2, rangeOptions = $$props.rangeOptions);
+    		if ("viewLocation" in $$props) $$invalidate(7, viewLocation = $$props.viewLocation);
+    		if ("viewTarget" in $$props) $$invalidate(8, viewTarget = $$props.viewTarget);
     		if ("dispatch" in $$props) dispatch = $$props.dispatch;
     		if ("formatPlayTime" in $$props) formatPlayTime = $$props.formatPlayTime;
     		if ("mouse_x" in $$props) mouse_x = $$props.mouse_x;
@@ -13819,6 +14262,8 @@ var app = (function (exports) {
     		if ("mouse_down" in $$props) mouse_down = $$props.mouse_down;
     		if ("mouse_disabled" in $$props) mouse_disabled = $$props.mouse_disabled;
     		if ("sinceLastMovementEvent" in $$props) sinceLastMovementEvent = $$props.sinceLastMovementEvent;
+    		if ("isFullscreen" in $$props) $$invalidate(4, isFullscreen = $$props.isFullscreen);
+    		if ("toggleFullscreen" in $$props) $$invalidate(5, toggleFullscreen = $$props.toggleFullscreen);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -13826,13 +14271,19 @@ var app = (function (exports) {
     	}
 
     	return [
-    		optionFlags,
+    		booleanOptions,
+    		colorOptions,
+    		rangeOptions,
     		title,
+    		isFullscreen,
+    		toggleFullscreen,
     		color,
     		viewLocation,
     		viewTarget,
     		init,
-    		input_change_handler
+    		input_change_handler,
+    		input_input_handler,
+    		input_change_input_handler
     	];
     }
 
@@ -13841,12 +14292,14 @@ var app = (function (exports) {
     		super(options);
 
     		init(this, options, instance$i, create_fragment$i, safe_not_equal, {
-    			title: 1,
-    			color: 2,
-    			optionFlags: 0,
-    			viewLocation: 3,
-    			viewTarget: 4,
-    			init: 5
+    			title: 3,
+    			color: 6,
+    			booleanOptions: 0,
+    			colorOptions: 1,
+    			rangeOptions: 2,
+    			viewLocation: 7,
+    			viewTarget: 8,
+    			init: 9
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -13859,15 +14312,15 @@ var app = (function (exports) {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*title*/ ctx[1] === undefined && !("title" in props)) {
+    		if (/*title*/ ctx[3] === undefined && !("title" in props)) {
     			console_1$2.warn("<Controls> was created without expected prop 'title'");
     		}
 
-    		if (/*viewLocation*/ ctx[3] === undefined && !("viewLocation" in props)) {
+    		if (/*viewLocation*/ ctx[7] === undefined && !("viewLocation" in props)) {
     			console_1$2.warn("<Controls> was created without expected prop 'viewLocation'");
     		}
 
-    		if (/*viewTarget*/ ctx[4] === undefined && !("viewTarget" in props)) {
+    		if (/*viewTarget*/ ctx[8] === undefined && !("viewTarget" in props)) {
     			console_1$2.warn("<Controls> was created without expected prop 'viewTarget'");
     		}
     	}
@@ -13888,11 +14341,27 @@ var app = (function (exports) {
     		throw new Error("<Controls>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get optionFlags() {
+    	get booleanOptions() {
     		throw new Error("<Controls>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set optionFlags(value) {
+    	set booleanOptions(value) {
+    		throw new Error("<Controls>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get colorOptions() {
+    		throw new Error("<Controls>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set colorOptions(value) {
+    		throw new Error("<Controls>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get rangeOptions() {
+    		throw new Error("<Controls>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set rangeOptions(value) {
     		throw new Error("<Controls>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -13913,7 +14382,7 @@ var app = (function (exports) {
     	}
 
     	get init() {
-    		return this.$$.ctx[5];
+    		return this.$$.ctx[9];
     	}
 
     	set init(value) {
@@ -13924,9 +14393,8 @@ var app = (function (exports) {
     /* src/apps/VizRApp.svelte generated by Svelte v3.24.0 */
 
     const { Object: Object_1$1, console: console_1$3 } = globals;
-    const file$9 = "src/apps/VizRApp.svelte";
 
-    function get_each_context_1(ctx, list, i) {
+    function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[26] = list[i];
     	child_ctx[30] = i;
@@ -13940,9 +14408,9 @@ var app = (function (exports) {
     	return child_ctx;
     }
 
-    // (105:4) <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>
+    // (118:4) <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>
     function create_default_slot_2$3(ctx) {
-    	let t0_value = /*captureViewDirection*/ ctx[12](/*location*/ ctx[3], /*target*/ ctx[4]) + "";
+    	let t0_value = /*captureViewDirection*/ ctx[14](/*location*/ ctx[6], /*target*/ ctx[7]) + "";
     	let t0;
     	let t1;
     	let gl_perspectivecamera;
@@ -13950,7 +14418,7 @@ var app = (function (exports) {
 
     	gl_perspectivecamera = new PerspectiveCamera({
     			props: {
-    				location: /*location*/ ctx[3],
+    				location: /*location*/ ctx[6],
     				lookAt: "center",
     				near: 0.01,
     				far: 1000
@@ -13971,9 +14439,9 @@ var app = (function (exports) {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty[0] & /*location, target*/ 24) && t0_value !== (t0_value = /*captureViewDirection*/ ctx[12](/*location*/ ctx[3], /*target*/ ctx[4]) + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty[0] & /*location, target*/ 192) && t0_value !== (t0_value = /*captureViewDirection*/ ctx[14](/*location*/ ctx[6], /*target*/ ctx[7]) + "")) set_data_dev(t0, t0_value);
     			const gl_perspectivecamera_changes = {};
-    			if (dirty[0] & /*location*/ 8) gl_perspectivecamera_changes.location = /*location*/ ctx[3];
+    			if (dirty[0] & /*location*/ 64) gl_perspectivecamera_changes.location = /*location*/ ctx[6];
     			gl_perspectivecamera.$set(gl_perspectivecamera_changes);
     		},
     		i: function intro(local) {
@@ -13996,15 +14464,15 @@ var app = (function (exports) {
     		block,
     		id: create_default_slot_2$3.name,
     		type: "slot",
-    		source: "(105:4) <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>",
+    		source: "(118:4) <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (114:8) {#each Array(heightmap[k].length) as _, i}
-    function create_each_block_1(ctx) {
+    // (127:8) {#each Array(heightmap[k].length) as _, i}
+    function create_each_block_1$1(ctx) {
     	let gl_mesh;
     	let current;
 
@@ -14014,19 +14482,19 @@ var app = (function (exports) {
     					x: 0,
     					y: 0,
     					z: 0,
-    					w: gridSizeX / /*heightmap*/ ctx[5][/*i*/ ctx[30]].length,
-    					h: 1 * /*heightmap*/ ctx[5][/*k*/ ctx[28]][/*i*/ ctx[30]],
-    					d: gridSizeZ / /*heightmap*/ ctx[5].length
+    					w: gridSizeX / /*heightmap*/ ctx[8][/*i*/ ctx[30]].length,
+    					h: 1 * /*heightmap*/ ctx[8][/*k*/ ctx[28]][/*i*/ ctx[30]],
+    					d: gridSizeZ / /*heightmap*/ ctx[8].length
     				}),
     				location: [
-    					-(gridSizeX / 2) + /*i*/ ctx[30] * (gridSizeX / /*heightmap*/ ctx[5][0].length),
+    					-(gridSizeX / 2) + /*i*/ ctx[30] * (gridSizeX / /*heightmap*/ ctx[8][0].length),
     					0,
-    					-(gridSizeZ / 2) + /*k*/ ctx[28] * (gridSizeZ / /*heightmap*/ ctx[5].length)
+    					-(gridSizeZ / 2) + /*k*/ ctx[28] * (gridSizeZ / /*heightmap*/ ctx[8].length)
     				],
     				rotation: [0, 0, 0],
-    				scale: [/*w*/ ctx[6], /*h*/ ctx[7], /*d*/ ctx[8]],
+    				scale: [/*w*/ ctx[11].value, /*h*/ ctx[12].value, /*d*/ ctx[13].value],
     				uniforms: {
-    					color: adjustColor$2(/*color*/ ctx[1], /*heightmap*/ ctx[5][/*k*/ ctx[28]][/*i*/ ctx[30]])
+    					color: adjustColor$2(/*color*/ ctx[10].value, /*heightmap*/ ctx[8][/*k*/ ctx[28]][/*i*/ ctx[30]])
     				}
     			},
     			$$inline: true
@@ -14043,25 +14511,23 @@ var app = (function (exports) {
     		p: function update(ctx, dirty) {
     			const gl_mesh_changes = {};
 
-    			if (dirty[0] & /*heightmap*/ 32) gl_mesh_changes.geometry = box({
+    			if (dirty[0] & /*heightmap*/ 256) gl_mesh_changes.geometry = box({
     				x: 0,
     				y: 0,
     				z: 0,
-    				w: gridSizeX / /*heightmap*/ ctx[5][/*i*/ ctx[30]].length,
-    				h: 1 * /*heightmap*/ ctx[5][/*k*/ ctx[28]][/*i*/ ctx[30]],
-    				d: gridSizeZ / /*heightmap*/ ctx[5].length
+    				w: gridSizeX / /*heightmap*/ ctx[8][/*i*/ ctx[30]].length,
+    				h: 1 * /*heightmap*/ ctx[8][/*k*/ ctx[28]][/*i*/ ctx[30]],
+    				d: gridSizeZ / /*heightmap*/ ctx[8].length
     			});
 
-    			if (dirty[0] & /*heightmap*/ 32) gl_mesh_changes.location = [
-    				-(gridSizeX / 2) + /*i*/ ctx[30] * (gridSizeX / /*heightmap*/ ctx[5][0].length),
+    			if (dirty[0] & /*heightmap*/ 256) gl_mesh_changes.location = [
+    				-(gridSizeX / 2) + /*i*/ ctx[30] * (gridSizeX / /*heightmap*/ ctx[8][0].length),
     				0,
-    				-(gridSizeZ / 2) + /*k*/ ctx[28] * (gridSizeZ / /*heightmap*/ ctx[5].length)
+    				-(gridSizeZ / 2) + /*k*/ ctx[28] * (gridSizeZ / /*heightmap*/ ctx[8].length)
     			];
 
-    			if (dirty[0] & /*w, h, d*/ 448) gl_mesh_changes.scale = [/*w*/ ctx[6], /*h*/ ctx[7], /*d*/ ctx[8]];
-
-    			if (dirty[0] & /*color, heightmap*/ 34) gl_mesh_changes.uniforms = {
-    				color: adjustColor$2(/*color*/ ctx[1], /*heightmap*/ ctx[5][/*k*/ ctx[28]][/*i*/ ctx[30]])
+    			if (dirty[0] & /*heightmap*/ 256) gl_mesh_changes.uniforms = {
+    				color: adjustColor$2(/*color*/ ctx[10].value, /*heightmap*/ ctx[8][/*k*/ ctx[28]][/*i*/ ctx[30]])
     			};
 
     			gl_mesh.$set(gl_mesh_changes);
@@ -14082,25 +14548,25 @@ var app = (function (exports) {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block_1.name,
+    		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(114:8) {#each Array(heightmap[k].length) as _, i}",
+    		source: "(127:8) {#each Array(heightmap[k].length) as _, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (113:4) {#each Array(heightmap.length) as _, k}
+    // (126:4) {#each Array(heightmap.length) as _, k}
     function create_each_block$1(ctx) {
     	let each_1_anchor;
     	let current;
-    	let each_value_1 = Array(/*heightmap*/ ctx[5][/*k*/ ctx[28]].length);
+    	let each_value_1 = Array(/*heightmap*/ ctx[8][/*k*/ ctx[28]].length);
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_1.length; i += 1) {
-    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    		each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -14124,19 +14590,19 @@ var app = (function (exports) {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*heightmap, w, h, d, color*/ 482) {
-    				each_value_1 = Array(/*heightmap*/ ctx[5][/*k*/ ctx[28]].length);
+    			if (dirty[0] & /*heightmap, w, h, d, color*/ 15616) {
+    				each_value_1 = Array(/*heightmap*/ ctx[8][/*k*/ ctx[28]].length);
     				validate_each_argument(each_value_1);
     				let i;
 
     				for (i = 0; i < each_value_1.length; i += 1) {
-    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+    					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i] = create_each_block_1$1(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
@@ -14180,14 +14646,14 @@ var app = (function (exports) {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(113:4) {#each Array(heightmap.length) as _, k}",
+    		source: "(126:4) {#each Array(heightmap.length) as _, k}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (126:4) <GL.Group location={[light.x,light.y,light.z]}>
+    // (139:4) <GL.Group location={[light.x,light.y,light.z]}>
     function create_default_slot_1$3(ctx) {
     	let gl_mesh;
     	let t;
@@ -14248,14 +14714,14 @@ var app = (function (exports) {
     		block,
     		id: create_default_slot_1$3.name,
     		type: "slot",
-    		source: "(126:4) <GL.Group location={[light.x,light.y,light.z]}>",
+    		source: "(139:4) <GL.Group location={[light.x,light.y,light.z]}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (102:0) <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
+    // (115:0) <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
     function create_default_slot$4(ctx) {
     	let gl_target;
     	let t0;
@@ -14272,7 +14738,7 @@ var app = (function (exports) {
     	gl_target = new Target({
     			props: {
     				id: "center",
-    				location: [0, /*h*/ ctx[7] / 2, 0]
+    				location: [0, /*h*/ ctx[12].value / 2, 0]
     			},
     			$$inline: true
     		});
@@ -14280,8 +14746,8 @@ var app = (function (exports) {
     	gl_orbitcontrols = new OrbitControls({
     			props: {
     				maxPolarAngle: Math.PI / 2,
-    				location: /*location*/ ctx[3],
-    				target: /*target*/ ctx[4],
+    				location: /*location*/ ctx[6],
+    				target: /*target*/ ctx[7],
     				$$slots: { default: [create_default_slot_2$3] },
     				$$scope: { ctx }
     			},
@@ -14298,7 +14764,7 @@ var app = (function (exports) {
     			$$inline: true
     		});
 
-    	let each_value = Array(/*heightmap*/ ctx[5].length);
+    	let each_value = Array(/*heightmap*/ ctx[8].length);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -14312,7 +14778,7 @@ var app = (function (exports) {
 
     	gl_group = new Group({
     			props: {
-    				location: [/*light*/ ctx[9].x, /*light*/ ctx[9].y, /*light*/ ctx[9].z],
+    				location: [/*light*/ ctx[4].x, /*light*/ ctx[4].y, /*light*/ ctx[4].z],
     				$$slots: { default: [create_default_slot_1$3] },
     				$$scope: { ctx }
     			},
@@ -14356,21 +14822,18 @@ var app = (function (exports) {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			const gl_target_changes = {};
-    			if (dirty[0] & /*h*/ 128) gl_target_changes.location = [0, /*h*/ ctx[7] / 2, 0];
-    			gl_target.$set(gl_target_changes);
     			const gl_orbitcontrols_changes = {};
-    			if (dirty[0] & /*location*/ 8) gl_orbitcontrols_changes.location = /*location*/ ctx[3];
-    			if (dirty[0] & /*target*/ 16) gl_orbitcontrols_changes.target = /*target*/ ctx[4];
+    			if (dirty[0] & /*location*/ 64) gl_orbitcontrols_changes.location = /*location*/ ctx[6];
+    			if (dirty[0] & /*target*/ 128) gl_orbitcontrols_changes.target = /*target*/ ctx[7];
 
-    			if (dirty[0] & /*location, target*/ 24 | dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[0] & /*location, target*/ 192 | dirty[1] & /*$$scope*/ 1) {
     				gl_orbitcontrols_changes.$$scope = { dirty, ctx };
     			}
 
     			gl_orbitcontrols.$set(gl_orbitcontrols_changes);
 
-    			if (dirty[0] & /*heightmap, w, h, d, color*/ 482) {
-    				each_value = Array(/*heightmap*/ ctx[5].length);
+    			if (dirty[0] & /*heightmap, w, h, d, color*/ 15616) {
+    				each_value = Array(/*heightmap*/ ctx[8].length);
     				validate_each_argument(each_value);
     				let i;
 
@@ -14398,7 +14861,7 @@ var app = (function (exports) {
     			}
 
     			const gl_group_changes = {};
-    			if (dirty[0] & /*light*/ 512) gl_group_changes.location = [/*light*/ ctx[9].x, /*light*/ ctx[9].y, /*light*/ ctx[9].z];
+    			if (dirty[0] & /*light*/ 16) gl_group_changes.location = [/*light*/ ctx[4].x, /*light*/ ctx[4].y, /*light*/ ctx[4].z];
 
     			if (dirty[1] & /*$$scope*/ 1) {
     				gl_group_changes.$$scope = { dirty, ctx };
@@ -14453,7 +14916,7 @@ var app = (function (exports) {
     		block,
     		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(102:0) <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>",
+    		source: "(115:0) <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>",
     		ctx
     	});
 
@@ -14463,295 +14926,178 @@ var app = (function (exports) {
     function create_fragment$j(ctx) {
     	let gl_scene;
     	let updating_gl;
-    	let t0;
-    	let navigationcontrols;
+    	let t;
+    	let controls;
     	let updating_init;
-    	let updating_optionFlags;
+    	let updating_colorOptions;
+    	let updating_booleanOptions;
+    	let updating_rangeOptions;
     	let updating_viewLocation;
     	let updating_viewTarget;
-    	let t1;
-    	let div;
-    	let label0;
-    	let input0;
-    	let t2;
-    	let label1;
-    	let input1;
-    	let input1_min_value;
-    	let input1_max_value;
-    	let input1_step_value;
-    	let t3;
-    	let t4;
-    	let t5;
-    	let t6;
-    	let label2;
-    	let input2;
-    	let input2_min_value;
-    	let input2_max_value;
-    	let input2_step_value;
-    	let t7;
-    	let t8;
-    	let t9;
-    	let t10;
-    	let label3;
-    	let input3;
-    	let input3_min_value;
-    	let input3_max_value;
-    	let input3_step_value;
-    	let t11;
-    	let t12;
-    	let t13;
     	let current;
-    	let mounted;
-    	let dispose;
 
     	function gl_scene_gl_binding(value) {
-    		/*gl_scene_gl_binding*/ ctx[15].call(null, value);
+    		/*gl_scene_gl_binding*/ ctx[17].call(null, value);
     	}
 
     	let gl_scene_props = {
     		backgroundOpacity: "1.0",
-    		process_extra_shader_components: /*process_extra_shader_components*/ ctx[13],
+    		process_extra_shader_components: /*process_extra_shader_components*/ ctx[15],
     		$$slots: { default: [create_default_slot$4] },
     		$$scope: { ctx }
     	};
 
-    	if (/*webgl*/ ctx[10] !== void 0) {
-    		gl_scene_props.gl = /*webgl*/ ctx[10];
+    	if (/*webgl*/ ctx[5] !== void 0) {
+    		gl_scene_props.gl = /*webgl*/ ctx[5];
     	}
 
     	gl_scene = new Scene({ props: gl_scene_props, $$inline: true });
     	binding_callbacks.push(() => bind(gl_scene, "gl", gl_scene_gl_binding));
 
-    	function navigationcontrols_init_binding(value) {
-    		/*navigationcontrols_init_binding*/ ctx[16].call(null, value);
+    	function controls_init_binding(value) {
+    		/*controls_init_binding*/ ctx[18].call(null, value);
     	}
 
-    	function navigationcontrols_optionFlags_binding(value) {
-    		/*navigationcontrols_optionFlags_binding*/ ctx[17].call(null, value);
+    	function controls_colorOptions_binding(value) {
+    		/*controls_colorOptions_binding*/ ctx[19].call(null, value);
     	}
 
-    	function navigationcontrols_viewLocation_binding(value) {
-    		/*navigationcontrols_viewLocation_binding*/ ctx[18].call(null, value);
+    	function controls_booleanOptions_binding(value) {
+    		/*controls_booleanOptions_binding*/ ctx[20].call(null, value);
     	}
 
-    	function navigationcontrols_viewTarget_binding(value) {
-    		/*navigationcontrols_viewTarget_binding*/ ctx[19].call(null, value);
+    	function controls_rangeOptions_binding(value) {
+    		/*controls_rangeOptions_binding*/ ctx[21].call(null, value);
     	}
 
-    	let navigationcontrols_props = { title: /*title*/ ctx[2] };
-
-    	if (/*navControlInit*/ ctx[11] !== void 0) {
-    		navigationcontrols_props.init = /*navControlInit*/ ctx[11];
+    	function controls_viewLocation_binding(value) {
+    		/*controls_viewLocation_binding*/ ctx[22].call(null, value);
     	}
 
-    	if (/*options*/ ctx[0] !== void 0) {
-    		navigationcontrols_props.optionFlags = /*options*/ ctx[0];
+    	function controls_viewTarget_binding(value) {
+    		/*controls_viewTarget_binding*/ ctx[23].call(null, value);
     	}
 
-    	if (/*location*/ ctx[3] !== void 0) {
-    		navigationcontrols_props.viewLocation = /*location*/ ctx[3];
+    	let controls_props = { title: /*title*/ ctx[3] };
+
+    	if (/*navControlInit*/ ctx[9] !== void 0) {
+    		controls_props.init = /*navControlInit*/ ctx[9];
     	}
 
-    	if (/*target*/ ctx[4] !== void 0) {
-    		navigationcontrols_props.viewTarget = /*target*/ ctx[4];
+    	if (/*colors*/ ctx[0] !== void 0) {
+    		controls_props.colorOptions = /*colors*/ ctx[0];
     	}
 
-    	navigationcontrols = new Controls({
-    			props: navigationcontrols_props,
-    			$$inline: true
-    		});
+    	if (/*options*/ ctx[1] !== void 0) {
+    		controls_props.booleanOptions = /*options*/ ctx[1];
+    	}
 
-    	binding_callbacks.push(() => bind(navigationcontrols, "init", navigationcontrols_init_binding));
-    	binding_callbacks.push(() => bind(navigationcontrols, "optionFlags", navigationcontrols_optionFlags_binding));
-    	binding_callbacks.push(() => bind(navigationcontrols, "viewLocation", navigationcontrols_viewLocation_binding));
-    	binding_callbacks.push(() => bind(navigationcontrols, "viewTarget", navigationcontrols_viewTarget_binding));
-    	navigationcontrols.$on("move", /*move_handler*/ ctx[20]);
+    	if (/*ranges*/ ctx[2] !== void 0) {
+    		controls_props.rangeOptions = /*ranges*/ ctx[2];
+    	}
+
+    	if (/*location*/ ctx[6] !== void 0) {
+    		controls_props.viewLocation = /*location*/ ctx[6];
+    	}
+
+    	if (/*target*/ ctx[7] !== void 0) {
+    		controls_props.viewTarget = /*target*/ ctx[7];
+    	}
+
+    	controls = new Controls({ props: controls_props, $$inline: true });
+    	binding_callbacks.push(() => bind(controls, "init", controls_init_binding));
+    	binding_callbacks.push(() => bind(controls, "colorOptions", controls_colorOptions_binding));
+    	binding_callbacks.push(() => bind(controls, "booleanOptions", controls_booleanOptions_binding));
+    	binding_callbacks.push(() => bind(controls, "rangeOptions", controls_rangeOptions_binding));
+    	binding_callbacks.push(() => bind(controls, "viewLocation", controls_viewLocation_binding));
+    	binding_callbacks.push(() => bind(controls, "viewTarget", controls_viewTarget_binding));
+    	controls.$on("move", /*move_handler*/ ctx[24]);
 
     	const block = {
     		c: function create() {
     			create_component(gl_scene.$$.fragment);
-    			t0 = space();
-    			create_component(navigationcontrols.$$.fragment);
-    			t1 = space();
-    			div = element("div");
-    			label0 = element("label");
-    			input0 = element("input");
-    			t2 = space();
-    			label1 = element("label");
-    			input1 = element("input");
-    			t3 = text(" width (");
-    			t4 = text(/*w*/ ctx[6]);
-    			t5 = text(")");
-    			t6 = space();
-    			label2 = element("label");
-    			input2 = element("input");
-    			t7 = text(" height (");
-    			t8 = text(/*h*/ ctx[7]);
-    			t9 = text(")");
-    			t10 = space();
-    			label3 = element("label");
-    			input3 = element("input");
-    			t11 = text(" depth (");
-    			t12 = text(/*d*/ ctx[8]);
-    			t13 = text(")");
-    			attr_dev(input0, "type", "color");
-    			set_style(input0, "height", "40px");
-    			add_location(input0, file$9, 151, 8, 4469);
-    			add_location(label0, file$9, 150, 4, 4453);
-    			attr_dev(input1, "type", "range");
-    			attr_dev(input1, "min", input1_min_value = 0.1);
-    			attr_dev(input1, "max", input1_max_value = 5);
-    			attr_dev(input1, "step", input1_step_value = 0.1);
-    			add_location(input1, file$9, 155, 8, 4564);
-    			add_location(label1, file$9, 154, 4, 4548);
-    			attr_dev(input2, "type", "range");
-    			attr_dev(input2, "min", input2_min_value = 0.1);
-    			attr_dev(input2, "max", input2_max_value = 5);
-    			attr_dev(input2, "step", input2_step_value = 0.1);
-    			add_location(input2, file$9, 159, 8, 4675);
-    			add_location(label2, file$9, 158, 4, 4659);
-    			attr_dev(input3, "type", "range");
-    			attr_dev(input3, "min", input3_min_value = 0.1);
-    			attr_dev(input3, "max", input3_max_value = 5);
-    			attr_dev(input3, "step", input3_step_value = 0.1);
-    			add_location(input3, file$9, 163, 8, 4787);
-    			add_location(label3, file$9, 162, 4, 4771);
-    			attr_dev(div, "class", "controls svelte-1tt45l5");
-    			add_location(div, file$9, 149, 0, 4426);
+    			t = space();
+    			create_component(controls.$$.fragment);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			mount_component(gl_scene, target, anchor);
-    			insert_dev(target, t0, anchor);
-    			mount_component(navigationcontrols, target, anchor);
-    			insert_dev(target, t1, anchor);
-    			insert_dev(target, div, anchor);
-    			append_dev(div, label0);
-    			append_dev(label0, input0);
-    			set_input_value(input0, /*color*/ ctx[1]);
-    			append_dev(div, t2);
-    			append_dev(div, label1);
-    			append_dev(label1, input1);
-    			set_input_value(input1, /*w*/ ctx[6]);
-    			append_dev(label1, t3);
-    			append_dev(label1, t4);
-    			append_dev(label1, t5);
-    			append_dev(div, t6);
-    			append_dev(div, label2);
-    			append_dev(label2, input2);
-    			set_input_value(input2, /*h*/ ctx[7]);
-    			append_dev(label2, t7);
-    			append_dev(label2, t8);
-    			append_dev(label2, t9);
-    			append_dev(div, t10);
-    			append_dev(div, label3);
-    			append_dev(label3, input3);
-    			set_input_value(input3, /*d*/ ctx[8]);
-    			append_dev(label3, t11);
-    			append_dev(label3, t12);
-    			append_dev(label3, t13);
+    			insert_dev(target, t, anchor);
+    			mount_component(controls, target, anchor);
     			current = true;
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[21]),
-    					listen_dev(input1, "change", /*input1_change_input_handler*/ ctx[22]),
-    					listen_dev(input1, "input", /*input1_change_input_handler*/ ctx[22]),
-    					listen_dev(input2, "change", /*input2_change_input_handler*/ ctx[23]),
-    					listen_dev(input2, "input", /*input2_change_input_handler*/ ctx[23]),
-    					listen_dev(input3, "change", /*input3_change_input_handler*/ ctx[24]),
-    					listen_dev(input3, "input", /*input3_change_input_handler*/ ctx[24])
-    				];
-
-    				mounted = true;
-    			}
     		},
     		p: function update(ctx, dirty) {
     			const gl_scene_changes = {};
 
-    			if (dirty[0] & /*light, heightmap, w, h, d, color, location, target*/ 1018 | dirty[1] & /*$$scope*/ 1) {
+    			if (dirty[0] & /*light, heightmap, location, target*/ 464 | dirty[1] & /*$$scope*/ 1) {
     				gl_scene_changes.$$scope = { dirty, ctx };
     			}
 
-    			if (!updating_gl && dirty[0] & /*webgl*/ 1024) {
+    			if (!updating_gl && dirty[0] & /*webgl*/ 32) {
     				updating_gl = true;
-    				gl_scene_changes.gl = /*webgl*/ ctx[10];
+    				gl_scene_changes.gl = /*webgl*/ ctx[5];
     				add_flush_callback(() => updating_gl = false);
     			}
 
     			gl_scene.$set(gl_scene_changes);
-    			const navigationcontrols_changes = {};
-    			if (dirty[0] & /*title*/ 4) navigationcontrols_changes.title = /*title*/ ctx[2];
+    			const controls_changes = {};
+    			if (dirty[0] & /*title*/ 8) controls_changes.title = /*title*/ ctx[3];
 
-    			if (!updating_init && dirty[0] & /*navControlInit*/ 2048) {
+    			if (!updating_init && dirty[0] & /*navControlInit*/ 512) {
     				updating_init = true;
-    				navigationcontrols_changes.init = /*navControlInit*/ ctx[11];
+    				controls_changes.init = /*navControlInit*/ ctx[9];
     				add_flush_callback(() => updating_init = false);
     			}
 
-    			if (!updating_optionFlags && dirty[0] & /*options*/ 1) {
-    				updating_optionFlags = true;
-    				navigationcontrols_changes.optionFlags = /*options*/ ctx[0];
-    				add_flush_callback(() => updating_optionFlags = false);
+    			if (!updating_colorOptions && dirty[0] & /*colors*/ 1) {
+    				updating_colorOptions = true;
+    				controls_changes.colorOptions = /*colors*/ ctx[0];
+    				add_flush_callback(() => updating_colorOptions = false);
     			}
 
-    			if (!updating_viewLocation && dirty[0] & /*location*/ 8) {
+    			if (!updating_booleanOptions && dirty[0] & /*options*/ 2) {
+    				updating_booleanOptions = true;
+    				controls_changes.booleanOptions = /*options*/ ctx[1];
+    				add_flush_callback(() => updating_booleanOptions = false);
+    			}
+
+    			if (!updating_rangeOptions && dirty[0] & /*ranges*/ 4) {
+    				updating_rangeOptions = true;
+    				controls_changes.rangeOptions = /*ranges*/ ctx[2];
+    				add_flush_callback(() => updating_rangeOptions = false);
+    			}
+
+    			if (!updating_viewLocation && dirty[0] & /*location*/ 64) {
     				updating_viewLocation = true;
-    				navigationcontrols_changes.viewLocation = /*location*/ ctx[3];
+    				controls_changes.viewLocation = /*location*/ ctx[6];
     				add_flush_callback(() => updating_viewLocation = false);
     			}
 
-    			if (!updating_viewTarget && dirty[0] & /*target*/ 16) {
+    			if (!updating_viewTarget && dirty[0] & /*target*/ 128) {
     				updating_viewTarget = true;
-    				navigationcontrols_changes.viewTarget = /*target*/ ctx[4];
+    				controls_changes.viewTarget = /*target*/ ctx[7];
     				add_flush_callback(() => updating_viewTarget = false);
     			}
 
-    			navigationcontrols.$set(navigationcontrols_changes);
-
-    			if (dirty[0] & /*color*/ 2) {
-    				set_input_value(input0, /*color*/ ctx[1]);
-    			}
-
-    			if (dirty[0] & /*w*/ 64) {
-    				set_input_value(input1, /*w*/ ctx[6]);
-    			}
-
-    			if (!current || dirty[0] & /*w*/ 64) set_data_dev(t4, /*w*/ ctx[6]);
-
-    			if (dirty[0] & /*h*/ 128) {
-    				set_input_value(input2, /*h*/ ctx[7]);
-    			}
-
-    			if (!current || dirty[0] & /*h*/ 128) set_data_dev(t8, /*h*/ ctx[7]);
-
-    			if (dirty[0] & /*d*/ 256) {
-    				set_input_value(input3, /*d*/ ctx[8]);
-    			}
-
-    			if (!current || dirty[0] & /*d*/ 256) set_data_dev(t12, /*d*/ ctx[8]);
+    			controls.$set(controls_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(gl_scene.$$.fragment, local);
-    			transition_in(navigationcontrols.$$.fragment, local);
+    			transition_in(controls.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(gl_scene.$$.fragment, local);
-    			transition_out(navigationcontrols.$$.fragment, local);
+    			transition_out(controls.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			destroy_component(gl_scene, detaching);
-    			if (detaching) detach_dev(t0);
-    			destroy_component(navigationcontrols, detaching);
-    			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(div);
-    			mounted = false;
-    			run_all(dispose);
+    			if (detaching) detach_dev(t);
+    			destroy_component(controls, detaching);
     		}
     	};
 
@@ -14780,7 +15126,22 @@ var app = (function (exports) {
 
     function instance$j($$self, $$props, $$invalidate) {
     	let { title } = $$props;
+    	const color = { value: "#ff3e00" };
+    	const light = {};
+    	const w = { value: 1 };
+    	const h = { value: 1 };
+    	const d = { value: 1 };
+    	let webgl;
+    	let { colors = { labels: [""], values: [color] } } = $$props;
     	let { options = { labels: [], values: [] } } = $$props;
+
+    	let { ranges = {
+    		labels: ["width", "height", "depth"],
+    		min: [0.1, 0.1, 0.1],
+    		max: [5, 5, 5],
+    		step: [0.1, 0.1, 0.1],
+    		values: [w, h, d]
+    	} } = $$props;
 
     	// initial view
     	let location = new Float32Array([0, 10, 5]);
@@ -14792,7 +15153,6 @@ var app = (function (exports) {
     		return "";
     	};
 
-    	let { color = "#ff3e00" } = $$props;
     	const data = JSON.parse(document.getElementById("gl_data_in_html").children[0].innerHTML);
     	const heightmap = [];
 
@@ -14807,11 +15167,6 @@ var app = (function (exports) {
     	}
 
     	console.log(heightmap);
-    	let w = 1;
-    	let h = 1;
-    	let d = 1;
-    	const light = {};
-    	let webgl;
 
     	/* This is a helper callback to bind custom uniforms/attributes
      * and to pass custom buffers, like the ad-hoc texture coords
@@ -14838,16 +15193,16 @@ var app = (function (exports) {
 
     		const loop = () => {
     			frame = requestAnimationFrame(loop);
-    			$$invalidate(9, light.x = 3 * Math.sin(Date.now() * 0.001), light);
-    			$$invalidate(9, light.y = 2.5 + 2 * Math.sin(Date.now() * 0.0004), light);
-    			$$invalidate(9, light.z = 3 * Math.cos(Date.now() * 0.002), light);
+    			$$invalidate(4, light.x = 3 * Math.sin(Date.now() * 0.001), light);
+    			$$invalidate(4, light.y = 2.5 + 2 * Math.sin(Date.now() * 0.0004), light);
+    			$$invalidate(4, light.z = 3 * Math.cos(Date.now() * 0.002), light);
     		};
 
     		loop();
     		return () => cancelAnimationFrame(frame);
     	});
 
-    	const writable_props = ["title", "options", "color"];
+    	const writable_props = ["title", "colors", "options", "ranges"];
 
     	Object_1$1.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$3.warn(`<VizRApp> was created with unknown prop '${key}'`);
@@ -14858,95 +15213,86 @@ var app = (function (exports) {
 
     	function gl_scene_gl_binding(value) {
     		webgl = value;
-    		$$invalidate(10, webgl);
+    		$$invalidate(5, webgl);
     	}
 
-    	function navigationcontrols_init_binding(value) {
+    	function controls_init_binding(value) {
     		navControlInit = value;
-    		$$invalidate(11, navControlInit);
+    		$$invalidate(9, navControlInit);
     	}
 
-    	function navigationcontrols_optionFlags_binding(value) {
+    	function controls_colorOptions_binding(value) {
+    		colors = value;
+    		$$invalidate(0, colors);
+    	}
+
+    	function controls_booleanOptions_binding(value) {
     		options = value;
-    		$$invalidate(0, options);
+    		$$invalidate(1, options);
     	}
 
-    	function navigationcontrols_viewLocation_binding(value) {
+    	function controls_rangeOptions_binding(value) {
+    		ranges = value;
+    		$$invalidate(2, ranges);
+    	}
+
+    	function controls_viewLocation_binding(value) {
     		location = value;
-    		$$invalidate(3, location);
+    		$$invalidate(6, location);
     	}
 
-    	function navigationcontrols_viewTarget_binding(value) {
+    	function controls_viewTarget_binding(value) {
     		target = value;
-    		$$invalidate(4, target);
+    		$$invalidate(7, target);
     	}
 
     	const move_handler = event => updateWorld(event);
 
-    	function input0_input_handler() {
-    		color = this.value;
-    		$$invalidate(1, color);
-    	}
-
-    	function input1_change_input_handler() {
-    		w = to_number(this.value);
-    		$$invalidate(6, w);
-    	}
-
-    	function input2_change_input_handler() {
-    		h = to_number(this.value);
-    		$$invalidate(7, h);
-    	}
-
-    	function input3_change_input_handler() {
-    		d = to_number(this.value);
-    		$$invalidate(8, d);
-    	}
-
     	$$self.$set = $$props => {
-    		if ("title" in $$props) $$invalidate(2, title = $$props.title);
-    		if ("options" in $$props) $$invalidate(0, options = $$props.options);
-    		if ("color" in $$props) $$invalidate(1, color = $$props.color);
+    		if ("title" in $$props) $$invalidate(3, title = $$props.title);
+    		if ("colors" in $$props) $$invalidate(0, colors = $$props.colors);
+    		if ("options" in $$props) $$invalidate(1, options = $$props.options);
+    		if ("ranges" in $$props) $$invalidate(2, ranges = $$props.ranges);
     	};
 
     	$$self.$capture_state = () => ({
     		onMount,
     		GL,
-    		NavigationControls: Controls,
+    		Controls,
     		title,
+    		color,
+    		light,
+    		w,
+    		h,
+    		d,
+    		webgl,
+    		colors,
     		options,
+    		ranges,
     		location,
     		target,
     		captureViewDirection,
-    		color,
     		adjustColor: adjustColor$2,
     		data,
     		heightmap,
     		gridSizeX,
     		gridSizeZ,
-    		w,
-    		h,
-    		d,
-    		light,
-    		webgl,
     		process_extra_shader_components,
     		updateWorld,
     		navControlInit
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("title" in $$props) $$invalidate(2, title = $$props.title);
-    		if ("options" in $$props) $$invalidate(0, options = $$props.options);
-    		if ("location" in $$props) $$invalidate(3, location = $$props.location);
-    		if ("target" in $$props) $$invalidate(4, target = $$props.target);
-    		if ("color" in $$props) $$invalidate(1, color = $$props.color);
-    		if ("w" in $$props) $$invalidate(6, w = $$props.w);
-    		if ("h" in $$props) $$invalidate(7, h = $$props.h);
-    		if ("d" in $$props) $$invalidate(8, d = $$props.d);
-    		if ("webgl" in $$props) $$invalidate(10, webgl = $$props.webgl);
-    		if ("process_extra_shader_components" in $$props) $$invalidate(13, process_extra_shader_components = $$props.process_extra_shader_components);
-    		if ("updateWorld" in $$props) $$invalidate(14, updateWorld = $$props.updateWorld);
-    		if ("navControlInit" in $$props) $$invalidate(11, navControlInit = $$props.navControlInit);
+    		if ("title" in $$props) $$invalidate(3, title = $$props.title);
+    		if ("webgl" in $$props) $$invalidate(5, webgl = $$props.webgl);
+    		if ("colors" in $$props) $$invalidate(0, colors = $$props.colors);
+    		if ("options" in $$props) $$invalidate(1, options = $$props.options);
+    		if ("ranges" in $$props) $$invalidate(2, ranges = $$props.ranges);
+    		if ("location" in $$props) $$invalidate(6, location = $$props.location);
+    		if ("target" in $$props) $$invalidate(7, target = $$props.target);
+    		if ("process_extra_shader_components" in $$props) $$invalidate(15, process_extra_shader_components = $$props.process_extra_shader_components);
+    		if ("updateWorld" in $$props) $$invalidate(16, updateWorld = $$props.updateWorld);
+    		if ("navControlInit" in $$props) $$invalidate(9, navControlInit = $$props.navControlInit);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -14954,38 +15300,52 @@ var app = (function (exports) {
     	}
 
     	return [
+    		colors,
     		options,
-    		color,
+    		ranges,
     		title,
+    		light,
+    		webgl,
     		location,
     		target,
     		heightmap,
+    		navControlInit,
+    		color,
     		w,
     		h,
     		d,
-    		light,
-    		webgl,
-    		navControlInit,
     		captureViewDirection,
     		process_extra_shader_components,
     		updateWorld,
     		gl_scene_gl_binding,
-    		navigationcontrols_init_binding,
-    		navigationcontrols_optionFlags_binding,
-    		navigationcontrols_viewLocation_binding,
-    		navigationcontrols_viewTarget_binding,
-    		move_handler,
-    		input0_input_handler,
-    		input1_change_input_handler,
-    		input2_change_input_handler,
-    		input3_change_input_handler
+    		controls_init_binding,
+    		controls_colorOptions_binding,
+    		controls_booleanOptions_binding,
+    		controls_rangeOptions_binding,
+    		controls_viewLocation_binding,
+    		controls_viewTarget_binding,
+    		move_handler
     	];
     }
 
     class VizRApp extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$j, create_fragment$j, safe_not_equal, { title: 2, options: 0, color: 1 }, [-1, -1]);
+
+    		init(
+    			this,
+    			options,
+    			instance$j,
+    			create_fragment$j,
+    			safe_not_equal,
+    			{
+    				title: 3,
+    				colors: 0,
+    				options: 1,
+    				ranges: 2
+    			},
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -14997,7 +15357,7 @@ var app = (function (exports) {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*title*/ ctx[2] === undefined && !("title" in props)) {
+    		if (/*title*/ ctx[3] === undefined && !("title" in props)) {
     			console_1$3.warn("<VizRApp> was created without expected prop 'title'");
     		}
     	}
@@ -15010,6 +15370,14 @@ var app = (function (exports) {
     		throw new Error("<VizRApp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
+    	get colors() {
+    		throw new Error("<VizRApp>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set colors(value) {
+    		throw new Error("<VizRApp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
     	get options() {
     		throw new Error("<VizRApp>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
@@ -15018,11 +15386,11 @@ var app = (function (exports) {
     		throw new Error("<VizRApp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get color() {
+    	get ranges() {
     		throw new Error("<VizRApp>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set color(value) {
+    	set ranges(value) {
     		throw new Error("<VizRApp>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }

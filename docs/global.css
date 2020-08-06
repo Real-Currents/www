@@ -76,6 +76,39 @@ button:focus {
     width: 100%;
 }
 
+.content * .container * {
+    image-rendering: optimizespeed !important;
+}
+
+.content * .container.fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.content * .r-data pre {
+    display: block;
+    display: -webkit-box;
+    max-width: 800px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 15;
+    -webkit-box-orient: vertical;
+}
+
+.content * img {
+    float:			right;
+    width:			320px;
+    margin-top: 	-2px;
+    margin-bottom: 	-1px;
+}
+
+.content * .r-mapping img {
+    float:			none;
+    margin:         auto;
+    width:			100%;
+}
+
 .section {
     width: 100%;
 }
@@ -102,10 +135,9 @@ pre code {
 }
 
 .controls {
-    float: right;
-    color: #282c34;
-    position: relative;
+    position: absolute;
     margin: -50% 8px 8px 0px;
+    color: #282c34;
     width: 300px;
     padding: 1em;
     text-align: center;
@@ -114,18 +146,26 @@ pre code {
     z-index: 2;
 }
 
-.controls {
-    position: absolute;
+.controls.right {
+    float: right;
     left: 50vw;
-    margin-left: auto;
-    margin-right: auto;
+}
+
+.controls.fullscreen {
+    position: fixed;
+    left: auto;
+    right: 0;
+    margin-top: 0;
+}
+
+.controls label {
+    clear: both;
+    margin: 2px;
 }
 
 .controls label input[type="color"] {
     clear: both;
-    margin: 100px;
-    margin-top: 2px;
-    margin-bottom: 10px;
+    margin: 10px 100px 10px;
 }
 
 
@@ -136,14 +176,42 @@ pre code {
     }
 
     .controls {
+        position: relative;
         margin-top: 8px;
+        margin-left: auto;
+        margin-right: auto;
         padding-left: 0;
         padding-right: 0;
     }
 
+    .controls.right {
+        position: relative;
+        float: none;
+        left: auto;
+    }
+
+}
+
+
+
+@font-face {
+    font-family: 			"Comfortaa";
+    font-weight: 			normal;
+    font-style: 			normal;
+    src: url("../fonts/comfortaa-light-webfont.woff") format("woff"),
+    url("../fonts/comfortaa-light-webfont.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:			"Comfortaa";
+    font-weight: 			bold;
+    font-style: 			normal;
+    src: url("../fonts/comfortaa-regular-webfont.woff") format("woff"),
+    url("../fonts/comfortaa-regular-webfont.ttf") format("truetype");
 }
 
 html, body {
+    font-family:			"Comfortaa";
     min-width:			604px;
     background:		#000;
 }
@@ -371,7 +439,6 @@ div#content * .r-data pre {
 
 div#content * img {
     float:			right;
-    position:		relative;
     width:			320px;
     margin-top: 	-2px;
     margin-bottom: 	-1px;
@@ -379,7 +446,6 @@ div#content * img {
 
 div#content * .r-mapping img {
     float:			none;
-    position:		relative;
     margin:         auto;
     width:			100%;
 }

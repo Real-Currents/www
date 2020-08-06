@@ -93,8 +93,8 @@ Here's an equally loose index of what can be viewed online:
 
 <div id="stream" style="display:none; text-align:center">
 <video id="aud1" poster="images/fathers.jpg" preload="auto" muted="true" controls="true">
-<source src="//s3-us-west-1.amazonaws.com/real-currents/js-demos/video/fathers.mp4" />
-<source src="//s3-us-west-1.amazonaws.com/real-currents/js-demos/video/fathers.ogv" />
+<source src="video/fathers.mp4" />
+<source src="video/fathers.ogv" />
 </video>
 
 <h1 id="text_title" style="display:none;">Fathers</h1>

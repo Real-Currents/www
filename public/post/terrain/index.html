@@ -6,16 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <base href="/">
   <title>SveltR: truly epic visualizations!</title>
+  
+  <link href='/fonts/font-test.b64.css' rel='stylesheet' type='text/css' />
+  <link href="/global.css" rel="stylesheet" type='text/css' />
 
-  <link href="/global.css" rel="stylesheet">
-
-  <link href="/main.css" rel="stylesheet">
+  <link href="/main.css" rel="stylesheet" type='text/css' />
 
 
   <script src="scripts/debugger.js"></script>
 </head>
 
-<body>
+<body style="height: 100%;"
+      onload='document.body.style.width=window.innerWidth;document.body.style.height=window.innerHeight;'>
 
 
 
@@ -58,6 +60,7 @@
  
 <article class="content">
   <main>
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="terrain-app" role="main" style="width: 100%;">
@@ -75,8 +78,8 @@
 
 image &lt;- data.frame(png::readPNG(small_input))
 
-cat(paste0(&#39;&lt;img src=&quot;/post/&#39;, small_input, &#39;&quot; style=&quot;float: right; width:256px; margin-top: -128px; padding: 1%;&quot; /&gt;&#39;))</code></pre>
-<p><img src="/post/data/terrain-small.png" style="float: right; width:256px; margin-top: -128px; padding: 1%;" /></p>
+cat(paste0(&#39;&lt;img src=&quot;/post/&#39;, small_input, &#39;&quot; style=&quot;float: right; width:256px; padding: 1%;&quot; /&gt;&#39;))</code></pre>
+<p><img src="/post/data/terrain-small.png" style="float: right; width:256px; padding: 1%;" /></p>
 <div class="r-data">
 <pre><code>## [1] 128</code></pre>
 <pre><code>## [1] 128</code></pre>

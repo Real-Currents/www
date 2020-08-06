@@ -14,7 +14,7 @@ tags:
 John Hall
 ======
 
-...codes professionally and personally for the World Wide Web and its associated technologies. His skills range from scripting simple utilities to crafting fully scalable applications to spec. The toolbox from which he regularly pulls includes Java, Kotlin, NodeJS, R, SQL, SVG, TypeScript, WebGL, audio and video streaming, as well as various cloud-native platforms, including AWS, Docker, Elasticsearch, Redis and Spring. Lately he spends his time in the world of [Sveltr, a hybrid template for visualizing R data](post/visualize-r/).
+...codes professionally and personally for the World Wide Web and its associated technologies. His skills range from scripting simple utilities to crafting fully scalable applications to spec. The toolbox from which he regularly pulls includes JavaScript, Kotlin, NodeJS, R, SQL, SVG, TypeScript, WebGL, audio and video streaming, as well as various cloud-native platforms, including AWS, Docker, Elasticsearch, Redis and Spring. Lately he spends his time in the world of [Sveltr, a hybrid template for visualizing R data](post/visualize-r/).
 
 What follows is a brief synopsis of his works [&ast;](dev/#details):
 

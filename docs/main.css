@@ -2,11 +2,10 @@
 .overlay.svelte-1l5epy8{position:absolute;left:0;top:0;user-select:none;-moz-user-select:none;will-change:transform}
 .container.svelte-6pzapg,canvas.svelte-6pzapg{position:relative;width:100%;height:100%;display:block;overflow:hidden}
 canvas.svelte-10c35ml{width:100%;height:100%;background-color:#666;-webkit-mask:url("../images/svelte-logo-mask.svg") 50% 50% content-box view-box no-repeat;mask:url("../images/svelte-logo-mask.svg") 50% 50% content-box view-box no-repeat}#view.svelte-10c35ml{text-align:center}
-@media screen and (max-width: 480px){.controls.svelte-1wtc1bv.svelte-1wtc1bv{margin-top:8px}}.controls.svelte-1wtc1bv label input[type="color"].svelte-1wtc1bv{clear:both;margin:100px;margin-top:2px;margin-bottom:10px}
+@media screen and (max-width: 480px){.controls.svelte-1wtc1bv{margin-top:8px}}
 .keys.svelte-p9x91x.svelte-p9x91x{top:calc(50vh - (100vw / 5.75));right:0;margin:8px;margin-top:128px;position:absolute;width:256px;height:256px;padding:24px;background-color:transparent;z-index:2}.keys.svelte-p9x91x .svelte-p9x91x{padding:24px}
 .controls.svelte-12v0mf9{width:256px}
-.controls.svelte-1tt45l5{margin-top:-160px;height:128px}
-.controls.svelte-snplat h2.svelte-snplat{color:black;cursor:pointer;pointer-events:all}
+.controls.svelte-1ll3lt3 h4.svelte-1ll3lt3{color:black;cursor:pointer;pointer-events:all}
 .keypad.svelte-el36x5{display:grid;grid-template-columns:repeat(3, 5em);grid-template-rows:repeat(4, 3em);grid-gap:0.5em
 	}button.svelte-el36x5{margin:0
 	}
