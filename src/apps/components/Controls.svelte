@@ -4,8 +4,9 @@
     export let title;
     export let color = '#ff3e00';
 
-    export let booleanOptions = [];
+    export let options = [];
     export let rangeOptions = [];
+    export let rangeValues = [];
 
     export let viewLocation, viewTarget;
 
@@ -153,10 +154,10 @@
 
     <h4>{ title }</h4>
 
-    {#if (booleanOptions['labels'].length > 0 && booleanOptions['values'].length > 0)}
-        {#each booleanOptions['values'] as option, o}
+    {#if (options['labels'].length > 0 && options['values'].length > 0)}
+        {#each options['values'] as option, o}
             <label>
-                <input type="checkbox" bind:checked={option.value} /> {booleanOptions['labels'][o]}
+                <input type="checkbox" bind:checked={option.value} /> {options['labels'][o]}
             </label><br />
         {/each}
     {/if}
@@ -167,11 +168,11 @@
         </label>
     {/if}
 
-    {#if (rangeOptions['labels'].length > 0 && rangeOptions['values'].length > 0)}
-        {#each rangeOptions['values'] as option, o}
+    {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
+        {#each rangeValues as option, o}
             <label>
-                <input type="range" bind:value={option.value} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
-                {rangeOptions['labels'][o]}({option.value})
+                <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
+                {rangeOptions['labels'][o]}({option})
             </label><br />
         {/each}
     {/if}
