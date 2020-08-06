@@ -6,7 +6,9 @@
 
 bin
 blogdown
+docs
 log
 man
 node_modules
 public
+.Rproj.user
