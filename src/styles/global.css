@@ -193,7 +193,25 @@ pre code {
 }
 
 
+
+@font-face {
+    font-family: 			"Comfortaa";
+    font-weight: 			normal;
+    font-style: 			normal;
+    src: url("../fonts/comfortaa-light-webfont.woff") format("woff"),
+    url("../fonts/comfortaa-light-webfont.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:			"Comfortaa";
+    font-weight: 			bold;
+    font-style: 			normal;
+    src: url("../fonts/comfortaa-regular-webfont.woff") format("woff"),
+    url("../fonts/comfortaa-regular-webfont.ttf") format("truetype");
+}
+
 html, body {
+    font-family:			"Comfortaa";
     min-width:			604px;
     background:		#000;
 }

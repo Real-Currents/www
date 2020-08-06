@@ -181,7 +181,7 @@
 	</label>
 </div>
 
-<div class="controls keys">
+<div class="controls keys right">
 	<h4 style="color: {pin ? '#999' : '#fff'}">{view}</h4>
 	<Keypad bind:value={pin} on:submit={handleSubmit}/>
 </div>
