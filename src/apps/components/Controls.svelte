@@ -4,11 +4,9 @@
     export let title;
     export let color = '#ff3e00';
 
-    let navContext;
-
-    export let booleanOptions = [];
-    export let colorOptions = [];
+    export let options = [];
     export let rangeOptions = [];
+    export let rangeValues = [];
 
     export let viewLocation, viewTarget;
 
@@ -17,6 +15,8 @@
     let formatPlayTime = (time) => "" + (new Date(time).toString());
 
     let mouse_x = 0, mouse_y = 0, mouse_down = false, mouse_disabled = false;
+
+    let navContext;
 
     let sinceLastMovementEvent = 0;
 
@@ -154,28 +154,25 @@
 
     <h4>{ title }</h4>
 
-    {#if (booleanOptions['labels'].length > 0 && booleanOptions['values'].length > 0)}
-        {#each booleanOptions['values'] as option, o}
+    {#if (options['labels'].length > 0 && options['values'].length > 0)}
+        {#each options['values'] as option, o}
             <label>
-                <input type="checkbox" bind:checked={option.value} /> {booleanOptions['labels'][o]}
+                <input type="checkbox" bind:checked={option.value} /> {options['labels'][o]}
             </label><br />
         {/each}
     {/if}
 
-    {#if (colorOptions['labels'].length > 0 && colorOptions['values'].length > 0)}
-        {#each colorOptions['values'] as option, o}
-            <label>
-                <input type="color" style="height: 40px" bind:value={option.value} /><br />
-                {colorOptions['labels'][o]}
-            </label><br />
-        {/each}
+    {#if (!!color)}
+        <label>
+            <input type="color" style="height: 40px" bind:value={color}>
+        </label>
     {/if}
 
-    {#if (rangeOptions['labels'].length > 0 && rangeOptions['values'].length > 0)}
-        {#each rangeOptions['values'] as option, o}
+    {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
+        {#each rangeValues as option, o}
             <label>
-                <input type="range" bind:value={option.value} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
-                {rangeOptions['labels'][o]}({option.value})
+                <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
+                {rangeOptions['labels'][o]}({option})
             </label><br />
         {/each}
     {/if}

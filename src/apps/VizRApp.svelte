@@ -5,20 +5,15 @@
 
     export let title;
 
-    const color = { value: '#ff3e00' };
+    let color = '#ff3e00';
 
     const light = {};
 
-    const w = { value: 1 };
-    const h = { value: 1 };
-    const d = { value: 1 };
+    let w = 1;
+    let h = 1;
+    let d = 1;
 
     let webgl;
-
-    export let colors = {
-        labels: [ "" ],
-        values: [ color ]
-    };
 
     export let options = {
         labels: [],
@@ -30,7 +25,7 @@
         min: [ 0.1, 0.1, 0.1 ],
         max: [ 5.0, 5.0 , 5.0 ],
         step: [ 0.1, 0.1, 0.1 ],
-        values: [ w, h, d ]
+        values: []
     };
 
     // initial view
@@ -97,6 +92,14 @@
             light.x = 3 * Math.sin(Date.now() * 0.001);
             light.y = 2.5 + 2 * Math.sin(Date.now() * 0.0004);
             light.z = 3 * Math.cos(Date.now() * 0.002);
+
+            if (ranges['values'].length > 0) {
+                w = ranges['values'][0];
+                h = ranges['values'][1];
+                d = ranges['values'][2];
+            } else {
+                ranges['values'] = [ w, h, d ];
+            }
         };
 
         loop();
@@ -113,7 +116,7 @@
 </style>
 
 <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
-    <GL.Target id="center" location={[0, h.value/2, 0]}/>
+    <GL.Target id="center" location={[0, h/2, 0]}/>
 
     <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>
         {captureViewDirection(location, target)}
@@ -129,8 +132,8 @@
             <GL.Mesh geometry={GL.box({ x: 0, y: 0, z: 0 , w: (gridSizeX / heightmap[i].length), h: (1 * heightmap[k][i]), d: (gridSizeZ / heightmap.length) })}
                      location={[ (-(gridSizeX / 2) + (i * (gridSizeX / heightmap[0].length))), 0, (-(gridSizeZ / 2) + (k * (gridSizeZ / heightmap.length))) ]}
                      rotation={[ 0, 0, 0]}
-                     scale={[ w.value, h.value, d.value]}
-                     uniforms={{ color: adjustColor(color.value, heightmap[k][i]) }}
+                     scale={[ w, h, d]}
+                     uniforms={{ color: adjustColor(color, heightmap[k][i]) }}
             />
         {/each}
     {/each}
@@ -154,9 +157,10 @@
 
 <Controls
         bind:init={navControlInit}
-        bind:colorOptions={colors}
-        bind:booleanOptions={options}
+        bind:color={color}
+        bind:options={options}
         bind:rangeOptions={ranges}
+        bind:rangeValues={ranges.values}
         bind:viewLocation={location}
         bind:viewTarget={target}
         title={title}
