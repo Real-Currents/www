@@ -60,7 +60,6 @@
  
 <article class="content">
   <main>
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="glsl-app" role="main" style="width: 100%; min-width: 800px; margin-left: -86px;">
@@ -76,7 +75,7 @@ mat4</code></pre>
 <pre><code>lowp
 mediump
 highp</code></pre>
-<p>To create custom shaders for use with <code>@svelte/gl</code>, I had to make some changes to the <code>gl</code> source, beginning by adding a declaration to all shaders compile by <code>Material.mjs</code>:</p>
+<p>I’ve had to <a href="https://github.com/sveltejs/gl/pull/28">make some changes</a> to <a href="https://github.com/Real-Currents/SvelteGL/tree/real/currents"><code>@sveltejs/gl</code></a>, in order to create custom shaders, beginning by adding a declaration to all shaders compiled by <code>Material.mjs</code>:</p>
 <pre><code>    const { program, uniforms, attributes } = compile(
         gl,
         &#39;#version 300 es&#39; + &#39;\n\n&#39; + scene.defines + defines + &#39;\n\n&#39; + vert_builtin + &#39;\n\n&#39; + vert,
@@ -102,7 +101,7 @@ fragColor.a *= alpha;
 
 fragColor.rgb *= mix(AMBIENT_LIGHT, vec3(1.0, 1.0, 1.0), lighting);
 fragColor.rgb += spec_amount;</code></pre>
-<p>With these changes in place I can now use all of the latest shader features within GL-powered SveltR apps and pages.</p>
+<p>With these changes in place I can now use all the latest shader features within GL-powered <a href="https://github.com/Real-Currents/SveltR" target="_blank">SveltR</a> apps and pages.</p>
 </div>
 </main>
 </article>

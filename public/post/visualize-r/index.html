@@ -60,7 +60,6 @@
  
 <article class="content">
   <main>
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="vizr-app" role="main" style="width: 100%; min-width: 800px; margin-left: -86px;">
@@ -88,12 +87,12 @@ After using R to read each pixel of this heightmap, the table (data.frame) is wr
 <p><br />
 <br />
 <br /></p>
-<p>Note the <code>type="application/json"</code> attribute, which prevents the browser from evaluating the contents of the <code>&lt;script&gt;</code> tag as JavaScript (if that is intended) and allows some other code block to call:</p>
+<p>Note the <code>type=&quot;application/json&quot;</code> attribute, which prevents the browser from evaluating the contents of the <code>&lt;script&gt;</code> tag as JavaScript (if that is intended) and allows some other code block to call:</p>
 <pre><code>&lt;script&gt;
   var data = JSON.parse(document.getElementById(&#39;gl_data_in_html&#39;).children[0].innerHTML);
 &lt;/script&gt;</code></pre>
 <p><br /></p>
-<p>Here’s the full source of the app.</p>
+<p>Then that same data can be used specify dimensions of the individual blocks in <span class="citation">[@sveltejs/gl]</span>(<a href="https://github.com/Real-Currents/SvelteGL/tree/real/currents" class="uri">https://github.com/Real-Currents/SvelteGL/tree/real/currents</a>). Here’s the full source of the app.</p>
 <p><code>VizRApp.svelte</code>:</p>
 <pre><code>&lt;script&gt;
     import { onMount } from &#39;svelte&#39;;

@@ -60,7 +60,6 @@
  
 <article class="content">
   <main>
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="terrain-app" role="main" style="width: 100%;">
@@ -49674,7 +49673,7 @@ knitTriangleIndices <- function(img_width, img_height) {
 
     indices
 }</code></pre>
-Finally, all of this data must be saved to json and then stitched together into a JS module which defines a new <code>terrain</code> (heightmap) object that can be imported by <code>@sveltejs/gl</code>, with the form:
+Finally, all of this data must be saved to json and then stitched together into a JS module which defines a new <code>terrain</code> (heightmap) object that can be imported by <a href="https://github.com/Real-Currents/SvelteGL/tree/real/currents"><code>@sveltejs/gl</code></a>, with the form:
 <pre><code>
     new Geometry({
         position: {
