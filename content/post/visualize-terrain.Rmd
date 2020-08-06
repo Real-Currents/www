@@ -1,0 +1,86 @@
+---
+title: Visualizing Terrain in SveltR
+author: John
+date: '2020-04-07'
+draft: false
+categories:
+  - GL
+tags:
+  - GIS
+  - GL
+  - Landscape
+  - Svelte
+  - SvelteGL
+  - Terrain
+  - WebGL
+---
+
+<div id="terrain-app" role="main" style="width: 100%; min-width: 800px; margin-left: -86px;">
+&nbsp;
+</div>
+
+## Visualizing Terrain
+
+```{r setup, cache = FALSE, echo = FALSE, results = "asis"}
+options(warn = -1)
+working_dir <- getwd()
+#print(working_dir)
+if (!require("knitr")) {
+    install.packages("knitr")
+    library("knitr")
+}
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load reticulate package for running python
+if (!require("png")) {
+    install.packages("png")
+}
+
+library(png)
+
+if (file.exists("data/heightmap-small.png")) {
+  input <- "data/heightmap-small.png"
+} else {
+  input <- file.choose()
+}
+
+image <- data.frame(png::readPNG(input))
+
+cat(paste0('<img id="heightmap" src="/post/', input, '" style="float: right; width:256px; padding: 1%;" />'))
+```
+
+If the output target is HTML, R has some methods for turning R data... (the same height map data as used in the [Visualizing R Data](post/visualize-r) post):
+
+<div class="r-data">
+
+```{r data, echo = FALSE}
+options(warn = -1)
+working_dir <- getwd()
+# print(working_dir)
+heightmap <- data.frame(c())
+if (print(file.exists(input))) {
+    heightmap <- data.frame(png::readPNG(input))
+    is.num <- sapply(heightmap, is.numeric)     # for all numeric values...
+    heightmap[is.num] <- lapply(heightmap[is.num], round, 6)  # ... lower precision to 6 decimals
+    head(heightmap)
+}
+
+```
+</div>
+
+
+... into JavaScript or JSON data and printing the results within HTML tags:
+```{r data_in_html, results='asis'}
+require(jsonlite)
+
+# print without tabs so R markdown will add
+# it to the DOM tree of the resulting page
+cat(paste(
+'<div id="data_in_html">\n',
+    '<script type="application/json">\n',
+    toJSON(heightmap), '\n',
+    '</script>\n',
+'</div>',
+sep=""))
+```

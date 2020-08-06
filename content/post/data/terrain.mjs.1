@@ -1,0 +1,7 @@
+import { Geometry } from '@sveltejs/gl';
+import { memoize } from '@sveltejs/gl/internal/utils.mjs';
+
+export default memoize(() => {
+	return new Geometry({
+		position: {
+			data: new Float32Array(

@@ -2,8 +2,11 @@
 .gradle
 .idea
 *.iml
+*.html
 
 bin
+blogdown
 log
 man
+node_modules
 public
