@@ -5,7 +5,7 @@
 
     export let title;
 
-    const color = { value: '#ff3e00' };
+    let color = '#ff3e00';
 
     const light = {};
 
@@ -14,11 +14,6 @@
     const d = { value: 1 };
 
     let webgl;
-
-    export let colors = {
-        labels: [ "" ],
-        values: [ color ]
-    };
 
     export let options = {
         labels: [],
@@ -130,7 +125,7 @@
                      location={[ (-(gridSizeX / 2) + (i * (gridSizeX / heightmap[0].length))), 0, (-(gridSizeZ / 2) + (k * (gridSizeZ / heightmap.length))) ]}
                      rotation={[ 0, 0, 0]}
                      scale={[ w.value, h.value, d.value]}
-                     uniforms={{ color: adjustColor(color.value, heightmap[k][i]) }}
+                     uniforms={{ color: adjustColor(color, heightmap[k][i]) }}
             />
         {/each}
     {/each}
@@ -154,7 +149,7 @@
 
 <Controls
         bind:init={navControlInit}
-        bind:colorOptions={colors}
+        bind:color={color}
         bind:booleanOptions={options}
         bind:rangeOptions={ranges}
         bind:viewLocation={location}

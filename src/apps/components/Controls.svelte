@@ -4,10 +4,7 @@
     export let title;
     export let color = '#ff3e00';
 
-    let navContext;
-
     export let booleanOptions = [];
-    export let colorOptions = [];
     export let rangeOptions = [];
 
     export let viewLocation, viewTarget;
@@ -17,6 +14,8 @@
     let formatPlayTime = (time) => "" + (new Date(time).toString());
 
     let mouse_x = 0, mouse_y = 0, mouse_down = false, mouse_disabled = false;
+
+    let navContext;
 
     let sinceLastMovementEvent = 0;
 
@@ -162,13 +161,10 @@
         {/each}
     {/if}
 
-    {#if (colorOptions['labels'].length > 0 && colorOptions['values'].length > 0)}
-        {#each colorOptions['values'] as option, o}
-            <label>
-                <input type="color" style="height: 40px" bind:value={option.value} /><br />
-                {colorOptions['labels'][o]}
-            </label><br />
-        {/each}
+    {#if (!!color)}
+        <label>
+            <input type="color" style="height: 40px" bind:value={color}>
+        </label>
     {/if}
 
     {#if (rangeOptions['labels'].length > 0 && rangeOptions['values'].length > 0)}
