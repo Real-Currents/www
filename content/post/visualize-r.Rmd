@@ -77,7 +77,7 @@ Note the `type="application/json"` attribute, which prevents the browser from ev
 
 <br />
 
-Here's the full source of the app.
+Then that same data can be used specify dimensions of the individual blocks in [@sveltejs/gl](https://github.com/Real-Currents/SvelteGL/tree/real/currents). Here's the full source of the app.
 
 `VizRApp.svelte`:
 

@@ -343,7 +343,7 @@ knitTriangleIndices <- function(img_width, img_height) {
 
 ```
 
-Finally, all of this data must be saved to json and then stitched together into a JS module which defines a new `terrain` (heightmap) object that can be imported by `@sveltejs/gl`, with the form:
+Finally, all of this data must be saved to json and then stitched together into a JS module which defines a new `terrain` (heightmap) object that can be imported by [`@sveltejs/gl`](https://github.com/Real-Currents/SvelteGL/tree/real/currents), with the form:
 <pre><code>
     new Geometry({
         position: {
