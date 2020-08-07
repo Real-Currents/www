@@ -13,7 +13,7 @@ tags:
 &nbsp;
 </div>
 
-# [SveltR](https://github.com/dancingfrog/sveltr)
+# [SveltR](https://github.com/Real-Currents/SveltR)
 
 ## A blogdown boilerplate for creating truly epic visualizations
 
