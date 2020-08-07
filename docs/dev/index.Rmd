@@ -14,13 +14,13 @@ tags:
 John Hall
 ======
 
-...codes professionally and personally for the World Wide Web and its associated technologies. His skills range from scripting simple utilities to crafting fully scalable applications to spec. The toolbox from which he regularly pulls includes JavaScript, Kotlin, NodeJS, R, SQL, SVG, TypeScript, WebGL, audio and video streaming, as well as various cloud-native platforms, including AWS, Docker, Elasticsearch, Redis and Spring. Lately he spends his time in the world of [Sveltr, a hybrid template for visualizing R data](post/visualize-r/).
+...codes professionally and personally for the World Wide Web and its associated technologies. His skills range from scripting simple utilities to crafting fully scalable applications to spec. The toolbox from which he regularly pulls includes JavaScript, Kotlin, NodeJS, R, SQL, SVG, TypeScript, WebGL, audio and video streaming, as well as various cloud-native platforms, including AWS, Docker, Elasticsearch, Redis and Spring. Lately he spends his time in the world of [SveltR, a hybrid template for visualizing R data](post/visualize-r/).
 
 What follows is a brief synopsis of his works [&ast;](dev/#details):
 
 
 ### Precisely /<br /> Pitney Bowes ![SDP © Precisely 2020](dev/images/sdp-downloads.png)
-#### Smart Data Platform | [smartdata.pb.com](https://smartdata.pb.com)
+#### Smart Data Platform | [smartdata.precisely.com](https://smartdata.precisely.com)
 * Created web-based interfaces (both graphical and restful) for the Smart Data Platform (SDP) internal web portal.
 * Created tools to provide useful and accurate views on data resource usage, various product build life-cycles and the quality of results
 * Completed integrations between the internal platform and data retrieval API’s provided by external suppliers, facilitating the implementation of end-to-end automation of the data update cycle.
