@@ -1,15 +1,17 @@
 ---
-title: 'Generating Planar Terrain Mesh'
+title: 'Simulating Events & Shade Across Time & Terrain'
 author: John
-date: '2020-07-31'
+date: '2020-08-16'
 draft: false
 categories:
   - GL
 tags:
   - GL
-  - Shader
+  - Ray-Tracing
+  - Shadows
   - SvelteJS
   - SvelteGL
+  - Terrain
   - WebGL
 ---
 
@@ -17,7 +19,7 @@ tags:
 &nbsp;
 </div>
 
-## Generating Planar Terrain Mesh
+## Simulating Events & Shade Across Time & Terrain
 
 ```{r setup, cache = FALSE, echo = FALSE, include=FALSE}
 options(warn = -1)
@@ -39,105 +41,7 @@ library(png)
 DISPLACE_MULTIPLY <- 0.125
 ```
 
-Given a gray scale heightmap, I need a planar triangulated mesh to serve as the base for a terrain object + shader to be used in the above webapp.
-
-I already have some tools to abstract a heightmap from an image. I'm going to start with a smaller version of the terrain image file which I've converted to grayscale:
-
-```{r image, cache = FALSE, echo = TRUE, results = "asis"}
-if (file.exists("data/terrain-small.png")) {
-    small_input <- "data/terrain-small.png"
-} else {
-    small_input <- file.choose()
-}
-
-image <- data.frame(png::readPNG(small_input))
-
-cat(paste0('<img src="/post/', small_input, '" style="float: right; width:256px; padding: 1%;" />'))
-```
-
-<div class="r-data">
-
-```{r preview_1, cache = FALSE, echo = FALSE}
-length(image[,1])   # width of the map
-length(image[1,])   # height of the map
-str(image)
-```
-</div>
-
-Now for every point in the image, I need to create coordinates for a 3d vertex (x, y, z), a normal for each vertex and texture coordinates (s, t) for each vertex:
-
-```{r map_vert_data, cache = FALSE, echo = TRUE}
-
-mapHeight <- function (image_map, image_width, image_height) {
-    # make a 1.0 x 1.0 plane starting at (0, 0, 0)... z is up
-    heights <- matrix(nrow = image_width, ncol = image_height)
-
-    for (y in 1:image_height) {
-        for (x in 1:image_width) {
-            heights[y, x] <- round(image_map[y, x], 6)
-        }
-    }
-
-    for (y in 1:image_height) {
-        for (x in 1:image_width) {
-            # vertices (x, y, z)
-            # z is "up", and png y coordinate system is reverse of WebGL
-            print(paste0(round((x / image_width), 6), ", ", round(y / image_height, 6), ", ", heights[(image_width + 1) - y, x]))
-            # normals
-            print(paste0(0.0, ", ", 0.0, ", ", 1.0)) # z is "up"
-            # texture coordinates (s, t)
-            print(paste0(round((x / image_width), 6), ", ", round(y / image_height, 6)))
-        }
-    }
-
-    heights
-}
-```
-
-<div class="r-data">
-
-```{r preview_map_data, cache = FALSE, echo = FALSE}
-heightmap <- mapHeight(image, length(image[1,]), length(image[, 1]))
-
-length(heightmap[1,])   # width of the heightmap
-length(heightmap[,1])   # height of the heightmap
-```
-</div>
-
-
-The following line will convert the heightmap frame into JavaScript or JSON data and optionally print the results within HTML tags:
-```{r data_in_html, echo = TRUE, results = "asis"}
-require(jsonlite)
-
-jsonHeightmap <- toJSON(heightmap)
-
-# print without tabs so R markdown will add
-# it to the DOM tree of the resulting page
-cat(paste0(
-    '<div id="data_in_html">\n',
-    '<script type="application/json">\n', jsonHeightmap, '\n', '</script>\n',
-    '</div>'
-))
-
-```
-
-```{r image_test, cache = FALSE, echo = FALSE, results = "asis"}
-
-if (file.exists("data")) {
-    vertex_test_file <- "data/terrain-heights.png"
-} else {
-    vertex_test_file <- file.choose(new = TRUE)
-}
-
-# test write to png
-png::writePNG(heightmap, vertex_test_file)
-
-cat(paste0('<img src="/post/', vertex_test_file, '" style="float: right; width:256px; padding: 1%;" />'))
-
-```
-
-The input and output test looks good, so time to work on a larger (medium sized) terrain image.
-```{r image_2, cache = FALSE, echo = TRUE, results = "asis"}
+```{r image, cache = TRUE, echo = FALSE, results = "asis"}
 if (file.exists("data/terrain-medium.png")) {
     medium_input <- "data/terrain-medium.png"
 } else {
@@ -149,7 +53,7 @@ image <- data.frame(png::readPNG(medium_input))
 
 <div class="r-data">
 
-```{r preview_2, cache = FALSE, echo = TRUE}
+```{r preview, cache = FALSE, echo = TRUE}
 length(image[1,])   # width of the map
 length(image[,1])   # height of the map
 str(image)

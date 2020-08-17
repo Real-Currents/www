@@ -131,6 +131,8 @@ pre {
 
 pre code {
     max-width: 1024px;
+    min-width: min-content;
+    display: list-item;
     word-wrap: break-word;
 }
 
@@ -432,6 +434,7 @@ div#content * .r-data pre {
     display: -webkit-box;
     max-width: 800px;
     overflow: hidden;
+    overflow-x: auto;
     text-overflow: ellipsis;
     -webkit-line-clamp: 9;
     -webkit-box-orient: vertical;

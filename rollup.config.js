@@ -1,7 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 import commonjs from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy'
-import del from 'rollup-plugin-delete'
+// import del from 'rollup-plugin-delete'
 import livereload from 'rollup-plugin-livereload';
 import resolve from 'rollup-plugin-node-resolve';
 import postcss from "rollup-plugin-postcss";

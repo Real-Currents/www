@@ -9,7 +9,7 @@ tags:
   - GIS
   - GL
   - Landscape
-  - Svelte
+  - SvelteJS
   - SvelteGL
   - Terrain
   - WebGL
