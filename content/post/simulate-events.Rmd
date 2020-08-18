@@ -51,18 +51,10 @@ if (file.exists("data/terrain-medium.png")) {
 image <- data.frame(png::readPNG(medium_input))
 ```
 
-<div class="r-data">
-
-```{r preview, cache = FALSE, echo = TRUE}
-length(image[1,])   # width of the map
-length(image[,1])   # height of the map
-str(image)
-```
-</div>
 
 Once the vertices, the normals, and the texture coordinates have been built for this new map, I will need indices to tie everything together. The sequence of the indices will trace the vertices into triangular faces:
 
-```{r idx_data, cache = TRUE, echo = TRUE}
+```{r idx_data, cache = FALSE, echo = FALSE}
 
 mapTerrainCoords <- function (image_map, image_width, image_height) {
     # make a 2.0 x 2.0 plane, starting from at (-1, -1, 0) ... z is up
