@@ -175,7 +175,7 @@ cat(paste('<div id="data_in_html"><script type="application/json">', jsonlite::t
 
 ```{r normal_preview, cache = TRUE, echo = FALSE, results = "asis"}
 if (file.exists("data")) {
-   normal_test_file <- "data/terrain-normals.png"
+   normal_test_file <- "data/planar-terrain-normals.png"
 } else {
     normal_test_file <- file.choose(new = TRUE)
 }
@@ -279,9 +279,9 @@ Finally, all of this data must be saved to json and then stitched together into 
 Now this turns out to be a [ginormous MJS file](/post/data/terrain.mjs) (~ 20MB), so I will ultimately use the smaller heightmap as the basis of `terrain` object imported by `@sveltejs/gl`. However, I will use the higher density height data exported by the normalmap (the blue PNG above) as well as create a json file for reference and use it to place the markers on the terrain later:
 
 ```{r json_write, cache = FALSE}
-jsonlite::write_json(heights, "data/terrain-heights.json")
-jsonlite::write_json(vertices, "data/terrain-verts.json")
-jsonlite::write_json(normals, "data/terrain-norms.json")
-jsonlite::write_json(textureCoords, "data/terrain-uvs.json")
-jsonlite::write_json(knitTriangleIndices(image_width, image_height), "data/terrain-idx.json")
+jsonlite::write_json(heights, "data/planar-terrain-heights.json")
+jsonlite::write_json(vertices, "data/planar-terrain-verts.json")
+jsonlite::write_json(normals, "data/planar-terrain-norms.json")
+jsonlite::write_json(textureCoords, "data/planar-terrain-uvs.json")
+jsonlite::write_json(knitTriangleIndices(image_width, image_height), "data/planar-terrain-idx.json")
 ```
