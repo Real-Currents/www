@@ -106,7 +106,7 @@ export default [
 			format: 'umd',
 			extend: true,
 			exports: 'named',
-			file: 'public/data/worker.js'
+			file: 'public/worker.js'
 		},
 		plugins: [
 			resolve({

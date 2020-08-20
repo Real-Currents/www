@@ -62,6 +62,7 @@
 
     console.log(heightmap);
 
+    let controlInit;
 
     /* This is a helper callback to bind custom uniforms/attributes
      * and to pass custom buffers. I inserted a hook directly in the
@@ -73,7 +74,9 @@
         const program = material.program;
     };
 
-    let controlInit;
+    let updateWorld = (event) => {
+        console.log(event);
+    };
 
     onMount(() => {
         let frame;

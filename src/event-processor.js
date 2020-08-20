@@ -28,7 +28,7 @@ function get(url) {
 function unpack (data, depth, extra = {}) {
     const unpacked = [];
     let group = 0;
-    
+
     if (Array.isArray(data)) {
         data.forEach(d => {
             if (Array.isArray(d) && --depth > 0) {
@@ -39,14 +39,14 @@ function unpack (data, depth, extra = {}) {
             }
         });
         return unpacked;
-        
+
     } else {
         const event = Object.assign(Object.assign({}, extra), d);
         unpacked.push(event);
     }
-    
+
     console.log(unpacked.length + " elements unpacked");
-    
+
     return unpacked;
 }
 
@@ -55,21 +55,23 @@ function unpack (data, depth, extra = {}) {
 export let onmessage = function(evt) {
     const position_events = [];
     const problem_events = [];
-    
+
     console.log(evt.data);
-    
+
     if (!fetched && "action" in evt.data && evt.data["action"].match(/event data/) !== null) {
         console.log("Fetching events...");
-        
-        const planarExtent = evt.data["payload"]["extent"];
-    
+
+        const eventSource = evt.data["payload"]["event-source"];
+        const heightmapSource = evt.data["payload"]["heightmap-source"];
+        const planarExtent = evt.data["payload"]["planar-extent"];
+
         const planarWidth = (planarExtent[1][0] - planarExtent[0][0]) / 2,
             planarDepth = (planarExtent[1][1] - planarExtent[0][1]) / 2;
-        
+
         // first get all of the position events,
         // then get terrain heights to map to
         // events by proximity of x, y
-        get('position_events.json').pipe(
+        get(eventSource).pipe(
             map(response => {
                 const data = response;
 
@@ -78,33 +80,33 @@ export let onmessage = function(evt) {
 
             }),
             mergeMap(events => {
-    
+
                 events.forEach(d => position_events.push(Object.assign({}, d)));
-                
-                return get('planar-terrain-heights.json');
+
+                return get(heightmapSource);
             })
         )
         .subscribe({
             next(heights) {
                 console.log(heights);
-                
+
                 console.log('Processing event and height data...');
-    
+
                 const delay = {
                     time: 1
                 };
-                
+
                 fetched = true;
-                
+
                 const heightAdjustment = 0.75;
-                
+
                 const heightOffset = 0.5;
-                
+
                 const terrainDepth = (Array.isArray(heights) && heights.length > 0) ?
                     heights.length : 0;
                 const terrainWidth = (terrainDepth > 0 && heights[0].length > 0) ?
                     heights[0].length : 0;
-    
+
                 position_events.forEach((d, i, a) => {
                     // delay.time += 6; // simulate slow load
                     setTimeout(() => {
@@ -118,13 +120,13 @@ export let onmessage = function(evt) {
                             const tx = Math.floor(terrainWidth * px / planarWidth);
                             const ty = Math.floor(terrainDepth * py / planarDepth);
                             const height = heightOffset + heightAdjustment * heights[tx][ty]; // assign height at this index
-                            
+
                             postMessage(Object.assign({ height }, d));
                         } catch (load_error) {
                             problem_events.push(Object.assign({ load_error }, d));
                         }
                     }, delay.time);
-    
+
                     if (i === (a.length - 1)) {
                         setTimeout(() => {
                             postMessage("Event data processing is complete.");

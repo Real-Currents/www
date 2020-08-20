@@ -1,7 +1,8 @@
 import './styles/global.css';
 import App from './apps/App.svelte';
-import TerrainApp from './apps/TerrainApp.svelte';
 import GLSLApp from './apps/GLSLApp.svelte';
+import SimulationApp from './apps/SimulationApp.svelte';
+import TerrainApp from './apps/TerrainApp.svelte';
 import TechApp from './apps/TechApp.svelte';
 import VizRApp from './apps/VizRApp.svelte';
 
@@ -31,6 +32,21 @@ export const glslApp = (
 ) ?
     new GLSLApp({
         target: glslAppElement,
+        props: {
+            title: "🦊 Hello SvelteGL!"
+        }
+    }) : {};
+
+
+const simulationAppId = "simulation-app";
+const simulationAppElement = document.getElementById(simulationAppId);
+export const simulationApp = (
+    simulationAppElement !== null &&
+    (simulationAppElement.constructor.name === 'HTMLElement' ||
+        simulationAppElement.constructor.name === 'HTMLDivElement')
+) ?
+    new SimulationApp({
+        target: simulationAppElement,
         props: {
             title: "🦊 Hello SvelteGL!"
         }
