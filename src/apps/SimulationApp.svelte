@@ -88,10 +88,10 @@
     };
 
     export let ranges = {
-        labels: [ "alpha", "height", "rotation" ],
-        min: [ 0.0, 0.5, 0.0 ],
-        max: [ 1.0, 2.0, 180.0 ],
-        step: [ 0.05, 0.25, 15.0 ],
+        labels: [ "block-height-alpha", "terrain-height", "terrain-rotation", "light-distance" ],
+        min: [ 0.0, 1.0, 0.0, 1.0 ],
+        max: [ 1.0, 2.0, 180.0, 100.0 ],
+        step: [ 0.05, 0.25, 10.0, 10.0 ],
         values: []
     };
 
@@ -221,14 +221,15 @@
         const loop = () => {
             frame = requestAnimationFrame(loop);
             light.x = 1.5 * Math.sin(Date.now() * 0.0001);
-            light.y = 9 * h * Math.sin(Math.pow((h - light.x)/2, 2));
+            light.y = 25 * h * Math.sin(Math.pow((h - light.x)/2, 2));
 
             if (ranges['values'].length > 0) {
                 a = ranges['values'][0];
                 h = ranges['values'][1];
                 rot = ranges['values'][2];
+                light.y = light.y + ranges['values'][3];
             } else {
-                ranges['values'] = [ a, h, rot ];
+                ranges['values'] = [ a, h, rot, 100 ];
             }
         };
 
@@ -245,7 +246,7 @@
 </style>
 
 <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
-    <GL.Target id="center" location={[0, h, 0]}/>
+    <GL.Target id="center" location={[0, 0.5, 0]}/>
 
     <GL.OrbitControls maxPolarAngle={Math.PI / 2} let:location={location}>
         <GL.PerspectiveCamera {location} lookAt="center" near={0.01} far={1000}/>
@@ -262,7 +263,7 @@
                 <GL.Mesh geometry={GL.box({ x: 0, y: 0, z: 0 , w: (gridSizeX / heightmap[i].length), h: (1 * heightmap[k][i]), d: (gridSizeZ / heightmap.length) })}
                          location={[ (-(gridSizeX / 2) + (i * (gridSizeX / heightmap[0].length))), 0, (-(gridSizeZ / 2) + (k * (gridSizeZ / heightmap.length))) ]}
                          rotation={[ 0, 0, 0]}
-                         scale={[ w, h/2, d]}
+                         scale={[ w, 3 * h / 8, d]}
                          uniforms={{ color: adjustColor(color, heightmap[k][i]), alpha: a }}
                 />
             {/each}
@@ -272,9 +273,9 @@
     <!-- ground -->
     <GL.Mesh
             geometry={((use_heightmap) ? GL.terrain() : terrain())}
-            location={[ 0, -h/2, 0 ]}
+            location={[ 0, -h/8, 0 ]}
             rotation={[ -rot, 0, 0 ]}
-            scale={[ 8, 8, 8 * h ]}
+            scale={[ 8, 8, 31 * h / 8 ]}
             frag={terrainFrag}
             vert={terrainVert}
             uniforms={{ color: adjustColor(color, h), alpha: 1.0, normalmap: normalmap }}
@@ -283,9 +284,9 @@
     <!-- water -->
     <GL.Mesh
             geometry={GL.plane()}
-            location={[0, -h * 63/128, 0]}
+            location={[0, -h * 63/1024, 0]}
             rotation={[ -90, 0, 0 ]}
-            scale={8 * h}
+            scale={[ 8, 8, 8 ]}
             uniforms={{ color: 0x0066ff, alpha: 0.45 }}
             transparent
     />
