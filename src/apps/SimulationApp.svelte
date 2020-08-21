@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
     import * as GL from '@sveltejs/gl';
-    import Controls from './components/Controls.svelte';
+    // import Controls from './components/Controls.svelte';
+    import Controls from './components/NavigationControls.svelte';
     import QuadStore from "./modules/quad-store";
     import terrain from './modules/terrain-small';
     // import terrainFrag from './shaders/default/frag.glsl';
