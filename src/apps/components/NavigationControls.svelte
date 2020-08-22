@@ -109,7 +109,7 @@
         if (worldPosition.z < -terrainDepth * 0.45) worldPosition.z = -terrainDepth * 0.45;
         if (terrainDepth * 0.45 < worldPosition.z) worldPosition.z = terrainDepth * 0.45;
 
-        // Pass event to GLApp for view update
+        // Pass event to SvelteGL App for view update
         dispatch("move");
 
         if (!!navContext === true) {
@@ -121,7 +121,7 @@
         worldPosition.y = y;
         worldPosition.r = Math.pow(2, (-y / 4));
 
-        // Pass event to GLApp for view update
+        // Pass event to SvelteGL App for view update
         dispatch("move");
 
         if (!!navContext === true) {
@@ -133,12 +133,12 @@
 
     $: zoom(-zoomY);
 
-    let terrainNavigationCursor = function (canvas) {
-        const ctx = canvas.getContext('2d');
-        canvas.width = 1024;
-        canvas.height = 1024;
-        canvas.style.width = navWidth + "px";
-        canvas.style.height = navWidth + "px";
+    let terrainNavigationCursor = function (cursorCanvas, glCanvas) {
+        const ctx = cursorCanvas.getContext('2d');
+        cursorCanvas.width = 1024;
+        cursorCanvas.height = 1024;
+        cursorCanvas.style.width = navWidth + "px";
+        cursorCanvas.style.height = navWidth + "px";
 
         ctx.lineWidth = 8;
         ctx.strokeStyle = '#ff3e00';
@@ -154,8 +154,8 @@
 
         const mouseHit = function mouseHit(event) {
             const scale_correct = 2.0;
-            const current_x = event.clientX - (canvas.offsetParent.offsetLeft + canvas.offsetLeft);  // / parseInt(canvas.style.width.substring(-2,3))
-            const current_y = event.clientY - (canvas.offsetParent.offsetTop + canvas.offsetTop); // / parseInt(canvas.style.height.substring(-2,3))
+            const current_x = event.clientX - (cursorCanvas.offsetParent.offsetLeft + cursorCanvas.offsetLeft);  // / parseInt(canvas.style.width.substring(-2,3))
+            const current_y = event.clientY - (cursorCanvas.offsetParent.offsetTop + cursorCanvas.offsetTop); // / parseInt(canvas.style.height.substring(-2,3))
             if (!mouse_disabled) {
                 const delta_x = (mouse_down) ? current_x - mouse_x : 0.0;
                 const delta_y = (mouse_down) ? current_y - mouse_y : 0.0;
@@ -165,10 +165,10 @@
                 mouse_x = current_x;
                 mouse_y = current_y;
                 if (mouse_down) {
-                    worldPosition.x += scale_correct * (terrainWidth / 2 * delta_x / parseInt(canvas.style.width.substring(-2,3)));
-                    worldPosition.z += scale_correct * (terrainDepth / 2 * delta_y / parseInt(canvas.style.height.substring(-2,3)));
+                    worldPosition.x += scale_correct * (terrainWidth / 2 * delta_x / parseInt(cursorCanvas.style.width.substring(-2,3)));
+                    worldPosition.z += scale_correct * (terrainDepth / 2 * delta_y / parseInt(cursorCanvas.style.height.substring(-2,3)));
 
-                    // Pass event to GLApp for view update
+                    // Pass event to SvelteGL App for view update
                     dispatch("move");
 
                     renderTerrainNavigationCursor(ctx);
@@ -177,7 +177,7 @@
         };
 
         if ('ontouchmove' in document.createElement('div'))  {
-            canvas.addEventListener('touchstart', function(e){
+            cursorCanvas.addEventListener('touchstart', function(e){
                 if (!mouse_disabled) {
                     // console.log('MouseDown');
                     touchHit(e);
@@ -185,13 +185,13 @@
                 }
                 e.preventDefault();
             });
-            canvas.addEventListener('touchmove', function(e){
+            cursorCanvas.addEventListener('touchmove', function(e){
                 if (!mouse_disabled && mouse_down) {
                     touchHit(e);
                 }
                 e.preventDefault();
             });
-            canvas.addEventListener('touchend', function(e){
+            cursorCanvas.addEventListener('touchend', function(e){
                 if (!mouse_disabled) {
                     // console.log('MouseUp');
                     mouse_down = false;
@@ -201,7 +201,7 @@
             console.log('touch is present');
 
         } else {
-            canvas.addEventListener('mousedown', function(e) {
+            cursorCanvas.addEventListener('mousedown', function(e) {
                 if (!mouse_disabled) {
                     // console.log('MouseDown');
                     mouseHit(e);
@@ -209,8 +209,8 @@
                 }
                 e.preventDefault();
             });
-            canvas.addEventListener('mousemove', mouseHit);
-            canvas.addEventListener('mouseup', function (e) {
+            cursorCanvas.addEventListener('mousemove', mouseHit);
+            cursorCanvas.addEventListener('mouseup', function (e) {
                 if (!mouse_disabled) {
                     // console.log('MouseUp');
                     mouse_down = false;
@@ -221,7 +221,7 @@
 
         let sinceLastMovementEvent = 0;
 
-        window.addEventListener('wheel', function (event) {
+        glCanvas.addEventListener('wheel', function (event) {
             const wheelEvent = (event || window['event']);
 
             if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
@@ -238,7 +238,7 @@
             wheelEvent.preventDefault();
         });
 
-        window.addEventListener('keydown', function (event) {
+        glCanvas.addEventListener('keydown', function (event) {
             const kbEvent = (event || window['event']); // cross-browser shenanigans
 
             if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
@@ -307,35 +307,13 @@
     export const init = function () {
         console.log("Initializing Terrain Navigation Controls...");
 
-        // if (!!navContext !== true) {
-        //     const canvas = document.getElementById("terrain-navigation-cursor");
-        //     // window.canvas = canvas; // debug
-        //     navContext = terrainNavigationCursor(canvas);
-        // }
-
-        document.querySelectorAll('.controls h4').forEach(c => {
+        document.querySelectorAll('main div[role="main"] .container canvas').forEach(c => {
             console.log(c);
 
-            const scrollLength = 3 * window.innerHeight / 4;
-            c.addEventListener('click', function (event) {
-                let scrollInterval = 33;
-                let scrollTime = 533;
-                let scrolled = 0
-
-                const startScroll = setInterval(function () {
-                    if (scrolled < scrollLength) {
-                        scroll({top: scrolled, left: 0});
-                    }
-                    scrolled += Math.floor(scrollLength / (scrollTime / scrollInterval));
-                }, scrollInterval);
-
-            });
-
-            c.title = "Click To See Article";
-        });
-
-        document.querySelectorAll('canvas').forEach(c => {
-            console.log(c);
+            if (!!navContext !== true) {
+                const mapCursor = document.getElementById("terrain-navigation-cursor");
+                navContext = terrainNavigationCursor(mapCursor, c);
+            }
 
             toggleFullscreen = () => {
                 if (!isFullscreen) {
@@ -377,16 +355,18 @@
         margin-bottom: 10px;
     }
 
-    .controls #terrain-navigation-view img.nav-map {
+    .controls #terrain-navigation-view img {
+        float: none;
+        margin: 2px;
         width: 200px;
         height: 200px;
     }
 
-    #terrain-navigation-view {
+    .controls #terrain-navigation-view {
         padding: 2px;
     }
 
-    #terrain-navigation-cursor {
+    .controls #terrain-navigation-cursor {
         position: absolute;
         top: 0px;
         left: 0px;
@@ -399,26 +379,25 @@
 </style>
 
 <div class="controls right">
-    <h4>{ title }</h4>
+    <!--<h4>{ title }</h4>-->
 
-    {#if (!!color)}
-        <label>
-            <input type="color" style="height: 40px" bind:value={color}>
-        </label>
-    {/if}
+    <!--{#if (!!color)}-->
+    <!--    <label>-->
+    <!--        <input type="color" style="height: 40px" bind:value={color}>-->
+    <!--    </label>-->
+    <!--{/if}-->
 
-<!--    <div id="terrain-navigation-view">-->
-<!--        <img alt="Navigation Controls Map"-->
-<!--             class="nav-map"-->
-<!--             src={map.src}-->
-<!--             width={map.style.width}-->
-<!--             height={map.style.height} />-->
-<!--        <canvas id="terrain-navigation-cursor"-->
-<!--                width="{map.width}"-->
-<!--                height="{map.height}"-->
-<!--                style="border-color: {color}"-->
-<!--        ></canvas>-->
-<!--    </div>-->
+    <div id="terrain-navigation-view">
+        <img alt="Navigation Controls Map"
+             src={map.src}
+             width={map.style.width}
+             height={map.style.height} />
+        <canvas id="terrain-navigation-cursor"
+                width="{map.width}"
+                height="{map.height}"
+                style="border-color: {color}"
+        ></canvas>
+    </div>
 
     <label>
         <b>-</b><input id="magnification" type="range" bind:value={zoomY} on:input={zoomY} min={-8} max={1} step={0.1}><b>+</b><br />

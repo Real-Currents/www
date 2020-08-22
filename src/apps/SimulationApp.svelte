@@ -285,7 +285,7 @@
     <!-- water -->
     <GL.Mesh
             geometry={GL.plane()}
-            location={[0, -h * 63/1024, 0]}
+            location={[0, -h * 127/1024, 0]}
             rotation={[ -90, 0, 0 ]}
             scale={[ 8, 8, 8 ]}
             uniforms={{ color: 0x0066ff, alpha: 0.45 }}

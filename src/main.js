@@ -48,7 +48,7 @@ export const simulationApp = (
     new SimulationApp({
         target: simulationAppElement,
         props: {
-            title: "🦊 Hello SvelteGL!"
+            title: "Event Simulation"
         }
     }) : {};
 
@@ -78,7 +78,7 @@ export const techApp = (
     new TechApp({
         target: techAppElement,
         props: {
-            title: '🦊 Hello Svelte!'
+            title: '🎉 Built with <a href="https://github.com/Real-Currents/SveltR" target="_blank">SveltR</a>! 🦊'
         }
     }) : {};
 
