@@ -400,8 +400,8 @@
     </div>
 
     <label>
-        <b>-</b><input id="magnification" type="range" bind:value={zoomY} on:input={zoomY} min={-8} max={1} step={0.1}><b>+</b><br />
-        magnification
+        <b>-</b><input id="magnification" type="range" bind:value={zoomY} on:input={zoomY} min={-4.0} max={0.5} step={0.1}><b>+</b><br />
+        magnification({zoomY})
     </label><br />
 
     {#if (options['labels'].length > 0 && options['values'].length > 0)}
