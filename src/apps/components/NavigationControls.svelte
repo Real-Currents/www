@@ -238,32 +238,30 @@
             wheelEvent.preventDefault();
         });
 
-        glCanvas.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', function (event) {
             const kbEvent = (event || window['event']); // cross-browser shenanigans
 
-            if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
-
-                // console.log(kbEvent);
-
-                sinceLastMovementEvent = (new Date()).getTime();
+                console.log(kbEvent);
 
                 if (kbEvent['keyCode'] === 32) { // spacebar
 
                     kbEvent.preventDefault();
 
-                    return true;
-
                 } else if (kbEvent['keyCode'] === 38 || kbEvent['keyCode'] === 87) { // up || W
 
-                    triggerMovement('forward');
+                    if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
+                        sinceLastMovementEvent = (new Date()).getTime();
+                        triggerMovement('forward');
+                    }
 
                     kbEvent.preventDefault();
 
-                    return true;
-
                 } else if (kbEvent['keyCode'] === 40 || kbEvent['keyCode'] === 83) { // down || S
 
-                    triggerMovement('backward');
+                    if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
+                        sinceLastMovementEvent = (new Date()).getTime();
+                        triggerMovement('backward');
+                    }
 
                     kbEvent.preventDefault();
 
@@ -271,26 +269,27 @@
 
                 } else if (kbEvent['keyCode'] === 37 || kbEvent['keyCode'] === 65) { // left || A
 
-                    triggerMovement('left');
+                    if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
+                        sinceLastMovementEvent = (new Date()).getTime();
+                        triggerMovement('left');
+                    }
 
                     kbEvent.preventDefault();
-
-                    return true;
 
                 } else if (kbEvent['keyCode'] === 39 || kbEvent['keyCode'] === 68) { // right || D
 
-                    triggerMovement('right');
+                    if (((new Date()).getTime() - sinceLastMovementEvent) > 66) {
+                        sinceLastMovementEvent = (new Date()).getTime();
+                        triggerMovement('right');
+                    }
 
                     kbEvent.preventDefault();
 
-                    return true;
-
                 } else {
                     console.log('Keyboard Event: ', kbEvent['keyCode']);
-
-                    return false;
                 }
-            }
+
+                return true;
         });
 
         document.getElementById("magnification").addEventListener('keydown', function (event) {

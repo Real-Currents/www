@@ -33,8 +33,8 @@
         initQuadDepth = (eventQuad.extent[1][1] - eventQuad.extent[0][1]) / 2;
 
     const heightmap = [];
-    const gridSizeX = initQuadWidth;
-    const gridSizeZ = initQuadDepth;
+    const gridSizeX = initQuadWidth * 2;
+    const gridSizeZ = initQuadDepth * 2;
 
     const timeExtent = [];
 
@@ -93,7 +93,7 @@
     };
 
     export let ranges = {
-        labels: [ "block-height-alpha", "terrain-height", "terrain-rotation", "light-distance" ],
+        labels: [ "alpha-blocks", "terrain-height", "terrain-rotation", "light-distance" ],
         min: [ 0.0, 1.0, 0.0, 1.0 ],
         max: [ 1.0, 2.0, 180.0, 100.0 ],
         step: [ 0.05, 0.25, 10.0, 10.0 ],
@@ -160,7 +160,7 @@
     let controlInit;
 
     // initial view
-    let location = new Float32Array([ 0, 50, 10 ]);
+    let location = new Float32Array([ 0, 5, 10 ]);
     let target = new Float32Array([0, 1, 0]);
 
     const captureViewDirection = (loc, tgt) => {
@@ -521,7 +521,8 @@
 <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
     <GL.Target id="center" location={[0, 0.5, 0]}/>
 
-    <GL.OrbitControls maxPolarAngle={Math.PI / 2} let:location={location}>
+    <GL.OrbitControls maxPolarAngle={Math.PI / 2} {location} {target}>
+        {captureViewDirection(location, target)}
         <GL.PerspectiveCamera {location} lookAt="center" near={0.01} far={1000}/>
     </GL.OrbitControls>
 
@@ -533,7 +534,7 @@
             geometry={GL.box(cursorDimensions)}
             location={[0, -worldPosition.y + markerHeight, 0]}
             rotation={[-90, 0, 0]}
-            scale={[0.99/worldPosition.r, 0.99/worldPosition.r, 0.5]}
+            scale={[0.99/worldPosition.r, 0.99/worldPosition.r, 0.05]}
             vert={quadVert}
             frag={quadFrag}
             uniforms={{ color: adjustColor(color), alpha: 1.0 }}
@@ -572,7 +573,7 @@
         <!-- water -->
         <GL.Mesh
                 geometry={GL.plane()}
-                location={[0, -h * 127/1024, 0]}
+                location={[0, -h * 96/1024, 0]}
                 rotation={[ -90, 0, 0 ]}
                 scale={initQuadWidth}
                 uniforms={{ color: 0x0066ff, alpha: 0.45 }}
@@ -600,5 +601,5 @@
         bind:viewLocation={location}
         bind:viewTarget={target}
         bind:worldPosition={worldPosition}
-        title={title}
+        extent={eventQuad.extent}
         on:move={(event) => updateWorld(event)}/>
