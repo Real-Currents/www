@@ -54,6 +54,9 @@ out mediump vec4 fragColor;
 void main () {
 //    fragColor = vec4(color, 1.0);
     fragColor = vec4(v_directional_light_shading * color, C_ONE);
+    #if defined(has_colormap)
+    fragColor = vec4(v_directional_light_shading * texture(colormap, v_textureCoords).rgb, C_ONE);
+    #endif
 
     if (alpha == C_ZERO || (C_ZERO <= alpha && alpha <= C_ONE)) {
         fragColor.a *= alpha;

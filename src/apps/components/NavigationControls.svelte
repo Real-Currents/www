@@ -348,10 +348,17 @@
     }
 
     .controls label input[type="color"] {
+        margin: 2px 100px 10px;
+    }
+
+    .controls label input[type="checkbox"] {
+        float: left;
+        margin-left: 32px;
+        margin-right: -48px;
+    }
+
+    .controls label input[type="color"] {
         clear: both;
-        margin: 100px;
-        margin-top: 2px;
-        margin-bottom: 10px;
     }
 
     .controls #terrain-navigation-view img {
@@ -403,19 +410,19 @@
         magnification({zoomY})
     </label><br />
 
-    {#if (options['labels'].length > 0 && options['values'].length > 0)}
-        {#each options['values'] as option, o}
-            <label>
-                <input type="checkbox" bind:checked={option.value} /> {options['labels'][o]}
-            </label><br />
-        {/each}
-    {/if}
-
     {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
         {#each rangeValues as option, o}
             <label>
                 <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
                 {rangeOptions['labels'][o]}({option})
+            </label><br />
+        {/each}
+    {/if}
+
+    {#if (options['labels'].length > 0 && options['values'].length > 0)}
+        {#each options['values'] as option, o}
+            <label>
+                <input type="checkbox" bind:checked={option} /> {options['labels'][o]}
             </label><br />
         {/each}
     {/if}

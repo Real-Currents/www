@@ -82,21 +82,17 @@
     let showQuads = false;
     let showByTime = false;
     let playTimeLoop = false;
-    // let options = {
-    //     'labels': ["Show Terrain Cursor", "Show Quad Extents", "Filter Events By Time", " Play Time Loop"],
-    //     'values': [showCursor, showQuads, showByTime, playTimeLoop]
-    // };
 
     export let options = {
-        labels: [],
-        values: []
+        'labels': [ "Show Terrain Cursor", "Show Quad Extents", "Filter Events By Time", " Play Time Loop" ],
+        'values': [ showCursor, showQuads, showByTime, playTimeLoop ]
     };
 
     export let ranges = {
         labels: [ "alpha-blocks", "terrain-height", "terrain-rotation", "light-distance" ],
         min: [ 0.0, 1.0, 0.0, 1.0 ],
         max: [ 1.0, 2.0, 180.0, 100.0 ],
-        step: [ 0.05, 0.25, 10.0, 10.0 ],
+        step: [ 0.05, 0.25, 15.0, 10.0 ],
         values: []
     };
 
@@ -239,7 +235,7 @@
             gl.bindBuffer(gl.ARRAY_BUFFER, null);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
-            if ((material.vertName == "normal-selected-txt-vertex-shader" && material.fragName == "normal-selected-txt-fragment-shader")) {
+            if (material.fragName === "normal-selected-txt-fragment-shader" && material.vertName === "normal-selected-txt-vertex-shader") {
                 for (let t = 0; t < 6; ++t) {
                     if (!!quad_textures[t]) {
                         const fragmentTextureLocation = gl.getUniformLocation(program, "uTexture" + t);
@@ -256,16 +252,9 @@
                         gl.uniform1i(fragmentTextureLocation, t);
                     }
                 }
-            } else {
-                if (!!terrainTexture) {
-                    const fragmentTextureLocation = gl.getUniformLocation(program, "uTexture");
-                    gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, terrainTexture);
-                    gl.uniform1i(fragmentTextureLocation, 0);
-                }
             }
 
-        } else if (material.vertName === "terrain-vert") {
+        } else if (material.fragName === "terrain-frag" && material.vertName === "terrain-vert") {
             // console.log(material.vertName);
 
             const heigthAdjMultLocation = gl.getUniformLocation(program, "height_adjustment");
@@ -287,6 +276,14 @@
             // uniform float material_specular_exponent;
             const specularExpLocation = gl.getUniformLocation(program, "material_specular_exponent");
             gl.uniform1f(specularExpLocation, 0.99);
+
+            if (!!terrainTexture) {
+                const fragmentTextureLocation = gl.getUniformLocation(program, "colormap");
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, terrainTexture);
+                gl.uniform1i(fragmentTextureLocation, 0);
+            }
 
         }
     };
@@ -397,18 +394,18 @@
             // Now that the image has loaded make copy it to the texture.
             console.log("Bind to texture");
 
-            // Pass this colormap texture to the terrain object, just
-            // to get @svelte/gl to bind the texture coordinates in the
-            // mesh to the 'uv' uniform in the vertext/fragment shaders.
-            // The actual map that is applied to fragColor comes from
-            // the terrain map image above
-            colormap = new GL.Texture(terrainMap.src, { width: 512, height: 512 });
-
             webgl.bindTexture(webgl.TEXTURE_2D, terrainTexture);
             webgl.texImage2D(webgl.TEXTURE_2D, level, internalFormat, format, type, terrainMap);
             webgl.generateMipmap(webgl.TEXTURE_2D);
             webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.NEAREST_MIPMAP_LINEAR);
             webgl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.NEAREST_MIPMAP_LINEAR);
+
+            // Pass this colormap texture to the terrain object, just
+            // to get @svelte/gl to bind the texture coordinates in the
+            // mesh to the 'uv' uniform in the vertex/fragment shaders.
+            // The actual map (and texture filter) that is applied to
+            // fragColor comes from the terrainMap initialized above
+            colormap = new GL.Texture(terrainMap.src, { width: 512, height: 512 });
         });
 
         terrainMap.src = "images/colormap.jpg";
@@ -529,20 +526,43 @@
     <GL.AmbientLight intensity={0.5}/>
     <GL.DirectionalLight direction={[ -1,-1,-1 ]} intensity={0.5}/>
 
-    <!-- cursor -->
-    <GL.Mesh
-            geometry={GL.box(cursorDimensions)}
-            location={[0, -worldPosition.y + markerHeight, 0]}
-            rotation={[-90, 0, 0]}
-            scale={[0.99/worldPosition.r, 0.99/worldPosition.r, 0.05]}
-            vert={quadVert}
-            frag={quadFrag}
-            uniforms={{ color: adjustColor(color), alpha: 1.0 }}
-            transparent
-    />
+    {#if options['values'][0]}
+        <!-- cursor -->
+        <GL.Mesh
+                geometry={GL.box(cursorDimensions)}
+                location={[0, -worldPosition.y + markerHeight, 0]}
+                rotation={[-90, 0, 0]}
+                scale={[0.99/worldPosition.r, 0.99/worldPosition.r, 0.05]}
+                vert={quadVert}
+                frag={quadFrag}
+                uniforms={{ color: adjustColor(color), alpha: 1.0 }}
+                transparent
+        />
+    {/if}
 
     <!-- world -->
     <GL.Group location={[-worldPosition.x, -worldPosition.y, -worldPosition.z]}>
+
+        <!-- ground -->
+        <GL.Mesh
+                geometry={((use_heightmap) ? GL.terrain() : terrain())}
+                location={[ 0, -h/8, 0 ]}
+                rotation={[ -rot, 0, 0 ]}
+                scale={[ initQuadWidth, initQuadWidth, 31 * h / 8 ]}
+                frag={terrainFrag}
+                vert={terrainVert}
+                uniforms={{ alpha: 1.0, color: adjustColor(color, h), colormap: colormap, normalmap: normalmap }}
+        />
+
+        <!-- water -->
+        <GL.Mesh
+                geometry={GL.plane()}
+                location={[0, -h * 96/1024, 0]}
+                rotation={[ -90, 0, 0 ]}
+                scale={initQuadWidth}
+                uniforms={{ color: 0x0066ff, alpha: 0.45 }}
+                transparent
+        />
 
         <!-- check heightmap -->
         {#if (a > 0.01)}
@@ -558,27 +578,6 @@
                 {/each}
             {/each}
         {/if}
-
-        <!-- ground -->
-        <GL.Mesh
-                geometry={((use_heightmap) ? GL.terrain() : terrain())}
-                location={[ 0, -h/8, 0 ]}
-                rotation={[ -rot, 0, 0 ]}
-                scale={[ initQuadWidth, initQuadWidth, 31 * h / 8 ]}
-                frag={terrainFrag}
-                vert={terrainVert}
-                uniforms={{ color: adjustColor(color, h), alpha: 1.0, normalmap: normalmap }}
-        />
-
-        <!-- water -->
-        <GL.Mesh
-                geometry={GL.plane()}
-                location={[0, -h * 96/1024, 0]}
-                rotation={[ -90, 0, 0 ]}
-                scale={initQuadWidth}
-                uniforms={{ color: 0x0066ff, alpha: 0.45 }}
-                transparent
-        />
 
         <!-- moving light -->
         <GL.Group location={[ light.x, light.y, light.z ]}>
