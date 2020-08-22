@@ -41,7 +41,17 @@ library(png)
 DISPLACE_MULTIPLY <- 0.125
 ```
 
-```{r image, cache = FALSE, echo = FALSE, results = "asis"}
+
+```{r images, cache = FALSE, echo = FALSE, results = "asis"}
+
+if (file.exists("data/terrain-colormap.png")) {
+    color_input <- "data/terrain-colormap.png"
+} else {
+    color_input <- file.choose()
+}
+
+image_color <- data.frame(png::readPNG(color_input))
+
 #if (file.exists("data/terrain-medium.png")) {
 #    medium_input <- "data/terrain-medium.png"
 if (file.exists("data/terrain-small.png")) {
@@ -52,9 +62,12 @@ if (file.exists("data/terrain-small.png")) {
     medium_input <- file.choose()
 }
 
-image <- data.frame(png::readPNG(medium_input))
+image_gray <- data.frame(png::readPNG(medium_input))
+
+cat(paste0('<img id="colormap" src="/post/', color_input, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
+Beginning with two texture images describing the same terrain, one color and one grayscale, the first objective is to simulate the perceived time-of-day by altering the color texture with light and shade effects.
 
 Once the vertices, the normals, and the texture coordinates have been built for this new map, I will need indices to tie everything together. The sequence of the indices will trace the vertices into triangular faces:
 
@@ -158,9 +171,9 @@ mapTerrainCoords <- function (image_map, image_width, image_height) {
     )
 }
 
-image_width <- length(image[1,])
-image_height <- length(image[, 1])
-map <- mapTerrainCoords(image, image_width, image_height)
+image_width <- length(image_gray[1,])
+image_height <- length(image_gray[, 1])
+map <- mapTerrainCoords(image_gray, image_width, image_height)
 
 heights <- map$heights
 vertices <- map$vertices
