@@ -9,7 +9,7 @@ tags:
   - R Markdown
 ---
 
-<div id="tech-app" role="main" style="width: 100%; min-width: 800px;">
+<div id="tech-app" role="main" style="width: 100%; min-width: 800px;  margin-left: -86px;">
 &nbsp;
 </div>
 
@@ -80,39 +80,37 @@ fig <- plot_ly(midwest, x = ~percollege, color = ~state, type = "box")
 fig
 ```
 
-<div class="r-mapping">
 Use R's geospatial packages to plot data on maps. For the following example, you will need to have installed the following native libraries on the host operating system:
 pandoc gdal geos proj udunits2:
 
-```{r mapping, echo = FALSE}
+```{r mapping_deps, echo = FALSE}
 #options(warn=-1)  # versions of GEOS runtime 3.7.2-CAPI-1.11.2 and GEOS at installation 3.7.1-CAPI-1.11.1 differ
 options(warn = 0)
 if (!require("maptools")) {
   install.packages(c("maptools", "rgdal", "rgeos", "sf", "sp"))
-} else {
-  options(warn=-1)
-  require(sp)
-  require(rgdal)
-  require(rgeos)
-  options(warn = 0)
-  require(maptools)
-
-  data(wrld_simpl)
-  xlim <- c(-130,-60)
-  ylim <- c(35,50)
-  plot(wrld_simpl,xlim=xlim,ylim=ylim,col='olivedrab3',bg='lightblue')
-  plot(wrld_simpl)
-  coords <- matrix(c(-122.92,-79.4, 49.277,43.66),ncol=2)
-
-  coords <- matrix(c(-122.92,-79.4, 49.277,43.66),ncol=2)
-  coords <- coordinates(coords)
-  spoints <- SpatialPoints(coords)
-  df <- data.frame(location=c("SFU","UofT"))
-  spointsdf <- SpatialPointsDataFrame(spoints,df)
-  plot(wrld_simpl) + plot(spointsdf,add=T,col=c('red','blue'),pch=16)
 }
+options(warn=-1)
+require(sp)
+require(rgdal)
+require(rgeos)
+
 ```
-</div>
+
+```{r mapping, echo = TRUE}
+require(maptools)
+
+data(wrld_simpl)
+xlim <- c(-130,-60)
+ylim <- c(35,50)
+plot(wrld_simpl,xlim=xlim,ylim=ylim,col='olivedrab3',bg='lightblue')
+
+coords <- matrix(c(-122.92,-79.4, 49.277,43.66),ncol=2)
+coords <- coordinates(coords)
+spoints <- SpatialPoints(coords)
+df <- data.frame(location=c("SFU","UofT"))
+spointsdf <- SpatialPointsDataFrame(spoints,df)
+plot(wrld_simpl) + plot(spointsdf,add=T,col=c('red','blue'),pch=16)
+```
 
 ## Embedding JSON data in HTML
 

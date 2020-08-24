@@ -199,38 +199,65 @@ png::writePNG(map$normal_array, normal_test_file)
 cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
-Now I have some idea of what this is supposed to look like, so I can verify whether my indexing algorithm works...
-```{r idx_data_2, cache = TRUE, echo = TRUE}
-currentRow <- 1
-indices <- c()
+The ray-tracing-based shade algorithm that I will use of this comes from the blog post [Throwing Shade at the Cartographer Illuminati](https://www.tylermw.com/throwing-shade/) by Tyler Morgan-Wall.
+<br />
 
-indices <- c(indices, (image_width - 2))
-indices <- c(indices, (image_width - 1 + image_width))
-indices <- c(indices, (image_width - 1 + (image_width - 1)))
+```{r throwing_shade, cache = FALSE, echo = TRUE, results= "asis"}
+if (!require(akima) || !require(reshape2) || !require(viridis)) {
+    install.packages(c("akima", "ggplot2", "reshape2", "viridis"))
+}
 
-indices <- c(indices, (image_width - 1 + image_width))
-indices <- c(indices, (image_width - 2))
-indices <- c(indices, (image_width - 1))
+library(akima)
+library(ggplot2)
+library(reshape2)
+library(viridis)
 
-print(indices)
+volcanoshadow <- matrix(1, ncol = ncol(volcano), nrow = nrow(volcano))
+
+volc <- list(x=1:nrow(volcano), y=1:ncol(volcano), z=volcano)
+sunangle <- 45 / 180*pi
+angle <- -90 / 180 * pi
+diffangle <- 90 / 180 * pi
+numberangles <- 25
+anglebreaks <- seq(angle, diffangle, length.out = numberangles)
+maxdistance <- floor(sqrt(ncol(volcano)^2 + nrow(volcano)^2))
+
+for (i in 1:nrow(volcano)) {
+  for (j in 1:ncol(volcano)) {
+    for (anglei in anglebreaks) {
+      for (k in 1:maxdistance) {
+        xcoord <- (i + sin(sunangle)*k)
+        ycoord <- (j + cos(sunangle)*k)
+        if(xcoord > nrow(volcano) ||
+           ycoord > ncol(volcano) ||
+           xcoord < 0 || ycoord < 0) {
+          break
+        } else {
+          tanangheight <- volcano[i, j] + tan(anglei) * k
+          if (all(c(volcano[ceiling(xcoord), ceiling(ycoord)],
+                    volcano[floor(xcoord), ceiling(ycoord)],
+                    volcano[ceiling(xcoord), floor(ycoord)],
+                    volcano[floor(xcoord), floor(ycoord)]) < tanangheight)) next
+          if (tanangheight < bilinear(volc$x,volc$y,volc$z,x0=xcoord,y0=ycoord)$z) {
+            volcanoshadow[i, j] <- volcanoshadow[i, j] - 1 / length(anglebreaks)
+            break
+          }
+        }
+      }
+    }
+  }
+}
+
+ggplot() +
+  geom_tile(data=melt(volcanoshadow), aes(x=Var1,y=Var2,fill=value)) +
+  scale_x_continuous("X coord",expand=c(0,0)) +
+  scale_y_continuous("Y coord",expand=c(0,0)) +
+  scale_fill_viridis() +
+  theme_void() +
+  theme(legend.position = "none")
 ```
 
-It's looking like this might be recursive, so I will need a helper function...
-<pre><code class="r idx_knit_recurssion_fail">
-knitTriangleIndices <- function(img_width, img_height) {
-    ind <- c()
-    width <- img_width - 1
-    row <- 1
 
-    ...
-
-    knitTriangleIndices(..., ...)
-
-    ...
-}
-</code></pre>
-
-Hours later, I decide my force powers are not strong enough for recursion in R, hence the following for-loop.
 ```{r idx_knit_for_loop, cache = TRUE, echo = TRUE}
 
 knitTriangleIndices <- function(img_width, img_height) {

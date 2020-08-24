@@ -103,7 +103,7 @@ button:focus {
     margin-bottom: 	-1px;
 }
 
-.content * .r-mapping img {
+.content * .r + p img {
     float:			none;
     margin:         auto;
     width:			100%;
@@ -447,7 +447,7 @@ div#content * img {
     margin-bottom: 	-1px;
 }
 
-div#content * .r-mapping img {
+div#content * .r + p img {
     float:			none;
     margin:         auto;
     width:			100%;
@@ -460,6 +460,7 @@ div#control {
     text-align:		center;
     background-color: transparent;
 }
+
 div#control #toggle_control {
     display:		inline-block;
     color:			#FFF;
