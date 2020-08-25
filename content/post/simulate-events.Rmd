@@ -36,13 +36,30 @@ knitr::opts_chunk$set(echo = TRUE)
 if (!require("png")) {
     install.packages("png")
 }
+
 library(png)
+
+if (!require(akima) || !require(reshape2) || !require(viridis)) {
+  install.packages(c("akima", "ggplot2", "reshape2", "viridis"))
+}
+
+library(akima)
+library(ggplot2)
+library(reshape2)
+library(viridis)
 
 DISPLACE_MULTIPLY <- 0.125
 ```
 
 
 ```{r images, cache = FALSE, echo = FALSE, results = "asis"}
+if (file.exists("data/terrain-small.png")) {
+  small_input <- "data/terrain-small.png"
+} else {
+  small_input <- file.choose()
+}
+
+image <- data.frame(png::readPNG(small_input))
 
 if (file.exists("data/terrain-colormap.png")) {
     color_input <- "data/terrain-colormap.png"
@@ -67,9 +84,208 @@ image_gray <- data.frame(png::readPNG(medium_input))
 cat(paste0('<img id="colormap" src="/post/', color_input, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
-Beginning with two texture images describing the same terrain, one color and one grayscale, the first objective is to simulate the perceived time-of-day by altering the color texture with light and shade effects.
+Given two texture images that describe the same terrain, one color and one grayscale, the first objective is to simulate the perceived time-of-day by altering the color texture with light and shade effects. The ray-tracing-based shade algorithm that I will use comes from the blog post [Throwing Shade at the Cartographer Illuminati](https://www.tylermw.com/throwing-shade/) by Tyler Morgan-Wall.
+<br />
 
-Once the vertices, the normals, and the texture coordinates have been built for this new map, I will need indices to tie everything together. The sequence of the indices will trace the vertices into triangular faces:
+```{r map_vert_data, cache = FALSE, echo = FALSE}
+
+mapHeight <- function (image_map, image_width, image_height) {
+  # make a 1.0 x 1.0 plane starting at (0, 0, 0)... z is up
+  heights <- matrix(1, nrow = image_width, ncol = image_height)
+
+  for (y in 1:image_height) {
+    for (x in 1:image_width) {
+      heights[y, x] <- round(image_map[y, x], 6)
+    }
+  }
+
+  heights
+}
+```
+
+```{r preview_map_data, cache = FALSE, echo = FALSE, results = "asis"}
+heightmap <- mapHeight(image, length(image[1,]), length(image[, 1]))
+volano <- volcano
+
+#print(nrow(heightmap))   # width of the heightmap
+#print(ncol(heightmap))   # height of the heightmap
+#
+## I'm going to substitute this heightmap matrix for the volcano matrix that was used in the example below,
+## so I need to know use the volcano max as a multiplier against heightmap data (which is normalized)
+#heightmap_max <- max(apply(heightmap, 1, max))
+#volcano_max <- max(apply(volcano, 1, max))
+#height_mult <- volcano_max / heightmap_max
+#
+#for (y in 1:ncol(heightmap)) {
+#    for (x in 1:nrow(heightmap)) {
+#      heightmap[y, x] <- heightmap[y, x] * (height_mult / 2)
+#    }
+#}
+#
+#max(apply(heightmap, 1, max))
+
+# print without tabs so R markdown will add it to the DOM tree of the resulting page
+cat(paste('<div id="data_in_html"><script type="application/json">', jsonlite::toJSON(heightmap), '\n</script>\n</div>', sep=""))
+```
+
+
+```{r throwing_shade, cache = TRUE, echo = TRUE, results= "asis"}
+shadow <- matrix(1, nrow = nrow(heightmap), ncol = ncol(heightmap))
+tanangheight <- matrix(1, nrow = nrow(heightmap), ncol = ncol(heightmap))
+
+sunangle <- 45 / 180 * pi
+angle <- -90 / 180 * pi
+diffangle <- 90 / 180 * pi
+numberangles <- 25
+anglebreaks <- seq(angle, diffangle, length.out = numberangles)
+maxdistance <- floor(sqrt(nrow(heightmap)^2 + ncol(heightmap)^2))
+
+for (y in 1:ncol(heightmap)) {
+    for (x in 1:nrow(heightmap)) {
+        for (anglei in anglebreaks) {
+            for (k in 1:maxdistance) {
+                xcoord <- (x + cos(sunangle) * k)
+                ycoord <- (y + sin(sunangle) * k)
+                if(xcoord > nrow(heightmap) || ycoord > ncol(heightmap) || xcoord < 0 || ycoord < 0) {
+                  break
+                } else {
+                  tanangheight[y, x] <- heightmap[y, x] + tan(anglei) * k
+                  if (all(
+                      c(heightmap[ceiling(ycoord), ceiling(xcoord)],
+                        heightmap[ceiling(ycoord), floor(xcoord)],
+                        heightmap[floor(ycoord), ceiling(xcoord)],
+                        heightmap[floor(ycoord), floor(xcoord)]
+                      ) < tanangheight[y, x]
+                  )) next
+                  if (tanangheight[y, x] < bilinear(1:ncol(heightmap), 1:nrow(heightmap), heightmap, x0=xcoord, y0=ycoord)$z) {
+                    shadow[y, x] <- shadow[y, x] - 1 / length(anglebreaks)
+                    break
+                  }
+                }
+            }
+        }
+    }
+}
+```
+
+
+```{r shadow_image, cache = FALSE, echo = FALSE, results = "asis"}
+
+shadowmap <- matrix(1, nrow = nrow(shadow), ncol = ncol(shadow))
+
+for (y in 1:ncol(shadow)) {
+    for (x in 1:nrow(shadow)) {
+      shadowmap[y, x] <- shadow[y, x]
+    }
+}
+
+if (file.exists("data")) {
+    shadow_image <- "data/terrain-shadow.png"
+} else {
+    shadow_image <- file.choose(new = TRUE)
+}
+
+# test write to png
+png::writePNG(shadowmap, shadow_image)
+
+cat(paste0('<img src="/post/', shadow_image, '" style="float: right; width:256px; padding: 1%;" />'))
+```
+
+Compare this shadowmap image to the ggplot graph that follows and notice that the X-axis and Y-axis have been inverted by the graph.
+
+```{r shadow_graph, cache = FALSE, echo = TRUE, results = "asis"}
+print("Graph shadow")
+
+ggplot(data=reshape2::melt(shadow), aes(x=Var1, y=Var2)) +
+  geom_raster(aes(fill=value)) +
+  scale_x_continuous("X coord",expand=c(0,0)) +
+  scale_y_continuous("Y coord",expand=c(0,0)) +
+  scale_fill_viridis() +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+ For a while I was trying different methods of iterating over the rows and columns to graph the shadows (and implied terrain) with the correct orientation. Turns out that this is just the way that ggplot2 works, so all I had to do was flip the inputs for the `x` and `y` arguments to `aes`, and *reverse the order or the y elements*:
+
+```{r shadow_graphs, cache = FALSE, echo = TRUE, results = "asis"}
+print("Graph shadow in correct orientation")
+
+ggplot(data=reshape2::melt(shadow), aes(x=Var2, y=rev(Var1))) +
+  geom_raster(aes(fill=value)) +
+  scale_x_continuous("X coord",expand=c(0,0)) +
+  scale_y_continuous("Y coord",expand=c(0,0)) +
+  scale_fill_viridis() +
+  theme_void() +
+  theme(legend.position = "none")
+
+print("Graph tanangheight")
+
+ggplot(data=reshape2::melt(tanangheight), aes(x=Var2, y=rev(Var1))) +
+  geom_raster(aes(fill=value)) +
+  scale_x_continuous("X coord",expand=c(0,0)) +
+  scale_y_continuous("Y coord",expand=c(0,0)) +
+  scale_fill_gradient() +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+As the post about the algorithm referenced above explains, the R implementation of this particular method is pretty slow, even on the small 128x128 example that was used. So the author create a package called `rayshader` that imports a C implementation of the same. Here's how it works:
+
+```{r rayshader_package, cache = FALSE, echo = TRUE}
+if (!require(rayshader)) {
+    install.packages(c("magrittr", "rayshader"))
+}
+library(rayshader)
+library(magrittr)
+
+#usgs_data <- raster::raster("usgs.img")
+#
+##Turn USGS data into a matrix
+#dc_topographic_map <- usgs_data %>%
+#  extract(.,raster::extent(.),buffer=1000) %>%
+#  matrix(ncol=10012,nrow=10012)
+#
+##Need to add Washington Monument into the data--load heightmap of
+##monument and add to topographic map.
+#washington_monument <- read.csv("washmon.csv", header=FALSE)
+#
+#lowvals <- 3486:3501
+#highvals <- 3519:3534
+#
+#usgs_data[lowvals,highvals] <- usgs_data[lowvals, highvals] +
+#     as.matrix(washington_monument)
+#
+#national_mall_map <- dc_topographic_map[1700:3700, 3000:4000]
+#
+#sunang <- 45*pi/180
+#
+#angle <- 0 / 180 * pi
+#diffangle <- 10 / 180 * pi
+#numberangles <- 30
+#anglebreaks <- seq(angle, diffangle, length.out = numberangles)
+#
+#single_angle <- rayshade(sunangle = sunang,
+#                         anglebreaks = anglebreaks,
+#                         heightmap = national_mall_map,
+#                         zscale = 1,
+#                         maxsearch = 200,
+#                         multicore=TRUE)
+#
+#if (file.exists("data")) {
+#    rayshader_test_file <- "data/national_mall_shaded.png"
+#} else {
+#    rayshader_test_file <- file.choose(new = TRUE)
+#}
+#
+##image function and ggplot is slow; save with PNG function
+##from PNG package.
+#png::writePNG(t(single_angle), rayshader_test_file)
+#
+#cat(paste0('<img id="heightmap" src="/post/', rayshader_test_file, '" style="width: 100%" />'))
+```
+
+
+I will make use of the `mapTerrainCoords` method that was developed in [Generating Planar Terrain Mesh](post/terrain) to write out the terrain normals to a PNG and to save the heightmap matrix to a json file which can be referenced when processing the location of each event:
 
 ```{r idx_data, cache = FALSE, echo = FALSE}
 
@@ -113,21 +329,21 @@ mapTerrainCoords <- function (image_map, image_width, image_height) {
         height_array[y,] <- height_array_x
     }
 
-    total_points <- i
-
-    print(total_points)
-
-    print("heights:")
-    print(length(height_array[1,]) * length(height_array[,1]))
-    print(length(height_array[1,]))
-
-    print("vertices:")
-    print(length(vertices))
-    print(length(vertices[[1]]))
-
-    print("textureCoords:")
-    print(length(textureCoords))
-    print(length(textureCoords[[1]]))
+    #total_points <- i
+    #
+    #print(total_points)
+    #
+    #print("heights:")
+    #print(length(height_array[1,]) * length(height_array[,1]))
+    #print(length(height_array[1,]))
+    #
+    #print("vertices:")
+    #print(length(vertices))
+    #print(length(vertices[[1]]))
+    #
+    #print("textureCoords:")
+    #print(length(textureCoords))
+    #print(length(textureCoords[[1]]))
 
     # Now re-calculate x and y normals based on neighboring heightmap coords
     i <- 0
@@ -156,12 +372,6 @@ mapTerrainCoords <- function (image_map, image_width, image_height) {
         }
     }
 
-    print("normals:")
-    print(length(normals))
-    print(length(normals[[1]]))
-    print(length(normal_array[,,1]))    # total sets of normal coords
-    print(length(normal_array[,1,1]))   # normal coords per image row
-    print(length(normal_array[1,1,]))   # normal coordinate dimensions
     list(
         heights = height_array,
         vertices = vertices,
@@ -170,6 +380,10 @@ mapTerrainCoords <- function (image_map, image_width, image_height) {
         textureCoords = textureCoords
     )
 }
+```
+
+
+```{r normal_preview, cache = TRUE, echo = TRUE, results = "asis"}
 
 image_width <- length(image_gray[1,])
 image_height <- length(image_gray[, 1])
@@ -179,14 +393,9 @@ heights <- map$heights
 vertices <- map$vertices
 normals <- map$normals
 textureCoords <- map$textureCoords
-```
 
-```{r heigt_data, cache = TRUE, echo = FALSE, results = "asis"}
-# print without tabs so R markdown will add it to the DOM tree of the resulting page
-cat(paste('<div id="data_in_html"><script type="application/json">', jsonlite::toJSON(heights), '\n</script>\n</div>', sep=""))
-```
+jsonlite::write_json(heights, "data/planar-terrain-heights.json")
 
-```{r normal_preview, cache = TRUE, echo = FALSE, results = "asis"}
 if (file.exists("data")) {
    normal_test_file <- "data/planar-terrain-normals.png"
 } else {
@@ -196,132 +405,5 @@ if (file.exists("data")) {
 # test write to png
 png::writePNG(map$normal_array, normal_test_file)
 
-cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="float: right; width:256px; padding: 1%;" />'))
-```
-
-The ray-tracing-based shade algorithm that I will use of this comes from the blog post [Throwing Shade at the Cartographer Illuminati](https://www.tylermw.com/throwing-shade/) by Tyler Morgan-Wall.
-<br />
-
-```{r throwing_shade, cache = FALSE, echo = TRUE, results= "asis"}
-if (!require(akima) || !require(reshape2) || !require(viridis)) {
-    install.packages(c("akima", "ggplot2", "reshape2", "viridis"))
-}
-
-library(akima)
-library(ggplot2)
-library(reshape2)
-library(viridis)
-
-volcanoshadow <- matrix(1, ncol = ncol(volcano), nrow = nrow(volcano))
-
-volc <- list(x=1:nrow(volcano), y=1:ncol(volcano), z=volcano)
-sunangle <- 45 / 180*pi
-angle <- -90 / 180 * pi
-diffangle <- 90 / 180 * pi
-numberangles <- 25
-anglebreaks <- seq(angle, diffangle, length.out = numberangles)
-maxdistance <- floor(sqrt(ncol(volcano)^2 + nrow(volcano)^2))
-
-for (i in 1:nrow(volcano)) {
-  for (j in 1:ncol(volcano)) {
-    for (anglei in anglebreaks) {
-      for (k in 1:maxdistance) {
-        xcoord <- (i + sin(sunangle)*k)
-        ycoord <- (j + cos(sunangle)*k)
-        if(xcoord > nrow(volcano) ||
-           ycoord > ncol(volcano) ||
-           xcoord < 0 || ycoord < 0) {
-          break
-        } else {
-          tanangheight <- volcano[i, j] + tan(anglei) * k
-          if (all(c(volcano[ceiling(xcoord), ceiling(ycoord)],
-                    volcano[floor(xcoord), ceiling(ycoord)],
-                    volcano[ceiling(xcoord), floor(ycoord)],
-                    volcano[floor(xcoord), floor(ycoord)]) < tanangheight)) next
-          if (tanangheight < bilinear(volc$x,volc$y,volc$z,x0=xcoord,y0=ycoord)$z) {
-            volcanoshadow[i, j] <- volcanoshadow[i, j] - 1 / length(anglebreaks)
-            break
-          }
-        }
-      }
-    }
-  }
-}
-
-ggplot() +
-  geom_tile(data=melt(volcanoshadow), aes(x=Var1,y=Var2,fill=value)) +
-  scale_x_continuous("X coord",expand=c(0,0)) +
-  scale_y_continuous("Y coord",expand=c(0,0)) +
-  scale_fill_viridis() +
-  theme_void() +
-  theme(legend.position = "none")
-```
-
-
-```{r idx_knit_for_loop, cache = TRUE, echo = TRUE}
-
-knitTriangleIndices <- function(img_width, img_height) {
-    indices <- c()
-    width <- img_width - 1
-    row <- 1
-
-    for (r in 1:(img_height - 1)) {
-        offset <- (img_width * (row - 1))
-        while (width > 0) {
-            idx1 <- (width - 1) + offset
-            idx2 <- (width + img_width) + offset
-            idx3 <- (width + (img_width - 1)) + offset
-
-            idx4 <- (width + img_width) + offset
-            idx5 <- (width - 1) + offset
-            idx6 <- (width) + offset
-
-            indices <- c(indices, idx1, idx2, idx3, idx4, idx5, idx6)
-
-            width <- (width - 1)
-        }
-        width <- img_width - 1
-        row <- row + 1
-    }
-
-    indices
-}
-
-```
-
-Finally, all of this data must be saved to json and then stitched together into a JS module which defines a new `terrain` (heightmap) object that can be imported by [`@sveltejs/gl`](https://github.com/Real-Currents/SvelteGL/tree/real/currents), with the form:
-<pre><code>
-    new Geometry({
-        position: {
-            data: new Float32Array([ /* array of vertices ... */ ]
-                .flat(Infinity)),
-            size: 3
-        },
-
-        normal: {
-            data: new Float32Array([ /* array of normals ... */ ]
-                .flat(Infinity)),
-            size: 3
-        },
-
-        uv: {
-            data: new Float32Array([ /* array of textureCoords ... */ ]
-                .flat(Infinity)),
-            size: 2
-        }
-    }, {
-        index: new Uint32Array([ /* array of indices returned by knitTriangleIndices */ ]
-        )
-    });
-
-</code></pre>
-
-Now this turns out to be a [ginormous MJS file](/post/data/terrain.mjs) (~ 20MB), so I will ultimately use the smaller heightmap as the basis of `terrain` object imported by `@sveltejs/gl`. However, I will use the higher density height data exported by the normalmap (the blue PNG above) as well as create a json file for reference and use it to place the markers on the terrain later:
-
-```{r json_write, cache = FALSE}
-jsonlite::write_json(heights, "data/planar-terrain-heights.json")
-jsonlite::write_json(vertices, "data/planar-terrain-verts.json")
-jsonlite::write_json(normals, "data/planar-terrain-norms.json")
-jsonlite::write_json(textureCoords, "data/planar-terrain-uvs.json")
-jsonlite::write_json(knitTriangleIndices(image_width, image_height), "data/planar-terrain-idx.json")
+cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="width: 100%" />'))
 ```
