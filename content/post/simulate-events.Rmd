@@ -396,7 +396,7 @@ anglebreaks <- seq(angle, diffangle, length.out = numberangles)
 single_angle <- ray_shade(
     heightmap = revx_elmat,
     #anglebreaks = anglebreaks,
-    maxsearch = floor(sqrt(nrow(revx_heights)^2 + ncol(revx_heights)^2)) / 64,
+    maxsearch = floor(sqrt(nrow(revx_elmat)^2 + ncol(revx_elmat)^2)) / 64,
     zscale = 100, sunaltitude = 45, lambert = FALSE, sunangle = sunangle,
     multicore = TRUE)
 
