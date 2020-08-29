@@ -1,7 +1,7 @@
 ---
 title: 'Events And Shade'
 author: John
-date: '2020-08-16'
+date: '2020-08-29'
 draft: false
 categories:
   - GL
@@ -50,7 +50,7 @@ library(ggplot2)
 library(reshape2)
 library(viridis)
 
-if (!require(maptools) || !require(rgdal) || !require(rayshader)) {
+if (!require(magrittr) || !require(rgdal) || !require(rayshader)) {
     install.packages(c("magrittr", "maptools", "rgdal", "rgeos", "sf", "sp"))
     devtools::install_github("tylermorganwall/rayimage")
     devtools::install_github("tylermorganwall/rayshader")
@@ -80,10 +80,10 @@ if (file.exists("data/terrain-colormap.png")) {
 
 image_color <- data.frame(png::readPNG(color_input))
 
-if (file.exists("data/terrain-large.png")) {
-    large_input <- "data/terrain-large.png"
-#if (file.exists("data/terrain-medium.png")) {
-#    large_input <- "data/terrain-medium.png"
+#if (file.exists("data/terrain-large.png")) {
+#    large_input <- "data/terrain-large.png"
+if (file.exists("data/terrain-medium.png")) {
+    large_input <- "data/terrain-medium.png"
 #if (file.exists("data/terrain-small.png")) {
 #    large_input <- "data/terrain-small.png"
 #if (file.exists("data/terrain-tiny.png")) {
@@ -117,13 +117,13 @@ mapHeight <- function(image_map, image_width, image_height) {
 ```
 
 ```{r preview_map_data, cache = FALSE, echo = FALSE, results = "asis"}
-heightmap <- mapHeight(image_test, length(image_test[1,]), length(image_test[, 1]))
-
-# import desert heightmap demo
+# import desert heightmap demo for test data
 localtif <- raster::raster("data/dem_01.tif")
 
 #And convert it to a matrix:
 elmat <- raster_to_matrix(localtif)
+
+heightmap <- mapHeight(image_test, length(image_test[1,]), length(image_test[, 1]))
 
 print(nrow(heightmap))   # width of the heightmap
 print(ncol(heightmap))   # height of the heightmap
@@ -394,13 +394,10 @@ numberangles <- 25
 anglebreaks <- seq(angle, diffangle, length.out = numberangles)
 
 single_angle <- ray_shade(
-    sunaltitude = 45,
-    sunangle = sunangle,
-    anglebreaks = anglebreaks,
     heightmap = revx_elmat,
-    maxsearch = floor(sqrt(nrow(revx_elmat)^2 + ncol(revx_elmat)^2)) / (height_mult * (nrow(revx_elmat) /10)),
-    #lambert = FALSE,
-    zscale = 1,
+    #anglebreaks = anglebreaks,
+    maxsearch = floor(sqrt(nrow(revx_heights)^2 + ncol(revx_heights)^2)) / 64,
+    zscale = 100, sunaltitude = 45, lambert = FALSE, sunangle = sunangle,
     multicore = TRUE)
 
 if (file.exists("data")) {
