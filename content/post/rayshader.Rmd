@@ -16,7 +16,9 @@ tags:
   - WebGL
 ---
 
-```{r setup, cache = FALSE, echo = FALSE}
+```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
+options(warn = -1)
+working_dir <- getwd()
 
 if (!require(magrittr) || !require(rgdal) || !require(rayshader)) {
     install.packages(c("magrittr", "maptools", "rgdal", "rgeos", "sf", "sp"))

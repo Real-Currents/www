@@ -148,24 +148,32 @@ Note the specification of the `type="application/json"` attribute, which prevent
 ## Run Python with Reticulate
 
 It is also possible to include Python code chunks in R Markdown, by first loading the `reticulate` package (in R):
-```{r prepare_python, echo = FALSE}
+```{r prepare_python, cache = FALSE, echo = FALSE}
 # Load reticulate package for running python
 if (!require("reticulate")) {
   install.packages("reticulate")
-  reticulate::conda_python(envname = "r-reticulate")
+  use_condaenv(condaenv = "r-reticulate", required = TRUE)
+  conda_python(envname = "r-reticulate")
+  conda_install(envname = "r-reticulate", c("python", "matplotlib", "ncurses", "readline"))
+  py_install("matplotlib", pip = TRUE)
+  py_module_available("matplotlib")
+
+} else {
   reticulate::use_python(python = "/var/task/adam/envs/r-reticulate/bin/python", required = TRUE)
-  reticulate::use_condaenv(condaenv = "r-reticulate", required = TRUE)
 }
+
 ```
 
-```{r reticulatte, echo = TRUE}
+```{r reticulate, echo = TRUE}
 library(reticulate)
-
-reticulate::py_install(c("matplotlib"))
 
 py_sys <- import("sys")
 print(py_sys$path)
 cat(list.files(py_sys$path)[grepl("matplot", list.files(py_sys$path))])
+
+py_install("matplotlib", pip = TRUE)
+py_module_available("matplotlib.pyplot")
+
 ```
 
 ... and then writing the python code;
@@ -180,7 +188,7 @@ for index, letter in enumerate(string):
 ```{python pyplot}
 import sys
 
-sys.path
+print(sys.path)
 
 try:
   import matplotlib.pyplot as plt

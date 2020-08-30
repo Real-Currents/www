@@ -21,7 +21,7 @@ tags:
 
 ## Events & Shade Across Time & Terrain
 
-```{r setup, cache = FALSE, echo = FALSE, include=FALSE}
+```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
 options(warn = -1)
 working_dir <- getwd()
 print(working_dir)
@@ -80,10 +80,10 @@ if (file.exists("data/terrain-colormap.png")) {
 
 image_color <- data.frame(png::readPNG(color_input))
 
-#if (file.exists("data/terrain-large.png")) {
-#    large_input <- "data/terrain-large.png"
-if (file.exists("data/terrain-medium.png")) {
-    large_input <- "data/terrain-medium.png"
+if (file.exists("data/terrain-large.png")) {
+    large_input <- "data/terrain-large.png"
+#if (file.exists("data/terrain-medium.png")) {
+#    large_input <- "data/terrain-medium.png"
 #if (file.exists("data/terrain-small.png")) {
 #    large_input <- "data/terrain-small.png"
 #if (file.exists("data/terrain-tiny.png")) {
@@ -194,7 +194,6 @@ for (y in 1:nrow(heightmap)) {
 
 
 ```{r shadow_image, cache = TRUE, echo = FALSE, results = "asis"}
-
 shadowmap <- matrix(1, nrow = nrow(shadow), ncol = ncol(shadow))
 
 for (y in 1:nrow(shadow)) {
@@ -214,46 +213,6 @@ png::writePNG(shadowmap, shadow_image)
 
 cat(paste0('<img src="/post/', shadow_image, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
-
-Compare this shadowmap image to the ggplot graph that follows and notice that the X-axis and Y-axis have been inverted by the graph.
-
-```{r shadow_graph, cache = FALSE, echo = TRUE, results = "asis"}
-print("Graph shadow")
-
-ggplot(data = reshape2::melt(shadow), aes(x = Var1, y = Var2)) +
-    geom_raster(aes(fill = value)) +
-    scale_x_continuous("X coord", expand = c(0, 0)) +
-    scale_y_continuous("Y coord", expand = c(0, 0)) +
-    scale_fill_viridis() +
-    theme_void() +
-    theme(legend.position = "none")
-```
-
- For a while I was trying different methods of iterating over the rows and columns to graph the shadows (and implied terrain) with the correct orientation. Turns out that this is just the way that ggplot2 works, so all I had to do was flip the inputs for the `x` and `y` arguments to `aes`, and *reverse the order of the y elements*:
-
-```{r shadow_graphs, cache = FALSE, echo = TRUE, results = "asis"}
-print("Graph shadow in correct orientation")
-
-ggplot(data = reshape2::melt(shadow), aes(x = Var2, y = rev(Var1))) +
-    geom_raster(aes(fill = value)) +
-    scale_x_continuous("X coord", expand = c(0, 0)) +
-    scale_y_continuous("Y coord", expand = c(0, 0)) +
-    scale_fill_viridis() +
-    theme_void() +
-    theme(legend.position = "none")
-
-print("Graph tanangheight")
-
-ggplot(data = reshape2::melt(tanangheight), aes(x = Var2, y = rev(Var1))) +
-    geom_raster(aes(fill = value)) +
-    scale_x_continuous("X coord", expand = c(0, 0)) +
-    scale_y_continuous("Y coord", expand = c(0, 0)) +
-    scale_fill_gradient() +
-    theme_void() +
-    theme(legend.position = "none")
-```
-
-The R implementation of this particular method is pretty slow, as explained in the post about the algorithm referenced above, even on the small 128x128 example that was used. So, the author created a package called `rayshader` that imports a C implementation of the same. Here's how it works:
 
 ```{r heights, cache = TRUE, echo = FALSE, results = "asis"}
 # Map terrain heights from the highdensity image
@@ -298,22 +257,6 @@ mapTerrainCoords <- function(image_map, image_width, image_height) {
         height_array[y,] <- height_array_x
     }
 
-    #total_points <- i
-    #
-    #print(total_points)
-    #
-    #print("heights:")
-    #print(length(height_array[1,]) * length(height_array[,1]))
-    #print(length(height_array[1,]))
-    #
-    #print("vertices:")
-    #print(length(vertices))
-    #print(length(vertices[[1]]))
-    #
-    #print("textureCoords:")
-    #print(length(textureCoords))
-    #print(length(textureCoords[[1]]))
-
     # Now re-calculate x and y normals based on neighboring heightmap coords
     i <- 0
     for (y in 1:image_height) {
@@ -350,71 +293,153 @@ mapTerrainCoords <- function(image_map, image_width, image_height) {
     )
 }
 
-map <- mapTerrainCoords(image_gray, nrow(image_gray), ncol(image_gray))
-#map <- mapTerrainCoords(image_gray, 256, 256)
+map <- mapTerrainCoords(image_test, nrow(image_test), ncol(image_test))
+#map <- mapTerrainCoords(image_gray, nrow(image_gray), ncol(image_gray))
 
 heights <- map$heights
 vertices <- map$vertices
 normals <- map$normals
 textureCoords <- map$textureCoords
-
 ```
 
-```{r rayshader_package, cache = FALSE, echo = TRUE, results = "asis"}
+The R implementation of this particular method is pretty slow, as explained in the post about the algorithm referenced above, even on the small 128x128 example that was used. So, the author created a package called [`rayshader`](https://www.rayshader.com/) that imports a C implementation of the same. Here's how it works:
 
-elmat <- matrix(1, nrow = nrow(heights), ncol = ncol(heights))
-for (y in 1:nrow(heights)) {
-    for (x in 1:ncol(heights)) {
+```{r rayshader_package, cache = TRUE, echo = TRUE}
+elmat <- matrix(1, nrow = nrow(image_test), ncol = ncol(image_test))
+
+for (y in 1:nrow(image_test)) {
+    for (x in 1:ncol(image_test)) {
         elmat[x, y] <- heights[y, x] * height_mult
     }
 }
 
 sunangle <- 45
 
-#We use another one of rayshader's built-in textures:
-#detect_water and add_water adds a water layer to the map:
+# We use another one of rayshader's built-in textures:
+# detect_water and add_water adds a water layer to the map:
 elmat %>%
-    sphere_shade(sunangle = sunangle, texture = "desert") %>%
+    sphere_shade(zscale = 100, sunangle = sunangle, texture = "desert") %>%
     add_water(detect_water(elmat), color = "desert") %>%
     plot_map()
 
-#revx_elmat <- elmat
-revx_elmat <- matrix(1, nrow = nrow(elmat), ncol = ncol(elmat))
-for (y in 1:nrow(elmat)) {
-    for (x in 1:ncol(elmat)) {
-        revx_elmat[y, x] <- elmat[(nrow(elmat) - y) + 1, x]
+elmat %>%
+    ray_shade(
+        maxsearch = floor(sqrt(nrow(elmat)^2 + ncol(elmat)^2)) / 64,
+        zscale = 100, sunaltitude = 45, sunangle = sunangle, lambert = TRUE,
+        multicore = TRUE) %>%
+    plot_map()
+```
+
+Following the examples is pretty straight forward and incredibly useful once you understand the parameters. However, the actual data I want to render and superimpose on the colormap is quite large, so I will break it down into quadrants before processing:
+
+```{r rayshader_high_dim, cache = FALSE, echo = TRUE, results = "asis"}
+heights <- mapHeight(image_gray, length(image_gray[1,]), length(image_gray[, 1])) # stick with the simple method for now
+#heights <- (mapTerrainCoords(image_gray, nrow(image_gray), ncol(image_gray)))$heights
+
+xparts <- 2
+yparts <- 2
+width <- ncol(heights)
+height <- nrow(heights)
+quad_width <- floor(width / xparts)
+quad_height <- floor(height / yparts)
+
+print(paste0("data width: ", width))
+print(paste0("data height: ", height))
+print(paste0("quad width: ", quad_width))
+print(paste0("quad height: ", quad_height))
+
+image_shaded <- matrix(3, nrow = height, ncol = width)
+
+print(paste0("image width: ", ncol(image_shaded)))
+print(paste0("image height: ", nrow(image_shaded)))
+
+for (j in 1:yparts) {
+    for (i in 1:xparts) {
+        quad_width_start <- ((i - 1) * quad_width)
+        quad_width_end <- (i * quad_width)
+        quad_height_start <- ((j - 1) * quad_height)
+        quad_height_end <- (j * quad_height)
+        elmat <- matrix(1, nrow = quad_height, ncol = quad_width)
+
+        for (y in 1:quad_height) {
+            for (x in 1:quad_width ) {
+                if (
+                    (y > quad_height) ||
+                    (x > quad_width) ||
+                    (y > quad_width) ||
+                    (x > quad_height) ||
+                    (quad_height_start + y > quad_height_end) ||
+                    (quad_width_start + x > quad_width_end)
+                ) {
+                    print(paste0(quad_width_start + y, ", ", quad_height_start + x, " => ", x, ", ", y))
+                }
+                elmat[x, y] <- heights[quad_height_start + y, quad_width_start + x] * height_mult
+            }
+        }
+
+        sunangle <- 45
+
+        revx_elmat <- matrix(1, nrow = nrow(elmat), ncol = ncol(elmat))
+        for (y in 1:nrow(elmat)) {
+            for (x in 1:ncol(elmat)) {
+                revx_elmat[y, x] <- elmat[(nrow(elmat) - y) + 1, x]
+            }
+        }
+
+        single_angle_shadow <- (revx_elmat %>%
+            ray_shade(
+                maxsearch = floor(sqrt(nrow(elmat)^2 + ncol(elmat)^2)) / 64,
+                zscale = 100, sunaltitude = 45, sunangle = sunangle, lambert = TRUE,
+                multicore = TRUE)
+        )
+
+        if (file.exists("data")) {
+            rayshader_test_file <- paste0("data/terrain-rayshaded-", (i - 1), "", (j - 1), ".png")
+        } else {
+            rayshader_test_file <- file.choose(new = TRUE)
+        }
+
+        ##image function and ggplot is slow; save with PNG function
+        ##from PNG package.
+        png::writePNG(t(single_angle_shadow), rayshader_test_file)
+
+        cat(paste0('<img id="shademap', (i - 1), "", (j - 1), '" src="/post/', rayshader_test_file, '" style="width: 100%" />'))
+
+        for (y in 1:quad_height) {
+            for (x in 1:quad_width ) {
+                if (
+                    (y > quad_height) ||
+                    (x > quad_width) ||
+                    (y > quad_width) ||
+                    (x > quad_height) ||
+                    (quad_height_start + y > quad_height_end) ||
+                    (quad_width_start + x > quad_width_end)
+                ) {
+                    print(paste0(y, ", ", x, " => ", quad_height_start + y, ", ", quad_width_start + x))
+                }
+                #image_shaded[quad_height_start + y, quad_width_start + x] <- c(
+                #    (single_angle_shadow[y, x] * image_shaded[quad_height_start + y, quad_width_start + x, 1] / height_mult),
+                #    (single_angle_shadow[y, x] * image_shaded[quad_height_start + y, quad_width_start + x, 2] / height_mult),
+                #    (single_angle_shadow[y, x] * image_shaded[quad_height_start + y, quad_width_start + x, 3] / height_mult),
+                #)
+            }
+        }
     }
 }
 
-sunang <- sunangle * pi / 180
-
-angle <- -90 / 180 * pi
-diffangle <- 90 / 180 * pi
-numberangles <- 25
-anglebreaks <- seq(angle, diffangle, length.out = numberangles)
-
-single_angle <- ray_shade(
-    heightmap = revx_elmat,
-    #anglebreaks = anglebreaks,
-    maxsearch = floor(sqrt(nrow(revx_elmat)^2 + ncol(revx_elmat)^2)) / 64,
-    zscale = 100, sunaltitude = 45, lambert = FALSE, sunangle = sunangle,
-    multicore = TRUE)
-
 if (file.exists("data")) {
-    rayshader_test_file <- "data/terrain-rayshaded.png"
+    rayshaded_file <- paste0("data/terrain-shaded-colormap.png")
 } else {
-    rayshader_test_file <- file.choose(new = TRUE)
+    rayshaded_file <- file.choose(new = TRUE)
 }
 
-##image function and ggplot is slow; save with PNG function
-##from PNG package.
-png::writePNG(t(single_angle), rayshader_test_file)
+## test write to png
+png::writePNG(image_shaded, rayshaded_file)
 
-cat(paste0('<img id="shademap" src="/post/', rayshader_test_file, '" style="width: 100%" />'))
+cat(paste0('<img id="shademap" src="/post/', rayshaded_file, '" style="width: 100%" />'))
 ```
 
-
-I will make use of the `mapTerrainCoords` method that was developed in [Generating Planar Terrain Mesh](post/terrain) to write out the terrain normals to a PNG and to save the heightmap matrix to a json file which can be referenced when processing the location of each event:
+I have made use of the `mapTerrainCoords` method that was developed in [Generating Planar Terrain Mesh](post/terrain) to generate the terrain heights and normals, and then write them out to a PNG and JSON file, respectively:
 
 ```{r idx_data, cache = FALSE, echo = FALSE, results = "asis"}
 

@@ -408,7 +408,7 @@
             colormap = new GL.Texture(terrainMap.src, { width: 512, height: 512 });
         });
 
-        terrainMap.src = document.getElementById("colormap").src; //"images/colormap.jpg";
+        terrainMap.src = document.getElementById("shademap").src; //"images/colormap.jpg";
 
         markerImage.addEventListener('load', function () {
             // Now that the image has loaded make copy it to the texture.
