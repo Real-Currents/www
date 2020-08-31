@@ -77,15 +77,15 @@
         }
     };
 
-    let showGroups = [ foundGroups[1], foundGroups[2], foundGroups[3], foundGroups[4], foundGroups[5], foundGroups[6] ];
     let showCursor = false;
-    let showQuads = false;
-    let showByTime = false;
-    let playTimeLoop = false;
+    // let showGroups = [ foundGroups[1], foundGroups[2], foundGroups[3], foundGroups[4], foundGroups[5], foundGroups[6] ];
+    // let showQuads = false;
+    // let showByTime = false;
+    // let playTimeLoop = false;
 
     export let options = {
-        'labels': [ "Show Terrain Cursor", "Show Quad Extents", "Filter Events By Time", " Play Time Loop" ],
-        'values': [ showCursor, showQuads, showByTime, playTimeLoop ]
+        'labels': [ "Show Terrain Cursor" ], //, "Show Quad Extents", "Filter Events By Time", " Play Time Loop" ],
+        'values': [ showCursor ] //, showQuads, showByTime, playTimeLoop ]
     };
 
     export let ranges = {
