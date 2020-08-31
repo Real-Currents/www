@@ -62,15 +62,15 @@
   <main>
 
 
-<div id="vizr-app" role="main" style="width: 100%; min-width: 800px; margin-left: -86px;">
+<div id="vizr-app" role="main" style="width: 100%; min-width: 800px;">
 <p> </p>
 </div>
 <div id="visualizing-r-data-with-sveltr" class="section level2">
-<h2>Visualizing R Data with <a href="https://github.com/dancingfrog/sveltr">SveltR</a></h2>
+<h2>Visualizing R Data with <a href="https://github.com/Real-Currents/SveltR">SveltR</a></h2>
 <p>If the output target of your Rmd (R Markdown) content is HTML, R has some methods for turning R data into JavaScript or JSON data and printing the results within HTML tags.
 <br />
 <br />
-<img src="/post/data/heightmap-small.png" style="float: right; width:256px; padding: 1%;" />
+<img src="post/data/heightmap-small.png" style="float: right; width:256px; padding: 1%;" />
 After using R to read each pixel of this heightmap, the table (data.frame) is written to json …
 <br />
 <br />
@@ -156,13 +156,12 @@ After using R to read each pixel of this heightmap, the table (data.frame) is wr
         heightmap[z] = xx;
     }
 
-    console.log(heightmap);
-
+   let controlInit;
 
     /* This is a helper callback to bind custom uniforms/attributes
-     * and to pass custom buffers, like the ad-hoc texture coords
-     * used in normal-selected texture shader below. I inserted a
-     * hook directly in the @sveltejs/gl source for this purpose
+     * and to pass custom buffers. I inserted a hook directly in the
+     * @sveltejs/gl source for this purpose:
+     * https://github.com/Real-Currents/SvelteGL/tree/real/currents
      */
     let process_extra_shader_components = (gl, material, model) =&gt; {
         // console.log(&quot;Process Extra Shader Components&quot;);
@@ -173,13 +172,11 @@ After using R to read each pixel of this heightmap, the table (data.frame) is wr
         console.log(event);
     };
 
-    let navControlInit;
-
     onMount(() =&gt; {
         let frame;
 
-        if (typeof navControlInit === &#39;function&#39;) {
-            navControlInit();
+        if (typeof controlInit === &#39;function&#39;) {
+            controlInit();
         }
 
         const loop = () =&gt; {
@@ -252,7 +249,7 @@ After using R to read each pixel of this heightmap, the table (data.frame) is wr
 &lt;/GL.Scene&gt;
 
 &lt;Controls
-        bind:init={navControlInit}
+        bind:init={controlInit}
         bind:color={color}
         bind:options={options}
         bind:rangeOptions={ranges}

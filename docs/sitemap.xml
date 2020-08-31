@@ -3,22 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/post/simulate-events-and-shade-1/</loc>
+    <lastmod>2020-08-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-08-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-08-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/rayshader/</loc>
+    <lastmod>2020-08-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/terrain/</loc>
     <lastmod>2020-07-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/</loc>
-    <lastmod>2020-07-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/revealing/</loc>
-    <lastmod>2020-07-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2020-07-11T00:00:00+00:00</lastmod>
   </url>
   
