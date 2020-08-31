@@ -335,12 +335,6 @@
 
 <style>
 
-    @media screen and (max-width: 480px) {
-        .controls {
-            margin-top: 8px;
-        }
-    }
-
     .controls h4 {
         color: black;
         cursor: pointer;
@@ -382,11 +376,16 @@
         min-height: 20px;
         border: 2px solid;
     }
+
+    @media screen and (max-width: 480px) {
+        .controls {
+            margin-top: 8px;
+        }
+    }
+
 </style>
 
-<div class="controls right">
-    <!--<h4>{ title }</h4>-->
-
+<div class="controls right" style="top: 0;">
     <!--{#if (!!color)}-->
     <!--    <label>-->
     <!--        <input type="color" style="height: 40px" bind:value={color}>-->

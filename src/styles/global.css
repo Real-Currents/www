@@ -148,15 +148,9 @@ pre code {
 
 .controls.right {
     float: right;
-    left: 54vw;
-    top: 5%;
-}
-
-.controls.fullscreen {
-    position: fixed;
-    left: auto;
-    right: 0;
-    margin-top: 0;
+    left: 50vw;
+    top: 0;
+    margin-top: 10%;
 }
 
 .controls label {
@@ -169,6 +163,11 @@ pre code {
     margin: 10px 100px 10px;
 }
 
+@media screen and (max-width: 1440px) {
+    .controls.right {
+        left: 54vw;
+    }
+}
 
 @media screen and (max-width: 604px) {
 
@@ -190,7 +189,12 @@ pre code {
         float: none;
         left: auto;
     }
+}
 
+.controls.fullscreen {
+    position: fixed;
+    left: auto;
+    right: 0;
 }
 
 
@@ -384,7 +388,9 @@ div#content * img {
     margin-bottom: 	-1px;
 }
 
-div#content * .r + p img, * .r-mapping  * img {
+div#content * .python + p img,
+div#content * .r + p img,
+div#content * .r-mapping  * img {
     float:			none;
     margin:         auto;
     width:			100%;
