@@ -19,7 +19,8 @@ tags:
 &nbsp;
 </div>
 
-## Events & Shade Across Time & Terrain: Part 1
+Events & Shade Across Time & Terrain: Part 1
+============================================
 
 ```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
 options(warn = -1)

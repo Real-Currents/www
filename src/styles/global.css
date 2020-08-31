@@ -131,7 +131,7 @@ pre {
 
 pre code {
     max-width: 1024px;
-    min-width: min-content;
+    min-width: max-content;
     display: list-item;
     word-wrap: break-word;
 }
