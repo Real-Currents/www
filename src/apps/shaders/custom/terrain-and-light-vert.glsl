@@ -67,7 +67,9 @@ vec3 directional_light_shading (vec3 normal) {
 	float ndotH; // dot product of nomral and & half-plane vector
 
 	ndotL = max(C_ZERO, dot(normal, nlight_direction));
-	computed_shade += light_ambient_color * vec3(C_HALF, C_HALF, C_HALF);
+	computed_shade += vec3(
+		(light_ambient_color.x * (C_ONE - C_QUARTER)), (light_ambient_color.y * (C_ONE - C_QUARTER)), (light_ambient_color.z * (C_ONE - C_QUARTER))
+	) + vec3(C_QUARTER, C_QUARTER, C_QUARTER);
 	computed_shade += ndotL * light_diffuse_color * vec3(C_ONE, C_ONE, C_ONE);
 
 	// The resolution of the vertex shader is not fine enough

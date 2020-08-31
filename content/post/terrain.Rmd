@@ -1,5 +1,5 @@
 ---
-title: Generating Planar Terrain Mesh
+title: 'Generating Planar Terrain Mesh'
 author: John
 date: '2020-07-31'
 draft: false
@@ -7,7 +7,8 @@ categories:
   - GL
 tags:
   - GL
-  - Svelte
+  - Shader
+  - SvelteJS
   - SvelteGL
   - WebGL
 ---
@@ -157,7 +158,7 @@ str(image)
 
 Once the vertices, the normals, and the texture coordinates have been built for this new map, I will need indices to tie everything together. The sequence of the indices will trace the vertices into triangular faces:
 
-```{r idx_data, cache = FALSE, echo = TRUE}
+```{r idx_data, cache = TRUE, echo = TRUE}
 
 mapTerrainCoords <- function (image_map, image_width, image_height) {
     # make a 2.0 x 2.0 plane, starting from at (-1, -1, 0) ... z is up
@@ -262,7 +263,7 @@ image_height <- length(image[, 1])
 map <- mapTerrainCoords(image, image_width, image_height)
 ```
 
-```{r normal_preview, cache = FALSE, echo = FALSE, results = "asis"}
+```{r normal_preview, cache = TRUE, echo = FALSE, results = "asis"}
 heights <- map$heights
 vertices <- map$vertices
 normals <- map$normals
@@ -281,7 +282,7 @@ cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="float:
 ```
 
 Now I have some idea of what this is supposed to look like, so I can verify whether my indexing algorithm works...
-```{r idx_data_2, cache = FALSE, echo = TRUE}
+```{r idx_data_2, cache = TRUE, echo = TRUE}
 currentRow <- 1
 indices <- c()
 
@@ -312,7 +313,7 @@ knitTriangleIndices <- function(img_width, img_height) {
 </code></pre>
 
 Hours later, I decide my force powers are not strong enough for recursion in R, hence the following for-loop.
-```{r idx_knit_for_loop, cache = FALSE, echo = TRUE}
+```{r idx_knit_for_loop, cache = TRUE, echo = TRUE}
 
 knitTriangleIndices <- function(img_width, img_height) {
     indices <- c()
@@ -372,7 +373,7 @@ Finally, all of this data must be saved to json and then stitched together into 
 
 Now this turns out to be a [ginormous MJS file](/post/data/terrain.mjs) (~ 20MB), so I will ultimately use the smaller heightmap as the basis of `terrain` object imported by `@sveltejs/gl`. However, I will use the higher density height data exported by the normalmap (the blue PNG above) as well as create a json file for reference and use it to place the markers on the terrain later:
 
-```{r json_write, cache = FALSE}
+```{r json_write, cache = TRUE}
 jsonlite::write_json(heights, "data/planar-terrain-heights.json")
 jsonlite::write_json(vertices, "data/planar-terrain-verts.json")
 jsonlite::write_json(normals, "data/planar-terrain-norms.json")
