@@ -9,9 +9,7 @@ tags:
   - R Markdown
 ---
 
-<div id="tech-app" role="main" style="width: 100%; min-width: 800px;  margin-left: -86px;">
-&nbsp;
-</div>
+<div id="tech-app" role="main" style="width: 100%; min-width: 800px;  margin-left: -86px;">&nbsp;</div>
 
 # [SveltR](https://github.com/Real-Currents/SveltR)
 
@@ -62,7 +60,7 @@ Filter(file.exists, r_profiles)
 
 ## Including Plots
 
-You can also embed (static) plots, for example:
+You can also embed (static) plots...
 
 ```{r pressure, echo = FALSE}
 plot(pressure)
@@ -76,7 +74,7 @@ if (!require("plotly")) {
   install.packages(c("plotly"))
   library(plotly)
 }
-fig <- plot_ly(midwest, x = ~percollege, color = ~state, type = "box")
+fig <- plot_ly(midwest, x = ~percollege, color = ~state, type = "box", width = 604, height = 400)
 fig
 ```
 
@@ -85,11 +83,10 @@ pandoc gdal geos proj udunits2:
 
 ```{r mapping_deps, echo = FALSE}
 #options(warn=-1)  # versions of GEOS runtime 3.7.2-CAPI-1.11.2 and GEOS at installation 3.7.1-CAPI-1.11.1 differ
-options(warn = 0)
+options(warn = -1)
 if (!require("maptools")) {
   install.packages(c("maptools", "rgdal", "rgeos", "sf", "sp"))
 }
-options(warn=-1)
 require(sp)
 require(rgdal)
 require(rgeos)
@@ -176,8 +173,8 @@ py_module_available("matplotlib.pyplot")
 
 ```
 
-... and then writing the python code;
-```{python data_test}
+... and then adding the python code block(s) (`{python}`):
+```{python}
 data = {"foo": {"bar": "baz"}}
 string = "Reticulate"
 

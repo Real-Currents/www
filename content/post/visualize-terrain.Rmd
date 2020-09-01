@@ -73,7 +73,7 @@ head(heightmap)
 cat(paste(
 '<div id="data_in_html">\n',
 '   <script type="application/json">\n\t\t',
-toJSON(heightmap), '\n',
+jsonlite::toJSON(heightmap), '\n',
 '   </script>\n',
 '</div>',
 sep=""))

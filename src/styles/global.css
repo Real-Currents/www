@@ -97,8 +97,6 @@ button:focus {
 }
 
 .content * img {
-    float:			right;
-    width:			320px;
     margin-top: 	-2px;
     margin-bottom: 	-1px;
 }
@@ -151,13 +149,8 @@ pre code {
 .controls.right {
     float: right;
     left: 50vw;
-}
-
-.controls.fullscreen {
-    position: fixed;
-    left: auto;
-    right: 0;
-    margin-top: 0;
+    top: 0;
+    margin-top: 10%;
 }
 
 .controls label {
@@ -170,6 +163,11 @@ pre code {
     margin: 10px 100px 10px;
 }
 
+@media screen and (max-width: 1440px) {
+    .controls.right {
+        left: 54vw;
+    }
+}
 
 @media screen and (max-width: 604px) {
 
@@ -191,7 +189,12 @@ pre code {
         float: none;
         left: auto;
     }
+}
 
+.controls.fullscreen {
+    position: fixed;
+    left: auto;
+    right: 0;
 }
 
 
@@ -300,70 +303,8 @@ body {
     display: block;
     min-width: 604px;
     overflow-x: auto;
-}
-
-div#transparent_background {
-    position: 			relative;
-    width: 				800px;
-    min-width: 			540px;
-    min-height: 			9999px;
-    margin: 				0 auto 0 auto;
-    background-color: 	rgb(25, 25, 25);
-    opacity:				0.75;
-    filter:				alpha(opacity=75); /* For IE8 and earlier */
-}
-
-div#home_screen {
-    position: 			relative;
-    margin: 				-9999px auto 0 auto;
-    width: 				800px;
-    min-width: 			604px;
-    min-height: 			100%;
-    padding-top:			8px;
-}
-
-div#trademark {
-    float: 				left;
-    min-width: 			82px;
-    max-width: 			82px;
-    height: 				10%;
-    min-height:           68px;
-    max-height: 			80px;
-    color:  				#7f7fff;
-    font-size:			15px;
-    text-align: 			right;
-    line-height: 			155%;
-    padding-right: 		4px;
-    border-right: 		2px solid #7f7fff;
-}
-
-div#title {
-    padding-top:			16px;
-    width: 				604px;
-    min-width: 			360px;
-    max-width: 			604px;
-    height: 				80px;
-    max-height: 			72px;
-    margin-left: 80px;
-    margin-top: -2px;
-    margin-bottom: -12px;
-    font-variant: small-caps;
-}
-
-div.titles * {
-    color:  				#7f7fff;
-}
-
-div#title h1 {
-    margin-top: 			-16px;
-    margin-left:			10px;
-    margin-bottom:		-12px;
-    font-size:          4.8em;
-    font-variant: 		small-caps;
-}
-
-span#mode {
-    font-variant: 		small-caps;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 div#content {
@@ -447,7 +388,9 @@ div#content * img {
     margin-bottom: 	-1px;
 }
 
-div#content * .r + p img {
+div#content * .python + p img,
+div#content * .r + p img,
+div#content * .r-mapping  * img {
     float:			none;
     margin:         auto;
     width:			100%;
@@ -469,6 +412,70 @@ div#control #toggle_control {
     min-width: 		256px;
     max-width:		256px;
     background-image: url('images/txt_bubble.png');
+}
+
+span#mode {
+    font-variant: 		small-caps;
+}
+
+div#transparent_background {
+    position: 			relative;
+    width: 				800px;
+    min-width: 			540px;
+    min-height: 			9999px;
+    margin: 				0 auto 0 auto;
+    background-color: 	rgb(25, 25, 25);
+    opacity:				0.75;
+    filter:				alpha(opacity=75); /* For IE8 and earlier */
+}
+
+div#home_screen {
+    position: 			relative;
+    margin: 				-9999px auto 0 auto;
+    width: 				800px;
+    min-width: 			604px;
+    min-height: 			100%;
+    padding-top:			8px;
+}
+
+div#trademark {
+    float: 				left;
+    min-width: 			82px;
+    max-width: 			82px;
+    height: 				10%;
+    min-height:           68px;
+    max-height: 			80px;
+    color:  				#7f7fff;
+    font-size:			15px;
+    text-align: 			right;
+    line-height: 			155%;
+    padding-right: 		4px;
+    border-right: 		2px solid #7f7fff;
+}
+
+div#title {
+    padding-top:			16px;
+    width: 				604px;
+    min-width: 			360px;
+    max-width: 			604px;
+    height: 				80px;
+    max-height: 			72px;
+    margin-left: 80px;
+    margin-top: -2px;
+    margin-bottom: -12px;
+    font-variant: small-caps;
+}
+
+div.titles * {
+    color:  				#7f7fff;
+}
+
+div#title h1 {
+    margin-top: 			-16px;
+    margin-left:			10px;
+    margin-bottom:		-12px;
+    font-size:          4.8em;
+    font-variant: 		small-caps;
 }
 
 * #uni-sol {

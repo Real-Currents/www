@@ -509,12 +509,6 @@
     });
 </script>
 
-<style>
-    .controls {
-        width: 256px;
-    }
-</style>
-
 <GL.Scene bind:gl={webgl} backgroundOpacity=1.0 process_extra_shader_components={process_extra_shader_components}>
     <GL.Target id="center" location={[0, 0.5, 0]}/>
 
