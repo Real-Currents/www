@@ -9,6 +9,6 @@ canvas.svelte-10c35ml{width:100%;height:100%;background-color:#666;-webkit-mask:
 .keypad.svelte-el36x5{display:grid;grid-template-columns:repeat(3, 5em);grid-template-rows:repeat(4, 3em);grid-gap:0.5em
 	}button.svelte-el36x5{margin:0
 	}
-@media screen and (max-width: 480px){.controls.svelte-1cok62l.svelte-1cok62l{margin-top:8px}}.controls.svelte-1cok62l label input[type="checkbox"].svelte-1cok62l{float:left;margin-left:32px;margin-right:-48px}.controls.svelte-1cok62l #terrain-navigation-view img.svelte-1cok62l{float:none;margin:2px;width:200px;height:200px}.controls.svelte-1cok62l #terrain-navigation-view.svelte-1cok62l{padding:2px}.controls.svelte-1cok62l #terrain-navigation-cursor.svelte-1cok62l{position:absolute;top:0px;left:0px;margin-top:16px;margin-left:64px;min-width:20px;min-height:20px;border:2px solid}
+.controls.svelte-pu5kxd label input[type="checkbox"].svelte-pu5kxd{float:left;margin-left:32px;margin-right:-48px}.controls.svelte-pu5kxd #terrain-navigation-view img.svelte-pu5kxd{float:none;margin:2px;width:200px;height:200px}.controls.svelte-pu5kxd #terrain-navigation-view.svelte-pu5kxd{padding:2px}.controls.svelte-pu5kxd #terrain-navigation-cursor.svelte-pu5kxd{position:absolute;top:0px;left:0px;margin-top:16px;margin-left:64px;min-width:20px;min-height:20px;border:2px solid}@media screen and (max-width: 480px){.controls.svelte-pu5kxd.svelte-pu5kxd{margin-top:8px}}
 
 /*# sourceMappingURL=main.css.map */

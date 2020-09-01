@@ -62,7 +62,7 @@
   <main>
 
 
-<div id="vizr-app" role="main" style="width: 100%; min-width: 800px;">
+<div id="vizr-app" role="main" style="width: 100%; min-width: 800px; margin-left: -86px;">
 <p> </p>
 </div>
 <div id="visualizing-r-data-with-sveltr" class="section level2">
@@ -87,7 +87,7 @@ After using R to read each pixel of this heightmap, the table (data.frame) is wr
 <p><br />
 <br />
 <br /></p>
-<p>Note the <code>type="application/json"</code> attribute, which prevents the browser from evaluating the contents of the <code>&lt;script&gt;</code> tag as JavaScript (if that is intended) and allows some other code block to call:</p>
+<p>Note the <code>type=&quot;application/json&quot;</code> attribute, which prevents the browser from evaluating the contents of the <code>&lt;script&gt;</code> tag as JavaScript (if that is intended) and allows some other code block to call:</p>
 <pre><code>&lt;script&gt;
   var data = JSON.parse(document.getElementById(&#39;gl_data_in_html&#39;).children[0].innerHTML);
 &lt;/script&gt;</code></pre>
