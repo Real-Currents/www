@@ -3,8 +3,6 @@ import { Observable } from "rxjs";
 import { fromPromise } from "rxjs/internal-compatibility";
 import { mergeMap, map, switchMap } from "rxjs/operators";
 
-var quad = null;
-
 var fetched = false;
 
 function get(url) {
@@ -137,7 +135,7 @@ export let onmessage = function(evt) {
             },
             error(err) { console.error(err); },
             complete() { console.log("Event fetch is complete"); }
-        });;
+        });
     }
 };
 

@@ -3,9 +3,9 @@ import App from './apps/App.svelte';
 import GLSLApp from './apps/GLSLApp.svelte';
 import SimulationApp from './apps/SimulationApp.svelte';
 import TerrainApp from './apps/TerrainApp.svelte';
+import InvoiceApp from './apps/InvoiceApp.svelte';
 import TechApp from './apps/TechApp.svelte';
 import VizRApp from './apps/VizRApp.svelte';
-
 
 const appId = 'svelte-app';
 const appElement = document.getElementById(appId);
@@ -64,6 +64,21 @@ export const terrainApp = (
         target: terrainAppElement,
         props: {
             title: "🦊 Hello SvelteGL!"
+        }
+    }) : {};
+
+
+const invoiceAppId = 'invoice-app';
+const invoiceAppElement = document.getElementById(invoiceAppId);
+export const invoiceApp = (
+    invoiceAppElement !== null &&
+    (invoiceAppElement.constructor.name === 'HTMLElement' ||
+        invoiceAppElement.constructor.name === 'HTMLDivElement')
+    ) ?
+    new InvoiceApp({
+        target: invoiceAppElement,
+        props: {
+            title: 'Invoicing'
         }
     }) : {};
 

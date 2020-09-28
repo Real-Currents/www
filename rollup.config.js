@@ -1,7 +1,10 @@
+import builtins from 'rollup-plugin-node-builtins';
+import globals from 'rollup-plugin-node-globals';
 import svelte from 'rollup-plugin-svelte';
 import commonjs from 'rollup-plugin-commonjs';
-import copy from 'rollup-plugin-copy'
-// import del from 'rollup-plugin-delete'
+import copy from 'rollup-plugin-copy';
+// import del from 'rollup-plugin-delete';
+import json from 'rollup-plugin-json';
 import livereload from 'rollup-plugin-livereload';
 import resolve from 'rollup-plugin-node-resolve';
 import postcss from "rollup-plugin-postcss";
@@ -21,26 +24,6 @@ export default [
 			file: 'public/main.js'
 		},
 		plugins: [
-			svelte({
-				// enable run-time checks when not in production
-				dev: !production,
-				// we'll extract any component CSS out into
-				// a separate file - better for performance
-				css: css => {
-					css.write('public/main.css');
-				}
-			}),
-
-			// If you have external dependencies installed from
-			// npm, you'll most likely need these plugins. In
-			// some cases you'll need additional configuration -
-			// consult the documentation for details:
-			// https://github.com/rollup/plugins/tree/master/packages/commonjs
-			resolve({
-				browser: true,
-				dedupe: ['svelte']
-			}),
-
 			postcss({
 				extract: 'public/global.css',
 				plugins: []
@@ -68,6 +51,28 @@ export default [
 					{ src: 'src/images', dest: 'public/' },
 					{ src: 'src/styles/imports', dest: 'public/' }
 				]
+			}),
+
+			json(),
+
+			// If you have external dependencies installed from
+			// npm, you'll most likely need these plugins. In
+			// some cases you'll need additional configuration -
+			// consult the documentation for details:
+			// https://github.com/rollup/plugins/tree/master/packages/commonjs
+			resolve({
+				browser: true,
+				dedupe: ['svelte']
+			}),
+
+			svelte({
+				// enable run-time checks when not in production
+				dev: !production,
+				// we'll extract any component CSS out into
+				// a separate file - better for performance
+				css: css => {
+					css.write('public/main.css');
+				}
 			}),
 
 			shader( {
@@ -109,11 +114,37 @@ export default [
 			file: 'public/worker.js'
 		},
 		plugins: [
+			commonjs(),
+
+			resolve({
+				browser: true
+			})
+		],
+		watch: {
+			clearScreen: false
+		}
+	},
+	{
+		input: 'src/invoice-service.js',
+		output: {
+			dir: 'dist',
+			format: 'umd',
+			name: 'self',
+			exports: 'named',
+			extend: true
+		},
+		plugins: [
 			resolve({
 				browser: true
 			}),
 
-			commonjs()
+			builtins(),
+
+			globals(),
+
+			commonjs(),
+
+			json()
 		],
 		watch: {
 			clearScreen: false
