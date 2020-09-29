@@ -1,0 +1,9 @@
+[
+  {
+    "date": "2020-09-29T04:43:10.641Z",
+    "global": {
+      "invoice_note": "August 31st - September 18th",
+      "invoice_reference_pattern": "$prefix{INVOICE}$date{YYYY_MM}$separator{_}$id{000000}"
+    }
+  }
+]

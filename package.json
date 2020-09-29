@@ -8,7 +8,7 @@
   "repository": "Real-Currents/www",
   "main": "index.js",
   "dependencies": {
-    "@rimiti/invoice-it": "git+https://github.com/Real-Currents/invoice-it.git#real/currents",
+    "invoice-it": "git+https://github.com/Real-Currents/invoice-it.git#real/currents",
     "koa": "^2.13.0",
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0"

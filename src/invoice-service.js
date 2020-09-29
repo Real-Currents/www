@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const Request = require('node-fetch').Request;
 
-const invoiceIt = require('@rimiti/invoice-it').default;
+const invoiceIt = require('invoice-it').default;
 
 // const Redis = require('ioredis');
 
@@ -260,72 +260,161 @@ export default async function main (options) {
     return (new Promise(async resolve => {
 
         if (options[2] === "test-invoice") {
-            const htmlPathfile = './data/invoice.html';
-            const pdfPathfile = './data/invoice.pdf';
-            const pdfPathfileAdd = './data/invoiceAdd.pdf';
 
-            invoiceIt.configure({
-                global: {
-                    logo: 'http://localhost:3000/images/real-currents-bw-invoice.png',
-                    date_format: 'YYYY-MM-DD',
-                    footer: {
-                        en: "Integrative Web Apps <br /> by <a href=\"http://www.real-currents.com\">Real~Currents</a>"
-                    },
-                    invoice_header_payment_reference: "invoice_header_payment_reference",
-                    invoice_note: 'It\'s my custom node!',
-                    invoice_reference_pattern: '$prefix{INVOICE}$date{YYMM}$separator{_}$id{00000}'
-                },
-            });
+            fs.open(path.resolve('./data/' + 'invoice.json'), 'r', (err, fd) => {
 
-            const emitter = {
-                name: 'Real~Currents',
-                first_name: 'John',
-                last_name: 'Hall',
-                street_number: '17',
-                street_name: 'Victory Circle',
-                zip_code: '05001',
-                city: 'White River Junction',
-                country: 'VT', // state
-                phone: '510.306.1376',
-                mail: 'john@real-currents.com',
-                website: 'www.real-currents.com',
-            };
+                if (err) {
+                    throw 'Could not open ' + path.resolve('./data/' + 'invoice.json') + ':\n' + err;
 
-            const client = {
-                company_name: 'ELE',
-                first_name: 'Jeremy',
-                last_name: '...',
-                street_number: '20',
-                street_name: 'Rue Victor Hugo',
-                zip_code: '77340',
-                city: 'Pontault-Combault',
-                country: 'France',
-                phone: '06 00 00 00 00',
-                mail: 'will.jameson@test.com',
-            };
+                } else {
+                    const invoiceLog = require(path.resolve('./data/' + 'invoice'));
+                    const invoiceRecord = {}
+                    const invoiceTotal = invoiceLog.length;
+                    const invoicePath = './data/invoice-' + invoiceTotal;
 
-            const workItems = [
-                {
-                    code: 'MTG',
-                    description: 'Online Meeting',
-                    // tax: 0.0, // date
-                    price: 22.5,
-                    qt: 3,
-                },
-                {
-                    code: 'DEV',
-                    description: 'Web Development',
-                    // tax: 0.0, // date
-                    price: 45,
-                    qt: 9,
+                    console.log('Total invoices written: ', invoiceTotal);
+
+                    invoiceRecord['date'] = new Date();
+
+                    invoiceRecord['global'] = {
+                        invoice_note: 'August 31st - September 18th',
+                        invoice_reference_pattern: '$prefix{INVOICE}$date{YYYY_MM}$separator{_}$id{'+ invoiceTotal.toString().padStart(6, '0') +'}'
+                    };
+
+                    invoiceLog.push(invoiceRecord);
+
+                    fs.closeSync(fd);
+
+                    fs.unlinkSync('./data/' + 'invoice.json');
+
+                    const updatedLog = JSON.stringify(invoiceLog, null, 2);
+
+                    console.log(JSON.parse(updatedLog));
+
+                    fs.open(path.resolve('./data/' + 'invoice.json'), 'w', async (err, fw) => {
+                        if (!!err) {
+                            resolve('{ "error": ' + JSON.stringify(err) +' }');
+
+                        } else try {
+
+                            await fs.write(fw, updatedLog, err => {
+                                if (!!err) console.error(err);
+                                fs.closeSync(fw);
+                            });
+
+                            console.log('Configure new invoice using record: ', invoiceRecord);
+
+                            invoiceIt.configure({
+                                global: {
+                                    logo: 'http://localhost:3000/images/real-currents-bw-invoice.png',
+                                    date_format: 'YYYY-MM-DD',
+                                    footer: {
+                                        en: "Integrative Web Apps <br /> by <a href=\"http://www.real-currents.com\">Real~Currents</a>"
+                                    },
+                                    invoice_header_payment_reference: "invoice_header_payment_reference",
+                                    invoice_note: invoiceRecord['global']['invoice_note'],
+                                    invoice_reference_pattern: invoiceRecord['global']['invoice_reference_pattern']
+                                }
+                            });
+
+                            const emitter = {
+                                name: 'Real~Currents',
+                                first_name: 'John',
+                                last_name: 'Hall',
+                                street_number: '17',
+                                street_name: 'Victory Circle',
+                                city: 'White River Junction',
+                                country: 'VT', // state
+                                zip_code: '05001',
+                                phone: '510.306.1376',
+                                mail: 'john@real-currents.com',
+                                website: 'www.real-currents.com',
+                            };
+
+                            const client = {
+                                company_name: 'ELE Optics Inc.',
+                                first_name: 'Jeremy',
+                                last_name: 'Shockley',
+                                street_number: '44',
+                                street_name: 'North Stone Avenue',
+                                city: 'Tucson',
+                                country: 'AZ', // state
+                                zip_code: '85701',
+                                phone: '323.841.5288',
+                                mail: 'jshockley@eleoptics.com',
+                            };
+
+                            const workItems = [
+                                {
+                                    code: 'MTG',
+                                    description: 'Meeting',
+                                    // tax: 0.0,
+                                    date: '2020-09-03',
+                                    price: 22.5,
+                                    qt: 1,
+                                },
+                                {
+                                    code: 'DEV',
+                                    description: 'Web Development',
+                                    // tax: 0.0,
+                                    date: '2020-09-04',
+                                    price: 45,
+                                    qt: 2,
+                                },
+                                {
+                                    code: 'MTG',
+                                    description: 'Meeting',
+                                    // tax: 0.0,
+                                    date: '2020-09-10',
+                                    price: 22.5,
+                                    qt: 1,
+                                },
+                                {
+                                    code: 'DEV',
+                                    description: 'Web Development',
+                                    // tax: 0.0,
+                                    date: '2020-09-11',
+                                    price: 45,
+                                    qt: 2,
+                                },
+                                {
+                                    code: 'DEV',
+                                    description: 'Web Development',
+                                    // tax: 0.0,
+                                    date: '2020-09-14',
+                                    price: 45,
+                                    qt: 3,
+                                },
+                                {
+                                    code: 'MTG',
+                                    description: 'Meeting',
+                                    // tax: 0.0,
+                                    date: '2020-09-17',
+                                    price: 22.5,
+                                    qt: 1,
+                                },
+                                {
+                                    code: 'DEV',
+                                    description: 'Web Development',
+                                    // tax: 0.0,
+                                    date: '2020-09-17',
+                                    price: 45,
+                                    qt: 2,
+                                }
+                            ];
+
+                            const invoice = invoiceIt.create(client, emitter);
+                            invoice.article = workItems;
+
+                            invoice.getInvoice().toHTML().toFile(invoicePath + '.html').then(() => invoice.getInvoice().toPDF().toFile(invoicePath + '.pdf')
+                                .then(() => resolve('{ "result": "' + invoicePath + '.pdf" }')));
+
+                        } catch (e) {
+                            resolve('{ "error": ' + JSON.stringify(e) +'}');
+                        }
+                    });
                 }
-            ];
-
-            const invoice = invoiceIt.create(client, emitter);
-            invoice.article = workItems;
-
-            invoice.getInvoice().toHTML().toFile(htmlPathfile).then(() => invoice.getInvoice().toPDF().toFile(pdfPathfile)
-                .then(() => resolve(pdfPathfile)));
+            });
 
         // } else {
         //     resolve(redis.getBuiltinCommands());
