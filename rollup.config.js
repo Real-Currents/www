@@ -14,6 +14,59 @@ import { terser } from 'rollup-plugin-terser';
 const production = !process.env.ROLLUP_WATCH;
 
 export default [
+
+	// WORKER
+	{
+		input: 'src/event-processor.js',
+		output: {
+			sourcemap: true,
+			name: 'self',
+			format: 'umd',
+			extend: true,
+			exports: 'named',
+			file: 'public/worker.js'
+		},
+		plugins: [
+			commonjs(),
+
+			resolve({
+				browser: true
+			})
+		],
+		watch: {
+			clearScreen: false
+		}
+	},
+
+	// SERVER
+	{
+		input: 'src/invoice-service.js',
+		output: {
+			dir: 'dist',
+			format: 'umd',
+			name: 'self',
+			exports: 'named',
+			extend: true
+		},
+		plugins: [
+			resolve({
+				browser: true
+			}),
+
+			builtins(),
+
+			globals(),
+
+			commonjs(),
+
+			json()
+		],
+		watch: {
+			clearScreen: false
+		}
+	},
+
+	// CLIENT
 	{
 		input: 'src/main.js',
 		output: {
@@ -98,53 +151,6 @@ export default [
 			// If we're building for production (npm run build
 			// instead of npm run dev), minify
 			production && terser()
-		],
-		watch: {
-			clearScreen: false
-		}
-	},
-	{
-		input: 'src/event-processor.js',
-		output: {
-			sourcemap: true,
-			name: 'self',
-			format: 'umd',
-			extend: true,
-			exports: 'named',
-			file: 'public/worker.js'
-		},
-		plugins: [
-			commonjs(),
-
-			resolve({
-				browser: true
-			})
-		],
-		watch: {
-			clearScreen: false
-		}
-	},
-	{
-		input: 'src/invoice-service.js',
-		output: {
-			dir: 'dist',
-			format: 'umd',
-			name: 'self',
-			exports: 'named',
-			extend: true
-		},
-		plugins: [
-			resolve({
-				browser: true
-			}),
-
-			builtins(),
-
-			globals(),
-
-			commonjs(),
-
-			json()
 		],
 		watch: {
 			clearScreen: false

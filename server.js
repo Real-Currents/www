@@ -28,22 +28,15 @@ app.use(serve('public', { extensions: true }));
 app.use(async (ctx) => {
     switch (ctx.path) {
 
+        case ('/log.json'):
+            await send(ctx, '/data/log.json');
+            break;
+
         case ('/position_events.json'):
             await send(ctx, '/data/position_events.json');
             break;
 
-        case ('/scan'):
-            await main([ '192.168.1.3', 6379, 'scan', 0 ])
-                .then(r => {
-                    console.debug(JSON.stringify(r)); // debug
-                    ctx.header['Content-Type'] = 'application/json';
-                    ctx.body = r;
-                }, err => {
-                    console.error(err);
-                });
-            break;
-
-        case ('/test'):
+        case ('/test-invoice'):
             await main([ '192.168.1.3', 6379, 'test-invoice', 0 ])
                 .then(r => {
                     console.debug(JSON.stringify(r)); // debug
@@ -54,9 +47,6 @@ app.use(async (ctx) => {
                 });
             break;
 
-        case ('/log.json'):
-            await send(ctx, '/data/log.json');
-            break;
         default:
             return ctx.body = 'Not Found';
     }
