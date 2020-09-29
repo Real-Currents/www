@@ -270,13 +270,19 @@ export default async function main (options) {
                     const invoiceLog = require(path.resolve('./data/' + 'invoice'));
                     const invoiceRecord = {}
                     const invoiceTotal = invoiceLog.length;
-                    const invoicePath = './data/invoice-' + invoiceTotal;
+                    invoiceRecord['id'] = invoiceTotal.toString().padStart(6, '0');
+                    invoiceRecord['date'] = new Date();
+                    invoiceRecord['path'] = './data/invoice-' + invoiceRecord['id'];
 
                     console.log('Total invoices written: ', invoiceTotal);
 
-                    invoiceRecord['date'] = new Date();
-
                     invoiceRecord['global'] = {
+                        logo: 'http://localhost:3000/images/real-currents-bw-invoice.png',
+                        date_format: 'YYYY-MM-DD',
+                        footer: {
+                            en: "Integrative Web Apps <br /> by <a href=\"http://www.real-currents.com\">Real~Currents</a>"
+                        },
+                        invoice_header_payment_reference: "invoice_header_payment_reference",
                         invoice_note: 'August 31st - September 18th',
                         invoice_reference_pattern: '$prefix{INVOICE}$date{YYYY_MM}$separator{_}$id{'+ invoiceTotal.toString().padStart(6, '0') +'}'
                     };
@@ -289,7 +295,7 @@ export default async function main (options) {
 
                     const updatedLog = JSON.stringify(invoiceLog, null, 2);
 
-                    console.log(JSON.parse(updatedLog));
+                    // console.log(JSON.parse(updatedLog));
 
                     fs.open(path.resolve('./data/' + 'invoice.json'), 'w', async (err, fw) => {
                         if (!!err) {
@@ -304,18 +310,7 @@ export default async function main (options) {
 
                             console.log('Configure new invoice using record: ', invoiceRecord);
 
-                            invoiceIt.configure({
-                                global: {
-                                    logo: 'http://localhost:3000/images/real-currents-bw-invoice.png',
-                                    date_format: 'YYYY-MM-DD',
-                                    footer: {
-                                        en: "Integrative Web Apps <br /> by <a href=\"http://www.real-currents.com\">Real~Currents</a>"
-                                    },
-                                    invoice_header_payment_reference: "invoice_header_payment_reference",
-                                    invoice_note: invoiceRecord['global']['invoice_note'],
-                                    invoice_reference_pattern: invoiceRecord['global']['invoice_reference_pattern']
-                                }
-                            });
+                            invoiceIt.configure(invoiceRecord);
 
                             const emitter = {
                                 name: 'Real~Currents',
@@ -406,8 +401,8 @@ export default async function main (options) {
                             const invoice = invoiceIt.create(client, emitter);
                             invoice.article = workItems;
 
-                            invoice.getInvoice().toHTML().toFile(invoicePath + '.html').then(() => invoice.getInvoice().toPDF().toFile(invoicePath + '.pdf')
-                                .then(() => resolve('{ "result": "' + invoicePath + '.pdf" }')));
+                            invoice.getInvoice().toHTML().toFile(invoiceRecord['path']+ '.html').then(() => invoice.getInvoice().toPDF().toFile(invoiceRecord['path'] + '.pdf')
+                                .then(() => resolve('{ "result": "' + invoiceRecord['path'] + '.pdf" }')));
 
                         } catch (e) {
                             resolve('{ "error": ' + JSON.stringify(e) +'}');
@@ -428,7 +423,7 @@ export default async function main (options) {
 
     if (!!process.argv[1] && process.argv[1].match(/(?:main|rt)/) !== null) {
 
-        console.log("COMMAND-LINE CONTEXT");
+            console.log("COMMAND-LINE CONTEXT");
 
         main((process.argv.length > 2) ? process.argv.slice(2) : [] )
             .then(r => {

@@ -4,6 +4,25 @@
 
 	export let title;
 
+	let buttonText = 'Create Invoice'
+
+	let invoiceResult = null;
+
+	async function handleClick() {
+		buttonText = 'Building ...'
+
+		await fetch('/test-invoice', {
+			method: 'POST'
+			// headers: {},
+			// body: uploadData
+		})
+				.then(res => res.json())
+				.then(json => (invoiceResult = json) && console.log("Response: ", json))
+				.catch(err => (invoiceResult = err) && console.error(err));
+
+		buttonText = 'Create Invoice';
+	}
+
 	const eventQuad = new QuadStore(
 			6,
 			[[ -16.0, -16.0 ],[ 16.0, 16.0 ]]
@@ -48,17 +67,29 @@
 </script>
 
 <style>
-	h4 {
-		margin-left: 10%;
+	.invoice-controls {
+		text-align: center;
+		padding: 1em;
+		max-width: 240px;
+		margin: 0 auto;
+	}
+
+	h1, h2, h3, h4 {
+		text-transform: uppercase;
+		font-size: 4em;
+		font-weight: 100;
 	}
 
 </style>
 
-<h4>{title}</h4>
+<div class="invoice-controls">
 
-<div class="controls">
-	<label>
-		Create Invoice
-		<input type="button" style="height: 40px" value="Create Invoice" />
-	</label>
+	<h4>{title}</h4>
+
+	<button on:click="{handleClick}">{buttonText}</button>
+
+	{#if (invoiceResult != null)}
+		<p>{invoiceResult}</p>
+	{/if}
+
 </div>
