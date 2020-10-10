@@ -15,32 +15,9 @@ const production = !process.env.ROLLUP_WATCH;
 
 export default [
 
-	// WORKER
+	// SERVICE LIB (SERVER-SIDE)
 	{
-		input: 'src/event-processor.js',
-		output: {
-			sourcemap: true,
-			name: 'self',
-			format: 'umd',
-			extend: true,
-			exports: 'named',
-			file: 'public/worker.js'
-		},
-		plugins: [
-			commonjs(),
-
-			resolve({
-				browser: true
-			})
-		],
-		watch: {
-			clearScreen: false
-		}
-	},
-
-	// SERVER
-	{
-		input: 'src/invoice-service.js',
+		input: 'src/services/invoice-service.js',
 		output: {
 			dir: 'dist',
 			format: 'umd',
@@ -66,7 +43,30 @@ export default [
 		}
 	},
 
-	// CLIENT
+	// SERVICE WORKER (CLIENT-SIDE)
+	{
+		input: 'src/services/event-processor-service.js',
+		output: {
+			sourcemap: true,
+			name: 'self',
+			format: 'umd',
+			extend: true,
+			exports: 'named',
+			file: 'public/worker.js'
+		},
+		plugins: [
+			commonjs(),
+
+			resolve({
+				browser: true
+			})
+		],
+		watch: {
+			clearScreen: false
+		}
+	},
+
+	// APPLICATION (CLIENT-SIDE)
 	{
 		input: 'src/main.js',
 		output: {
@@ -135,9 +135,10 @@ export default [
 					'../@sveltejs/gl/**/*.glsl',
 					'**/*.glsl',
 					'**/*.vs',
-					'**/*.fs' ],
+					'**/*.fs'
+				],
 				// specify whether to remove comments
-				removeComments: true,   // default: true
+				removeComments: true
 			} ),
 
 			// In dev mode, call `npm run start` once

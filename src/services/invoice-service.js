@@ -323,7 +323,7 @@ export default async function main (options) {
                                 zip_code: '05001',
                                 phone: '510.306.1376',
                                 mail: 'john@real-currents.com',
-                                website: 'www.real-currents.com',
+                                website: 'www.real-currents.com'
                             };
 
                             const client = {
@@ -336,7 +336,7 @@ export default async function main (options) {
                                 country: 'AZ', // state
                                 zip_code: '85701',
                                 phone: '323.841.5288',
-                                mail: 'jshockley@eleoptics.com',
+                                mail: 'jshockley@eleoptics.com'
                             };
 
                             const workItems = [
