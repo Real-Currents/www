@@ -32,8 +32,6 @@
     article {
         margin-top: 20px;
         padding: 0;
-        width: max-content;
-        width: -moz-max-content;
         /*border: 2px solid black;*/
     }
 

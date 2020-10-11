@@ -92,6 +92,12 @@
         float: left;
         padding: 10px;
         max-width: 320px;
+        width: max-content;
+        width: -moz-max-content;
+    }
+
+    .invoice-controls button {
+        clear: both;
     }
 
 </style>
@@ -108,6 +114,7 @@
         <p>{invoiceResult}</p>
     {/if}
 
+    <br /><br /><br />
     <button on:click="{handleClick}">{buttonText}</button>
 
 </div>
