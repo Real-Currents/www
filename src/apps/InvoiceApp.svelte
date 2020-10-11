@@ -1,6 +1,4 @@
 <script>
-    import * as d3 from 'd3';
-    import { map } from 'rxjs/operators';
     import { onMount } from 'svelte';
     import QuadStore from './modules/quad-store';
     import Emitter from './components/invoice/Emitter.svelte';
@@ -9,29 +7,9 @@
 
     let buttonText = 'Create Invoice';
 
-    let emitter;
+    let getEmitters;
 
     let invoiceResult = null;
-
-    async function getEmitterData () {
-        const emitterData = (await d3.csv('shop/data/emitter.csv')).map(d => ({
-            name: 'Real~Currents',
-            first_name: 'John',
-            last_name: 'Hall',
-            street_number: '17',
-            street_name: 'Victory Circle',
-            city: 'White River Junction',
-            country: 'VT', // state
-            zip_code: '05001',
-            phone: '510.306.1376',
-            mail: 'john@real-currents.com',
-            website: 'www.real-currents.com'
-        }));
-
-        console.log("emitter: ", emitterData);
-
-        return emitterData;
-    }
 
     async function handleClick() {
         buttonText = 'Building ...'
@@ -87,8 +65,12 @@
     }
 
     onMount(async () => {
-        emitter = await getEmitterData();
-        console.log("Retrieved emitter data");
+        if (typeof getEmitters === 'function') {
+            console.log("Retrieving emitter data: ");
+            console.log(await getEmitters('shop/data/emitter.csv'));
+        } else {
+            console.log("getEmitters is not a function", typeof getEmitters);
+        }
     });
 </script>
 
@@ -96,7 +78,6 @@
     .invoice-controls {
         text-align: center;
         padding: 1em;
-        max-width: 240px;
         margin: 0 auto;
     }
 
@@ -106,21 +87,27 @@
         font-weight: 100;
     }
 
+    .invoice-controls .emitter {
+        display: inline-block;
+        float: left;
+        padding: 10px;
+        max-width: 320px;
+    }
+
 </style>
 
 <div class="invoice-controls">
 
     <h4>{title}</h4>
 
-    <button on:click="{handleClick}">{buttonText}</button>
-
-    {#if (!!emitter && emitter.length > 0)}
-        <Emitter bind:emitter="{emitter[0]}" />
-        <!--p>{emitter[0].name}</p-->
-    {/if}
+    <div class="emitter">
+        <Emitter bind:getEmitters="{getEmitters}" />
+    </div>
 
     {#if (invoiceResult != null)}
         <p>{invoiceResult}</p>
     {/if}
+
+    <button on:click="{handleClick}">{buttonText}</button>
 
 </div>

@@ -138,7 +138,7 @@ export default [
 					'**/*.fs'
 				],
 				// specify whether to remove comments
-				removeComments: true
+				removeComments: true,   // default: true
 			} ),
 
 			// In dev mode, call `npm run start` once
