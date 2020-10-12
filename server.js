@@ -2,6 +2,7 @@
 const Koa = require('koa');
 const app = new Koa();
 const port = process.env['PORT'] || 3000;
+const bodyParser = require('koa-body');
 const send = require('koa-send');
 const serve = require('koa-static');
 const main = require('./dist/invoice-service').default;
@@ -13,7 +14,7 @@ app.use(async (ctx, next) => {
     console.log(`${ctx.method} ${ctx.url} - ${rt}`);
 });
 
-// x-response-time
+// response time
 app.use(async (ctx, next) => {
     const start = Date.now();
     await next();
@@ -24,8 +25,13 @@ app.use(async (ctx, next) => {
 // static response
 app.use(serve('public', { extensions: true }));
 
+// parser
+app.use(bodyParser());
+
 // reactive response
 app.use(async (ctx) => {
+    console.log('Request: ', ctx.request);
+
     switch (ctx.path) {
 
         case ('/log.json'):
@@ -36,8 +42,19 @@ app.use(async (ctx) => {
             await send(ctx, '/data/position_events.json');
             break;
 
+        case ('/create-invoice'):
+            await main([ 'create-invoice', ctx.request.body ])
+                .then(r => {
+                    console.debug(JSON.stringify(r)); // debug
+                    ctx.header['Content-Type'] = 'application/json';
+                    ctx.body = r;
+                }, err => {
+                    console.error(err);
+                });
+            break;
+
         case ('/test-invoice'):
-            await main([ '192.168.1.3', 6379, 'test-invoice', 0 ])
+            await main([ 'test-invoice', '192.168.1.3', 6379, 0 ])
                 .then(r => {
                     console.debug(JSON.stringify(r)); // debug
                     ctx.header['Content-Type'] = 'application/json';

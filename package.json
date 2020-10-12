@@ -8,8 +8,11 @@
   "repository": "Real-Currents/www",
   "main": "index.js",
   "dependencies": {
+    "co-body": "^6.1.0",
     "invoice-it": "git+https://github.com/Real-Currents/invoice-it.git#real/currents",
     "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-bodyparser": "^4.3.0",
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0"
   },

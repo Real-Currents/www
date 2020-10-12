@@ -1,21 +1,18 @@
 <script>
     import * as d3 from "d3";
 
-    export let emitter;
+    export let clients;
 
-    export const getEmitters = async (data) => {
-        emitters = (await getEmitterData(data));
-        emitter = emitters[0];
-        return emitters;
+    export const getClients = async (data) => {
+        clients = (await getClientData(data));
+        return clients;
     };
 
-    let emitters;
-
-    async function getEmitterData (data) {
+    async function getClientData (data) {
         return (await d3.csv(data)).map(d => ({
             // TODO: validate field values...
             org: d['org'],
-            name: d['name'],
+            company_name: d['company_name'],
             first_name: d['first_name'],
             last_name: d['last_name'],
             street_number: d['street_number'],
@@ -71,28 +68,28 @@
 
 </style>
 
-{#if (!!emitters && emitters.length > 0)}
-{#each emitters as emitter}
+{#if (!!clients && clients.length > 0)}
+{#each clients as client}
     <article>
         <ul class="asset" layout>
-            <li><input class="key" type="hidden" value="{emitter.org}" /></li>
-            <li flex><span class="name">{emitter.name}</span></li>
-            <li flex><span class="first_name">{emitter.first_name}</span></li>
-            <li flex><span class="last_name">{emitter.last_name}</span></li>
+            <li><input class="key" type="hidden" value="{client.org}" /></li>
+            <li flex><span class="name">{client.company_name}</span></li>
+            <li flex><span class="first_name">{client.first_name}</span></li>
+            <li flex><span class="last_name">{client.last_name}</span></li>
             <li flex="50" layout>
-                <div flex><span class="street_number">{emitter.street_number}</span></div>&nbsp;
-                <div flex><span class="street_number">{emitter.street_name}</span></div>
+                <div flex><span class="street_number">{client.street_number}</span></div>&nbsp;
+                <div flex><span class="street_number">{client.street_name}</span></div>
             </li>
             <li flex="50" layout>
-                <div flex><span class="street_number">{emitter.city}</span></div>,&nbsp;
-                <div flex><span class="street_number">{emitter.country}</span></div>&nbsp;
-                <div flex><span class="street_number">{emitter.zip_code}</span></div>
+                <div flex><span class="street_number">{client.city}</span></div>,&nbsp;
+                <div flex><span class="street_number">{client.country}</span></div>&nbsp;
+                <div flex><span class="street_number">{client.zip_code}</span></div>
                 <!--div flex><span class="date-time created_at">{(new Date(created_at).toDateString())}</span></div-->
                 <!--div flex><span class="date-time last_modified">{(new Date(last_modified).toDateString())}</span></div-->
             </li>
-            <li flex><span class="phone">{emitter.phone}</span></li>
-            <li flex><span class="mail">{emitter.mail}</span></li>
-            <li flex><span class="website">{emitter.website}</span></li>
+            <li flex><span class="phone">{client.phone}</span></li>
+            <li flex><span class="mail">{client.mail}</span></li>
+            <li flex><span class="website">{client.website}</span></li>
             <!--li flex="25">
                 <div flex><input class="action" type="button" value="select" disabled /></div>
             </li-->

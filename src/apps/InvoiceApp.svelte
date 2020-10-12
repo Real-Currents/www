@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
-    import QuadStore from './modules/quad-store';
     import Emitter from './components/invoice/Emitter.svelte';
+    import Clients from './components/invoice/Clients.svelte';
+    import Work from './components/invoice/Work.svelte';
 
     export let title;
 
@@ -9,67 +10,75 @@
 
     let getEmitters;
 
+    let emitter;
+
+    let getClients;
+
+    let clients;
+
+    let getWork;
+
+    let workSelection;
+
+    let note = "";
+
     let invoiceResult = null;
 
     async function handleClick() {
         buttonText = 'Building ...'
 
-        await fetch('/test-invoice', {
-            method: 'POST'
-            // headers: {},
-            // body: uploadData
-        })
-            .then(res => res.json())
-            .then(json => (invoiceResult = json) && console.log("Response: ", json))
-            .catch(err => (invoiceResult = err) && console.error(err));
+        if (!!workSelection && workSelection.length > 0) {
+            let  client;
+            workSelection.filter(w =>
+                clients.filter(c => {
+                    if (c['org'] === w['org']) {
+                        client = c;
+                        return true;
+                    }
+                }).length > 0
+            );
+
+            if (!!client) {
+
+                const invoiceData = {
+                    emitter: emitter,
+                    client: client,
+                    workEntries: workSelection
+                };
+
+                if (!!note) {
+                    invoiceData['note'] = note;
+                }
+
+                await fetch('/create-invoice', {
+                    // headers: {},
+                    method: 'POST',
+                    body: JSON.stringify(invoiceData)
+                })
+                    .then(res => res.json())
+                    .then(json => (invoiceResult = JSON.stringify(json)) && console.log("Response: ", json))
+                    .catch(err => (invoiceResult = err) && console.error(err));
+
+            } else {
+                window.alert("Work entries do not match any client!");
+            }
+
+        } else {
+            window.alert("Not work entries have been selected!");
+        }
 
         buttonText = 'Create Invoice';
     }
 
-    const eventQuad = new QuadStore(
-        6,
-        [[ -16.0, -16.0 ],[ 16.0, 16.0 ]]
-    );
-
-    const eventsLoading = [false];
-
-    const eventsLoaded = [false];
-
-    const initQuadWidth = (eventQuad.extent[1][0] - eventQuad.extent[0][0]) / 2,
-        initQuadDepth = (eventQuad.extent[1][1] - eventQuad.extent[0][1]) / 2;
-
-    const heightmap = [];
-    const gridSizeX = initQuadWidth * 2;
-    const gridSizeZ = initQuadDepth * 2;
-
-    let quadList = [];
-
-    // Use a Web Worker to load position events...
-    // as if they are coming in from async remote service
-    if (window.Worker) {
-
-        window.eventQuad = eventQuad; // debug
-
-        const eventProcessor = new Worker('worker.js');
-
-        eventProcessor.postMessage({
-            "action": "Load event data",
-            "payload": {
-                "event-source": "post/data/position_events.json",
-                "heightmap-source": "post/data/planar-terrain-heights.json",
-                "planar-extent": eventQuad.extent
-            }
-        });
-
-        console.log("Quads initialized: ", quadList);
-    }
-
     onMount(async () => {
-        if (typeof getEmitters === 'function') {
-            console.log("Retrieving emitter data: ");
+        if (typeof getEmitters === 'function' &&
+            typeof getClients === 'function' &&
+            typeof getWork === 'function'
+        ) {
+            console.log("Retrieving work data: ");
             console.log(await getEmitters('shop/data/emitter.csv'));
-        } else {
-            console.log("getEmitters is not a function", typeof getEmitters);
+            console.log(await getClients('shop/data/clients.csv'));
+            console.log(await getWork('shop/data/work.csv'));
         }
     });
 </script>
@@ -96,6 +105,22 @@
         width: -moz-max-content;
     }
 
+    .invoice-controls .clients {
+        display: inline-block;
+        padding: 10px;
+        max-width: 320px;
+        width: max-content;
+        width: -moz-max-content;
+    }
+
+
+    .invoice-controls .work {
+        clear: both;
+        padding: 10px;
+        width: max-content;
+        width: -moz-max-content;
+    }
+
     .invoice-controls button {
         clear: both;
     }
@@ -107,14 +132,31 @@
     <h4>{title}</h4>
 
     <div class="emitter">
-        <Emitter bind:getEmitters="{getEmitters}" />
+        <Emitter bind:emitter="{emitter}" bind:getEmitters="{getEmitters}" />
     </div>
+
+    <div class="clients">
+        <Clients bind:clients="{clients}" bind:getClients="{getClients}" />
+    </div>
+
+    <br /><br /><br />
+
+    <div class="work">
+        <Work bind:getWorkEntries="{getWork}" bind:selection="{workSelection}" />
+    </div>
+
+    <input name="note" type="text" value="{note}" />
+
+    {#if (!!workSelection && workSelection.length > 0)}
+        {#each workSelection as selected}
+            <p>{selected.org} - {selected.description}</p>
+        {/each}
+    {/if}
 
     {#if (invoiceResult != null)}
         <p>{invoiceResult}</p>
     {/if}
 
-    <br /><br /><br />
     <button on:click="{handleClick}">{buttonText}</button>
 
 </div>
