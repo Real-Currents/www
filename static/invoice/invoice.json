@@ -2,7 +2,7 @@
   {
     "id": "000000",
     "date": "2020-09-29T12:19:22.892Z",
-    "path": "./data/invoice-000000",
+    "path": "./static/invoice/invoice-000000",
     "global": {
       "logo": "http://localhost:3000/images/real-currents-bw-invoice.png",
       "date_format": "YYYY-MM-DD",
@@ -17,7 +17,7 @@
   {
     "id": "000001",
     "date": "2020-10-12T13:15:09.570Z",
-    "path": "./data/invoice-000001",
+    "path": "./static/invoice/invoice-000001",
     "global": {
       "logo": "http://localhost:3000/images/real-currents-bw-invoice.png",
       "date_format": "YYYY-MM-DD",

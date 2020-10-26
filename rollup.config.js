@@ -7,7 +7,7 @@ import copy from 'rollup-plugin-copy';
 import json from 'rollup-plugin-json';
 import livereload from 'rollup-plugin-livereload';
 import resolve from 'rollup-plugin-node-resolve';
-import postcss from "rollup-plugin-postcss";
+import postcss from 'rollup-plugin-postcss';
 import shader from 'rollup-plugin-shader';
 import { terser } from 'rollup-plugin-terser';
 
@@ -77,11 +77,6 @@ export default [
 			file: 'public/main.js'
 		},
 		plugins: [
-			postcss({
-				extract: 'public/global.css',
-				plugins: []
-			}),
-
 			commonjs(),
 
 			// del({
@@ -108,6 +103,20 @@ export default [
 
 			json(),
 
+			postcss({
+				extract: 'public/global.css',
+				plugins: [],
+				minimize: true,
+				use: [
+					['sass', {
+						includePaths: [
+							'./theme',
+							'./node_modules'
+						]
+					}]
+				]
+			}),
+
 			// If you have external dependencies installed from
 			// npm, you'll most likely need these plugins. In
 			// some cases you'll need additional configuration -
@@ -121,10 +130,11 @@ export default [
 			svelte({
 				// enable run-time checks when not in production
 				dev: !production,
+				emitCss: true,
 				// we'll extract any component CSS out into
 				// a separate file - better for performance
 				css: css => {
-					css.write('public/main.css');
+					css.write('public/main.css', true);
 				}
 			}),
 

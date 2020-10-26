@@ -71,7 +71,7 @@ export default async function main (options) {
                     const invoiceTotal = invoiceLog.length;
                     invoiceRecord['id'] = invoiceTotal.toString().padStart(6, '0');
                     invoiceRecord['date'] = new Date();
-                    invoiceRecord['path'] = './data/invoice-' + invoiceRecord['id'];
+                    invoiceRecord['path'] = './static/invoice/invoice-' + invoiceRecord['id'];
                     invoiceRecord['note'] = invoiceData['note']
 
                     console.log('Total invoices written: ', invoiceTotal);
@@ -141,7 +141,7 @@ export default async function main (options) {
                     const invoiceTotal = invoiceLog.length;
                     invoiceRecord['id'] = invoiceTotal.toString().padStart(6, '0');
                     invoiceRecord['date'] = new Date();
-                    invoiceRecord['path'] = './data/invoice-' + invoiceRecord['id'];
+                    invoiceRecord['path'] = './static/invoice/invoice-' + invoiceRecord['id'];
 
                     console.log('Total invoices written: ', invoiceTotal);
 
