@@ -60,13 +60,13 @@ export default async function main (options) {
 
             console.log('Invoice data: ', invoiceData);
 
-            fs.open(path.resolve('./data/' + 'invoice.json'), 'r', (err, fd) => {
+            fs.open(path.resolve('./static/invoice/' + 'invoice.json'), 'r', (err, fd) => {
 
                 if (err) {
-                    throw 'Could not open ' + path.resolve('./data/' + 'invoice.json') + ':\n' + err;
+                    throw 'Could not open ' + path.resolve('./static/invoice/' + 'invoice.json') + ':\n' + err;
 
                 } else {
-                    const invoiceLog = require(path.resolve('./data/' + 'invoice'));
+                    const invoiceLog = require(path.resolve('./static/invoice/' + 'invoice'));
                     const invoiceRecord = {}
                     const invoiceTotal = invoiceLog.length;
                     invoiceRecord['id'] = invoiceTotal.toString().padStart(6, '0');
@@ -92,13 +92,13 @@ export default async function main (options) {
 
                     fs.closeSync(fd);
 
-                    fs.unlinkSync('./data/' + 'invoice.json');
+                    fs.unlinkSync('./static/invoice/' + 'invoice.json');
 
                     const updatedLog = JSON.stringify(invoiceLog, null, 2);
 
                     // console.log(JSON.parse(updatedLog));
 
-                    fs.open(path.resolve('./data/' + 'invoice.json'), 'w', async (err, fw) => {
+                    fs.open(path.resolve('./static/invoice/' + 'invoice.json'), 'w', async (err, fw) => {
                         if (!!err) {
                             resolve('{ "error": ' + JSON.stringify(err) +' }');
 
@@ -130,13 +130,13 @@ export default async function main (options) {
 
         } else if (options[0] === "test-invoice") {
 
-            fs.open(path.resolve('./data/' + 'invoice.json'), 'r', (err, fd) => {
+            fs.open(path.resolve('./static/invoice/' + 'invoice.json'), 'r', (err, fd) => {
 
                 if (err) {
-                    throw 'Could not open ' + path.resolve('./data/' + 'invoice.json') + ':\n' + err;
+                    throw 'Could not open ' + path.resolve('./static/invoice/' + 'invoice.json') + ':\n' + err;
 
                 } else {
-                    const invoiceLog = require(path.resolve('./data/' + 'invoice'));
+                    const invoiceLog = require(path.resolve('./static/invoice/' + 'invoice'));
                     const invoiceRecord = {}
                     const invoiceTotal = invoiceLog.length;
                     invoiceRecord['id'] = invoiceTotal.toString().padStart(6, '0');
@@ -160,13 +160,13 @@ export default async function main (options) {
 
                     fs.closeSync(fd);
 
-                    fs.unlinkSync('./data/' + 'invoice.json');
+                    fs.unlinkSync('./static/invoice/' + 'invoice.json');
 
                     const updatedLog = JSON.stringify(invoiceLog, null, 2);
 
                     // console.log(JSON.parse(updatedLog));
 
-                    fs.open(path.resolve('./data/' + 'invoice.json'), 'w', async (err, fw) => {
+                    fs.open(path.resolve('./static/invoice/' + 'invoice.json'), 'w', async (err, fw) => {
                         if (!!err) {
                             resolve('{ "error": ' + JSON.stringify(err) + ' }');
 

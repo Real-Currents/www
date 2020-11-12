@@ -35,11 +35,11 @@ app.use(async (ctx) => {
     switch (ctx.path) {
 
         case ('/log.json'):
-            await send(ctx, '/data/log.json');
+            await send(ctx, '/static/log.json');
             break;
 
         case ('/position_events.json'):
-            await send(ctx, '/data/position_events.json');
+            await send(ctx, '/static/position_events.json');
             break;
 
         case ('/create-invoice'):

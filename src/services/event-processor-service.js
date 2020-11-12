@@ -56,7 +56,7 @@ export let onmessage = function(evt) {
 
     console.log(evt.data);
 
-    if (!fetched && "action" in evt.data && evt.data["action"].match(/event data/) !== null) {
+    if (!fetched && "action" in evt.data && evt.data["action"].match(/event static/) !== null) {
         console.log("Fetching events...");
 
         const eventSource = evt.data["payload"]["event-source"];

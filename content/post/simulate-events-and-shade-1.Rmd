@@ -46,19 +46,19 @@ if (!require(akima) ||
     install.packages(c("akima", "ggplot2", "reshape2", "viridis"))
 }
 
-library(akima)
-library(ggplot2)
-library(reshape2)
-library(viridis)
-
 if (!require(magrittr) || !require(rgdal) || !require(rayshader)) {
     install.packages(c("magrittr", "maptools", "rgdal", "rgeos", "sf", "sp"))
-    devtools::install_github("tylermorganwall/rayimage", upgrade = "never")
-    devtools::install_github("tylermorganwall/rayshader", upgrade = "never")
+    devtools::install_github("tylermorganwall/rayimage@7a9a138e10e19119c88e960f9cfb191d1fdae002", update = "never")
+    devtools::install_github("tylermorganwall/terrainmeshr@e112055e47033508cc45c8246b8dc0a0e94920f7", update = "never")
+    devtools::install_github("tylermorganwall/rayshader@d0c9bd94be95c44eff6e7d8da5eadff070dc11db", update = "never")
 }
 
 library(magrittr)
+library(akima)
+library(ggplot2)
+library(reshape2)
 library(rayshader)
+library(viridis)
 
 DISPLACE_MULTIPLY <- 0.125
 ```
