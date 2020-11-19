@@ -5,7 +5,7 @@ const port = process.env['PORT'] || 3000;
 const bodyParser = require('koa-body');
 const send = require('koa-send');
 const serve = require('koa-static');
-const main = require('./dist/invoice-service').default;
+const main = require('./modules/invoice-service').default;
 
 // logger
 app.use(async (ctx, next) => {

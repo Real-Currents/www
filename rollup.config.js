@@ -15,11 +15,11 @@ const production = !process.env.ROLLUP_WATCH;
 
 export default [
 
-	// SERVICE LIB (SERVER-SIDE)
+	/* SERVER MODULES: */
 	{
-		input: 'src/services/invoice-service.js',
+		input: 'src/modules/invoice-service.js',
 		output: {
-			dir: 'dist',
+			dir: 'modules',
 			format: 'umd',
 			name: 'self',
 			exports: 'named',
@@ -43,9 +43,10 @@ export default [
 		}
 	},
 
-	// SERVICE WORKER (CLIENT-SIDE)
+	/* WORKER MODULES: */
+
 	{
-		input: 'src/services/event-processor-service.js',
+		input: 'src/modules/event-processor-service.js',
 		output: {
 			sourcemap: true,
 			name: 'self',
@@ -66,7 +67,8 @@ export default [
 		}
 	},
 
-	// APPLICATION (CLIENT-SIDE)
+	/* APPLICATION: */
+
 	{
 		input: 'src/main.js',
 		output: {
