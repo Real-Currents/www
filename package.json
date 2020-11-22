@@ -84,8 +84,8 @@
   "scripts": {
     "build": "npm run build:blogdown && npm run build:_rollup",
     "build:preview": "npm run build:_preview && npm run build:_rollup",
-    "build:blogdown": "Rscript src/build.R; echo 'done'",
-    "build:_preview": "Rscript src/build_preview.R; echo 'done'",
+    "build:blogdown": "Rscript src/build.R",
+    "build:_preview": "Rscript src/build_preview.R",
     "build:_rollup": "rollup -c",
     "build:_webpack": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
     "install-extra:fedora": "sudo dnf install armadillo armadillo-devel pandoc gdal-devel geos-devel proj-devel mesa-libGLU mesa-libGLU-devel udunits2-devel",
@@ -96,6 +96,7 @@
     "postinstall": "export rprofile=\"$(echo $(R  -f src/example.R  | grep '/Rprofile') | grep -o '[A-Z|a-z|\\/][A-Z|a-z|0-9|\\:|\\/|\\.|\\_]*')\" && $(echo 'options(repos = list(CRAN=\"http://cran.rstudio.com/\"))' >> $rprofile) || sudo $(echo 'options(repos = list(CRAN=\"http://cran.rstudio.com/\"))' >> $rprofile) && Rscript -e 'update.packages(repos=\"http://cran.rstudio.com/\", ask=FALSE, checkBuilt=TRUE)'",
     "prebuild": "rimraf dist",
     "start": "node server",
+    "start:blogdown": "Rscript src/start.R; echo 'done'",
     "start:dev": "bash src/stich-planar-terrain.sh && rollup -c -w"
   }
 }
