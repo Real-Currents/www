@@ -1,9 +1,7 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
-    import { onMount } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import * as GL from '@sveltejs/gl';
     import NavigationControls from './components/NavigationControls.svelte';
-
     import generateFace from './modules/grid-generator';
     import QuadStore from './modules/quad-store';
     import markerVert from './shaders/sprite-vertex-shader.glsl';
@@ -70,8 +68,8 @@
         }
     };
 
-    let showGroups = [ foundGroups[1], foundGroups[2], foundGroups[3], foundGroups[4], foundGroups[5], foundGroups[6] ];
     let showCursor = false;
+    let showGroups = [ foundGroups[1], foundGroups[2], foundGroups[3], foundGroups[4], foundGroups[5], foundGroups[6] ];
     let showQuads = false;
     let showByTime = false;
     let playTimeLoop = false;

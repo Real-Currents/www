@@ -10,6 +10,8 @@
     export let rangeOptions = [];
     export let rangeValues = [];
 
+    export let timeExtent = [];
+
     export let viewLocation, viewTarget;
     export let worldPosition = {
         x: 0.0,

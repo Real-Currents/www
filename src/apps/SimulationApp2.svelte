@@ -5,6 +5,8 @@
     import generateFace from './modules/grid-generator';
     import QuadStore from "./modules/quad-store";
     import terrain from './modules/terrain-small';
+    import markerFrag from './shaders/custom/sprite-fragment-shader.glsl';
+    import markerVert from './shaders/custom/sprite-vertex-shader.glsl';
     import quadFrag from './shaders/custom/normal-selected-txt-fragment-shader.glsl';
     import quadVert from './shaders/custom/normal-selected-txt-vertex-shader.glsl';
     import terrainFrag from './shaders/custom/terrain-frag.glsl';
@@ -21,9 +23,9 @@
         [[ -16.0, -16.0 ],[ 16.0, 16.0 ]]
     );
 
-    const eventsLoading = [false];
+    const eventsLoading = [ false ];
 
-    const eventsLoaded = [false];
+    const eventsLoaded = [ false ];
 
     const initQuadWidth = (eventQuad.extent[1][0] - eventQuad.extent[0][0]) / 2,
         initQuadDepth = (eventQuad.extent[1][1] - eventQuad.extent[0][1]) / 2;
@@ -31,8 +33,6 @@
     const heightmap = [];
     const gridSizeX = initQuadWidth * 2;
     const gridSizeZ = initQuadDepth * 2;
-
-    const timeExtent = [];
 
     const initialTerrainHeight = 0.0;
 
@@ -74,23 +74,22 @@
     };
 
     let showCursor = false;
-    // let showGroups = [ foundGroups[1], foundGroups[2], foundGroups[3], foundGroups[4], foundGroups[5], foundGroups[6] ];
-    // let showQuads = false;
-    // let showByTime = false;
-    // let playTimeLoop = false;
-
-    export let options = {
-        'labels': [ "Show Terrain Cursor" ], //, "Show Quad Extents", "Filter Events By Time", " Play Time Loop" ],
-        'values': [ showCursor ] //, showQuads, showByTime, playTimeLoop ]
+    let showGroups = [ foundGroups[1], foundGroups[2], foundGroups[3], foundGroups[4], foundGroups[5], foundGroups[6] ];
+    let showQuads = false;
+    let showByTime = false;
+    let playTimeLoop = false;
+    let options = {
+        'labels': [ "Show Terrain Cursor", "Show Quad Extents", "Filter Events By Time", " Play Time Loop" ],
+        'values': [ showCursor, showQuads, showByTime, playTimeLoop ]
     };
-
-    export let ranges = {
+    let ranges = {
         labels: [ "alpha-blocks", "terrain-height", "terrain-rotation", "light-distance" ],
         min: [ 0.0, 1.0, 0.0, 1.0 ],
         max: [ 1.0, 2.0, 180.0, 100.0 ],
         step: [ 0.05, 0.25, 15.0, 10.0 ],
         values: []
     };
+    let timeExtent = [];
 
     let a = 0.0;
     let w = 1;
@@ -167,6 +166,218 @@
             cursorExtent[0][0] > quadExtent[1][0] ||
             cursorExtent[0][1] > quadExtent[1][1]
         )
+    }
+
+    function mapEventState (es, quads, level, cursorExtent, depth, x=1, y=1) {
+        --depth;
+        const firstLevelReset = {
+            1: false,
+            2: false
+        };
+
+        if (!Array.isArray(quads)) {
+            // the store is a QuadStore, not an Array
+            // so map the store to qs
+            ++level;
+
+            for (let s = 1; s <= 2; ++s) {
+                if (typeof es[s] !== 'object') es[s] = {};
+
+                for (let t = 1; t <= 2; ++t) {
+
+                    if (Array.isArray(quads[s][t].store) || depth < 1) {
+
+                        // Map this quad directly to qs
+                        const quadWidth = quads[s][t].extent[1][0] - quads[s][t].extent[0][0];
+                        const quadDepth = quads[s][t].extent[1][1] - quads[s][t].extent[0][1];
+                        const quadMarker = {
+                            x:quads[s][t].extent[0][0] + quadWidth / 2, y:quads[s][t].extent[0][1] + quadDepth / 2, group: 0,
+                            t: (new Date).getTime()
+                        };
+                        const size = (Array.isArray(quads[s][t].store)) ?
+                            quads[s][t].store.length :
+                            quads[s][t].peek()[1][1] +
+                            quads[s][t].peek()[1][2] +
+                            quads[s][t].peek()[2][1] +
+                            quads[s][t].peek()[2][2];
+
+                        if (Array.isArray(quads[s][t].store)) {
+
+                            if (quads[s][t].store.length > 0) {
+
+                                es[s][t] = quads[s][t].store
+                                    // .filter(d => checkCursorIntersection(
+                                    //     cursorExtent,
+                                    //     [[d['x'] - 0.05, d['y'] - 0.05], [d['x'] + 0.05, d['y'] + 0.05]])
+                                    // )
+                                    .map(d => {
+                                        var event = Object.assign({}, d);
+                                        let p;
+                                        for (p in event) {
+                                            if (p === 'group') {
+                                                // map groups
+                                                const group = ("" + event['group']);
+                                                if (group in foundGroups && foundGroups[group] === null) {
+                                                    foundGroups[group] = true;
+                                                }
+                                            } else if (p === 't') {
+                                                // map times
+                                                const minTime = timeExtent[0];
+                                                const maxTime = timeExtent[1];
+                                                if (!!minTime !== true || event['t'] < minTime) {
+                                                    timeExtent[0] = event['t']
+                                                }
+                                                if (!!maxTime !== true || event['t'] > maxTime) {
+                                                    timeExtent[1] = event['t']
+                                                }
+                                            }
+                                        }
+
+                                        if (!checkCursorIntersection(cursorExtent,
+                                            [[event['x'] - 0.05, event['y'] - 0.05], [event['x'] + 0.05, event['y'] + 0.05]])
+                                        ) {
+                                            // flip sign to dim cursors that are outside the group
+                                            event['group'] = -event['group'] ;
+                                        }
+
+                                        return event;
+                                    })
+                                    .slice();
+                            }
+
+                        } else if (level > 3 && size > 0) {
+                            // if (level > 4) console.log("Level " + level +
+                            //     " EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                            //     " check cursor extents intersect: ", cursorExtent, quads[s][t].extent);
+
+                            if (checkCursorIntersection(cursorExtent, quads[s][t].extent)) {
+                                if (typeof es[s][t] !== 'object') es[s][t] = {};
+                                // console.log("Depth "+ depth +", Level " + level +
+                                //         " EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                                //         " cursor extents intersect: ", cursorExtent, quads[s][t].extent);
+                                // if marker extent intersects this quad, go deeper
+                                mapEventState(es[s][t], quads[s][t].store, level, cursorExtent, 1, s, t);
+
+                            } else {
+                                es[s][t] = quadMarker;
+                            }
+                        }
+
+                    } else if (depth > 0) {
+                        // Map next level quads to qs
+                        if (level === 1 && !firstLevelReset[s]) {
+                            es[s] = {};
+                            firstLevelReset[s] = true;
+                        }
+                        if (typeof es[s][t] !== 'object') es[s][t] = {};
+                        const size = quads[s][t].peek()[1][1] +
+                            quads[s][t].peek()[1][2] +
+                            quads[s][t].peek()[2][1] +
+                            quads[s][t].peek()[2][2];
+                        // console.log("From level "+ level +" recurse into quad " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                        //         " (size " + size + ")");
+                        mapEventState(es[s][t], quads[s][t].store, level, cursorExtent, depth, s, t);
+                    }
+                }
+            }
+
+            --level;
+        }
+    }
+
+    function mapQuadState (qs, quads, level, depth, x=1, y=1) {
+        --depth;
+        const firstLevelReset = {
+            1: false,
+            2: false
+        };
+
+        if (!Array.isArray(quads)) {
+            // the store is a QuadStore, not an Array
+            // so map the store to qs
+            ++level;
+
+            for (let s = 1; s <= 2; ++s) {
+                if (typeof qs[s] !== 'object') qs[s] = {};
+
+                for (let t = 1; t <= 2; ++t) {
+                    if (Array.isArray(quads[s][t].store) || depth === 1) {
+                        // Map this quad directly to qs
+                        const quadWidth = quads[s][t].extent[1][0] - quads[s][t].extent[0][0];
+                        const quadDepth = quads[s][t].extent[1][1] - quads[s][t].extent[0][1];
+                        const quadBox = {
+                            x:quads[s][t].extent[0][0],    y:0.0,      z:quads[s][t].extent[0][1],
+                            w:quadWidth,                   h:1.0,      d:quadDepth
+                        };
+                        const size = (Array.isArray(quads[s][t].store)) ?
+                            quads[s][t].store.length :
+                            quads[s][t].peek()[1][1] +
+                            quads[s][t].peek()[1][2] +
+                            quads[s][t].peek()[2][1] +
+                            quads[s][t].peek()[2][2];
+
+                        qs[s][t] = quadBox;
+                        // console.log("Level " + level +
+                        //         " QuadState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                        //         ": ", qs[s][t]);
+
+                    } else if (depth > 1) {
+                        // Map next level quads to qs
+                        if (level === 1 && !firstLevelReset[s]) {
+                            qs[s] = {};
+                            firstLevelReset[s] = true;
+                        }
+                        if (typeof qs[s][t] !== 'object') qs[s][t] = {};
+                        const size = quads[s][t].peek()[1][1] +
+                            quads[s][t].peek()[1][2] +
+                            quads[s][t].peek()[2][1] +
+                            quads[s][t].peek()[2][2];
+                        // console.log("From level "+ level +" recurse into quad " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                        //         " (size " + size + ")");
+                        mapQuadState(qs[s][t], quads[s][t].store, level, depth, s, t);
+                    }
+                }
+            }
+
+            --level;
+        }
+    }
+
+    function mapStateToList (state, depth) {
+        const list = [];
+        --depth;
+
+        if (Array.isArray(state)) {
+            state.forEach(d => {
+                if (typeof d === 'object' && 'x' in d && 'y' in d) {
+                    list.push(Object.assign({}, d))
+                }
+            });
+
+        } for (const x in state) {
+            if (parseInt(x) === 1 || parseInt(x) === 2) {
+                for (const y in state[x]) {
+                    if (parseInt(y) === 1 || parseInt(y) === 2) {
+                        if ('1' in state[x][y] || '2' in state[x][y]) {
+                            if (depth > 0) {
+                                mapStateToList(state[x][y], depth)
+                                    .forEach(d => {
+                                        if (typeof d === 'object' && 'x' in d && 'y' in d) {
+                                            list.push(Object.assign({}, d))
+                                        }
+                                    });
+                            }
+                        } else {
+                            list.push(Object.assign({}, state[x][y]));
+                        }
+                    }
+                }
+            }
+        }
+
+        // console.log(ql);
+
+        return list.slice();
     }
 
     let process_extra_shader_components = (gl, material, model) => {
@@ -297,6 +508,31 @@
             ]
         ];
 
+        // console.log(worldPosition.r, cursorExtent);
+
+        const depth = 5;
+
+        // console.log(quadState);
+
+        mapEventState(eventState,  eventQuad.get(), 0, cursorExtent, depth);
+
+        // console.log(eventState);
+
+        showGroups = showGroups.map((g, i) => {
+            if (g === null) return foundGroups[i + 1];
+            else return g;
+        });
+
+        ranges.labels.unshift("time-event");
+        ranges.min.unshift(timeExtent[0]);
+        ranges.max.unshift(timeExtent[1]);
+        ranges.step.unshift(60000);
+
+        // console.log(foundGroups);
+
+        // now map eventState to a flat list for rendering
+        eventList = mapStateToList(eventState, depth * depth);
+
         if (!!eventsLoaded[0] !== true) return;
     }
 
@@ -305,26 +541,6 @@
 
         refreshState()
     };
-
-    // Use a Web Worker to load position events...
-    // as if they are coming in from async remote service
-    if (window.Worker) {
-
-        window.eventQuad = eventQuad; // debug
-
-        const eventProcessor = new Worker('worker.js');
-
-        eventProcessor.postMessage({
-            "action": "Load event data",
-            "payload": {
-                "event-source": "post/data/position_events.json",
-                "heightmap-source": "post/data/planar-terrain-heights.json",
-                "planar-extent": eventQuad.extent
-            }
-        });
-
-        console.log("Quads initialized: ", quadList);
-    }
 
     onMount(() => {
         if (typeof controlInit === 'function') {
@@ -349,9 +565,7 @@
             heightmap[z] = xx;
         }
 
-        console.log(heightmap);
-
-        if (!!markerTexture == false) {
+        if (!!markerTexture === false) {
             // Create a texture and create initial bind
             markerTexture = webgl.createTexture();
             webgl.bindTexture(webgl.TEXTURE_2D, markerTexture);
@@ -359,7 +573,7 @@
         }
 
         for (let t = 0; t < 6; ++t) {
-            if (!!quad_textures[t] == false) {
+            if (!!quad_textures[t] === false) {
                 // Create a texture and create initial bind
                 quad_textures[t] = webgl.createTexture();
                 webgl.bindTexture(webgl.TEXTURE_2D, quad_textures[t]);
@@ -367,7 +581,7 @@
             }
         }
 
-        if (!!terrainTexture == false) {
+        if (!!terrainTexture === false) {
             // Create a texture and create initial bind
             terrainTexture = webgl.createTexture();
             webgl.bindTexture(webgl.TEXTURE_2D, terrainTexture);
@@ -501,6 +715,115 @@
 
         loop();
 
+        // Use a Web Worker to load position events...
+        // as if they are coming in from async remote service
+        if (window.Worker) {
+
+            window.eventQuad = eventQuad; // debug
+
+            const eventProcessor = new Worker('worker.js');
+
+            eventProcessor.postMessage({
+                "action": "Load event data",
+                "payload": {
+                    "event-source": "post/data/position_events.json",
+                    "heightmap-source": "post/data/planar-terrain-heights.json",
+                    "planar-extent": eventQuad.extent
+                }
+            });
+
+            console.log('Processing event and height data...');
+
+            console.log("Quads initialized: ", quadList);
+
+            const delay = {
+                time: 1
+            };
+
+            const depth = 6;
+
+            const heightAdjustment = 0.75;
+
+            const heightOffset = 0.5;
+
+            const planarExtent = eventQuad.extent;
+
+            const planarWidth = (planarExtent[1][0] - planarExtent[0][0]) / 2,
+                planarDepth = (planarExtent[1][1] - planarExtent[0][1]) / 2;
+
+            const terrainDepth = (Array.isArray(heightmap) && heightmap.length > 0) ?
+                heightmap.length : 0;
+            const terrainWidth = (terrainDepth > 0 && heightmap[0].length > 0) ?
+                heightmap[0].length : 0;
+
+            console.log(heightmap);
+            console.log("terrainDepth: ", terrainDepth);
+            console.log("terrainWidth: ", terrainWidth);
+
+            eventProcessor.onmessage = function(event) {
+                eventsLoading[0] = true;
+
+                delay.time += 66;
+
+                // if (typeof event.data === 'object' && "x" in event.data && "y" in event.data) {
+                //     eventQuad.push(Object.assign({}, event.data));
+                //     eventTotal++;
+                //
+                // } else {
+                //     // last message indicates event loading is done... for now
+                if (typeof event.data === 'object') {
+                    // console.log(event.data);
+
+                    if ("x" in d && "y" in d) { // try {
+                        // Explore sign reversal
+                        // const x = d["x"], y = d["y"];
+                        // d["y"] = -x;
+                        // d["x"] = y;
+                        // const px= d["x"] + planarWidth / 2;     // shift all planar numbers to positive domain
+                        // const py = d["y"] + planarDepth / 2;    // shift all planar numbers to positive domain
+                        // const tx = Math.floor(terrainWidth * px / planarWidth);
+                        // const ty = Math.floor(terrainDepth * py / planarDepth);
+                        // const height = heightOffset + heightAdjustment * heightmap[tx][ty]; // assign height at this index
+
+                    // } catch (load_error) {
+                    //     problem_events.push(Object.assign({ load_error }, d));
+                    }
+
+                    eventQuad.push(Object.assign({ height: 1.0 }, event.data));
+                    eventTotal++;
+
+                    setTimeout(() => {
+                        if (!!eventsLoading[0] && !eventsLoaded[0]) {
+                            eventsLoading[0] = false;
+
+                            console.log(new Date(), "REFRESH EVENT STATE");
+
+                            console.log("Total events loaded: ", eventTotal);
+
+                            mapQuadState(quadState, eventQuad.get(), 0, depth);
+
+                            // now map quadState to a flat list for rendering
+                            quadList = mapStateToList(quadState, depth);
+
+                            console.log("QuadList has ", quadList.length);
+
+                            refreshState();
+
+                            eventsLoaded[0] = true;
+
+                        } else {
+                            eventsLoaded[0] = false;
+                        }
+                    }, delay.time);
+
+                }
+            };
+
+        } else {
+            console.log('Your browser doesn\'t support web workers.');
+            window.alert('Your browser doesn\'t support web workers, so no event data can be loaded.');
+        }
+
         return () => cancelAnimationFrame(frame);
     });
 </script>
@@ -587,6 +910,7 @@
         bind:options={options}
         bind:rangeOptions={ranges}
         bind:rangeValues={ranges.values}
+        bind:timeExtent={timeExtent}
         bind:viewLocation={location}
         bind:viewTarget={target}
         bind:worldPosition={worldPosition}

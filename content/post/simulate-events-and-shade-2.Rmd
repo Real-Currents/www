@@ -15,9 +15,7 @@ tags:
   - WebGL
 ---
 
-<!--div id="simulation-app" role="main" style="width: 100%;">
-&nbsp;
-</div-->
+<div id="simulation-app-2" role="main" style="width: 100%;">&nbsp;</div>
 
 Events & Shade Across Time & Terrain: Part 2
 ============================================
@@ -89,7 +87,6 @@ if (file.exists("data/terrain-large.png")) {
 
 image_gray <- data.frame(png::readPNG(large_input))
 
-cat(paste0('<img id="colormap" src="/post/', color_input, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
 
@@ -142,7 +139,7 @@ for (y in 1:nrow(heightmap)) {
 #print(max(apply(heightmap, c(1, 2), max)))
 ```
 
-I will continue to employ `mapTerrainCoords` and the ray-tracing shading methods provided by [rayshader](https://github.com/tylermorganwall/rayshader) that were explored in [Generating Planar Terrain Mesh](post/terrain) and [Events And Shade: Part 1](post/simulate-events-and-shade-1), respectively, to generate the terrain height maps, normal maps and shaded textures:
+In part 2, I continue to employ `mapTerrainCoords` and the ray-tracing shading methods provided by [rayshader](https://github.com/tylermorganwall/rayshader) that were explored in [Generating Planar Terrain Mesh](post/terrain) and [Events And Shade: Part 1](post/simulate-events-and-shade-1), respectively, to generate the terrain height maps, normal maps and shaded textures:
 
 ```{r heights, cache = TRUE, echo = FALSE}
 # Map terrain heights from the highdensity image
@@ -232,7 +229,23 @@ normals <- map$normals
 textureCoords <- map$textureCoords
 ```
 
-```{r rayshader_high_dim, cache = FALSE, echo = FALSE, results = "asis"}
+```{r normal_map, cache = FALSE, echo = FALSE, results = "asis"}
+
+jsonlite::write_json(heights, "data/planar-terrain-heights.json")
+
+if (file.exists("data")) {
+  normal_test_file <- "data/planar-terrain-normals.png"
+} else {
+  normal_test_file <- file.choose(new = TRUE)
+}
+
+# test write to png
+png::writePNG(map$normal_array, normal_test_file)
+
+cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="width: 100%" />'))
+```
+
+```{r rayshaded_map, cache = FALSE, echo = FALSE, results = "asis"}
 xparts <- 2
 yparts <- 2
 width <- ncol(heights)
@@ -289,8 +302,6 @@ for (j in 1:yparts) {
         # image function and ggplot are slow; save with PNG function from PNG package.
         png::writePNG(t(single_angle_shadow), rayshader_test_file)
 
-        cat(paste0('<img id="shademap', (i - 1), "", (j - 1), '" src="/post/', rayshader_test_file, '" style="width: 100%" />'))
-
         for (y in 1:quad_height) {
             for (x in 1:quad_width ) {
 
@@ -311,24 +322,7 @@ if (file.exists("data")) {
     rayshaded_file <- file.choose(new = TRUE)
 }
 
-## test write to png
 png::writePNG(image_shaded, rayshaded_file)
 
 cat(paste0('<img id="shademap" src="/post/', rayshaded_file, '" style="width: 100%" />'))
-```
-
-```{r idx_data, cache = FALSE, echo = FALSE, results = "asis"}
-
-jsonlite::write_json(heights, "data/planar-terrain-heights.json")
-
-if (file.exists("data")) {
-    normal_test_file <- "data/planar-terrain-normals.png"
-} else {
-    normal_test_file <- file.choose(new = TRUE)
-}
-
-# test write to png
-png::writePNG(map$normal_array, normal_test_file)
-
-cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="width: 100%" />'))
 ```
