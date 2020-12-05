@@ -721,6 +721,8 @@
 
             window.eventQuad = eventQuad; // debug
 
+            window.problem_events = [];
+
             const eventProcessor = new Worker('worker.js');
 
             eventProcessor.postMessage({
@@ -774,31 +776,33 @@
                 if (typeof event.data === 'object') {
                     // console.log(event.data);
 
-                    if ("x" in d && "y" in d) { // try {
+                    const d = {};
+
+                    if ("x" in event.data && "y" in event.data) try {
+                        const x = event.data["x"], y = event.data["y"];
                         // Explore sign reversal
-                        // const x = d["x"], y = d["y"];
-                        // d["y"] = -x;
-                        // d["x"] = y;
+                        d["x"] = x;
+                        d["y"] = -y;
                         // const px= d["x"] + planarWidth / 2;     // shift all planar numbers to positive domain
                         // const py = d["y"] + planarDepth / 2;    // shift all planar numbers to positive domain
                         // const tx = Math.floor(terrainWidth * px / planarWidth);
                         // const ty = Math.floor(terrainDepth * py / planarDepth);
                         // const height = heightOffset + heightAdjustment * heightmap[tx][ty]; // assign height at this index
 
-                    // } catch (load_error) {
-                    //     problem_events.push(Object.assign({ load_error }, d));
-                    }
+                        d["t"] = event.data["t"]
 
-                    eventQuad.push(Object.assign({ height: 1.0 }, event.data));
-                    eventTotal++;
+                        eventQuad.push(Object.assign({ height: 1.0 }, d));
+                        eventTotal++;
+
+                    } catch (load_error) {
+                        window.problem_events.push(Object.assign({ load_error }, event.data));
+                    }
 
                     setTimeout(() => {
                         if (!!eventsLoading[0] && !eventsLoaded[0]) {
                             eventsLoading[0] = false;
 
                             console.log(new Date(), "REFRESH EVENT STATE");
-
-                            console.log("Total events loaded: ", eventTotal);
 
                             mapQuadState(quadState, eventQuad.get(), 0, depth);
 
@@ -808,6 +812,8 @@
                             console.log("QuadList has ", quadList.length);
 
                             refreshState();
+
+                            console.log("Total events loaded: ", eventTotal);
 
                             eventsLoaded[0] = true;
 
@@ -892,8 +898,29 @@
             {/each}
         {/if}
 
+        {#if options['values'][1]}
+            {#each quadList as quad}
+                <!-- quadBox -->
+                <GL.Mesh
+                        geometry={GL.box(quad)}
+                        location={[0, 0, 0]}
+                        rotation={[0, 0, 0]}
+                        vert={quadVert}
+                        frag={quadFrag}
+                        uniforms={{ color: adjustColor(color), alpha: 1.0 }}
+                        transparent
+                />
+            {/each}
+        {/if}
+
         <!-- moving light -->
         <GL.Group location={[ light.x, light.y, light.z ]}>
+            <GL.Mesh
+                    geometry={GL.sphere({ turns: 36, bands: 36 })}
+                    location={[0,0.2,0]}
+                    scale={0.1}
+                    uniforms={{ color: 0xffffff, emissive: adjustColor(color, 1.0) }}
+            />
             <GL.PointLight
                     location={[ 0, 0, 0 ]}
                     color={adjustColor(color, 1.0)}
