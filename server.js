@@ -71,4 +71,4 @@ app.use(async (ctx) => {
 
 app.listen(port);
 
-console.log('Listening on port ' + port);
+console.log('Listening @ http://127.0.0.1:' + port);

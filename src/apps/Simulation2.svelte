@@ -461,8 +461,8 @@
         const program = material.program;
 
         if ((material.vertName == "texture-vertex-shader" && material.fragName == "texture-fragment-shader") ||
-                // (material.vertName == "planar-terrain-vertex-shader" && material.fragName == "planar-terrain-fragment-shader") ||
-                (material.vertName == "normal-selected-txt-vertex-shader" && material.fragName == "normal-selected-txt-fragment-shader")
+            // (material.vertName == "planar-terrain-vertex-shader" && material.fragName == "planar-terrain-fragment-shader") ||
+            (material.vertName == "normal-selected-txt-vertex-shader" && material.fragName == "normal-selected-txt-fragment-shader")
         ) {
             // console.log(material.vertName, material.fragName);
 

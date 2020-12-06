@@ -1,5 +1,6 @@
 <script>
-    import { onMount } from 'svelte';
+
+import { onMount } from 'svelte';
     import * as GL from '@sveltejs/gl';
     import NavigationControls from './components/NavigationControls.svelte';
     import generateFace from './modules/grid-generator';
@@ -37,7 +38,7 @@
     const initialTerrainHeight = 0.0;
 
     const cursorDimensions = {
-        x:-4.0, y:-4.0, z:initialTerrainHeight, w:8.0, h:8.0, d:1.0
+        x: -6.0, y: -6.0, z: initialTerrainHeight, w: 12.0, h: 12.0, d: 1.0
     };
 
     let eventList = [];
@@ -148,6 +149,25 @@
         return [ r/255, g/255, b/255 ];
     }
 
+    function markerColor (clr, selector) {
+        const r = (selector !== selector) ? parseInt('0x' + clr.substr(1, 2), 16) : // default to clr
+            (selector < 1) ? 127 : (selector % 5 < 1) ? 64 : (selector === 4) ? 127 : 255,
+            g = (selector !== selector) ? parseInt('0x' + clr.substr(3, 2), 16) : // default to clr
+                (selector < 1) ? 127 : (selector % 3 < 1) ? 64 : (selector === 1) ? 127 : 255,
+            b = (selector !== selector) ? parseInt('0x' + clr.substr(5, 2), 16) : // default to clr
+                (selector < 1) ? 127 : (selector % 2 < 1) ? 64 : 255;
+
+        // return Math.abs((((hr < 255) ? hr : r) << 16) + (g << 8) + ((hb < 255) ? hb : b));
+        return Math.abs((r << 16) + (g << 8) + b);
+    }
+
+    function heightMapper (x, y) {
+        // Do something with initTerrainHeight and lookup h in heightmap
+        const offsetH = (eventTotal > 0) ? (quadList[x][y] / eventTotal) : 0;
+        console.log(quadList, eventTotal , offsetH);
+        return offsetH;
+    };
+
     let controlInit;
 
     // initial view
@@ -179,6 +199,7 @@
             // the store is a QuadStore, not an Array
             // so map the store to qs
             ++level;
+            let groupsAreVisible = 0;
 
             for (let s = 1; s <= 2; ++s) {
                 if (typeof es[s] !== 'object') es[s] = {};
@@ -191,7 +212,9 @@
                         const quadWidth = quads[s][t].extent[1][0] - quads[s][t].extent[0][0];
                         const quadDepth = quads[s][t].extent[1][1] - quads[s][t].extent[0][1];
                         const quadMarker = {
-                            x:quads[s][t].extent[0][0] + quadWidth / 2, y:quads[s][t].extent[0][1] + quadDepth / 2, group: 0,
+                            x: quads[s][t].extent[0][0] + quadWidth / 2,
+                            y: quads[s][t].extent[0][1] + quadDepth / 2,
+                            group: 0,
                             t: (new Date).getTime()
                         };
                         const size = (Array.isArray(quads[s][t].store)) ?
@@ -201,62 +224,71 @@
                             quads[s][t].peek()[2][1] +
                             quads[s][t].peek()[2][2];
 
-                        if (Array.isArray(quads[s][t].store)) {
+                        if (Array.isArray(quads[s][t].store) && quads[s][t].store.length > 0) {
 
-                            if (quads[s][t].store.length > 0) {
-
-                                es[s][t] = quads[s][t].store
-                                    // .filter(d => checkCursorIntersection(
-                                    //     cursorExtent,
-                                    //     [[d['x'] - 0.05, d['y'] - 0.05], [d['x'] + 0.05, d['y'] + 0.05]])
-                                    // )
-                                    .map(d => {
-                                        var event = Object.assign({}, d);
-                                        let p;
-                                        for (p in event) {
-                                            if (p === 'group') {
-                                                // map groups
-                                                const group = ("" + event['group']);
-                                                if (group in foundGroups && foundGroups[group] === null) {
-                                                    foundGroups[group] = true;
-                                                }
-                                            } else if (p === 't') {
-                                                // map times
-                                                const minTime = timeExtent[0];
-                                                const maxTime = timeExtent[1];
-                                                if (!!minTime !== true || event['t'] < minTime) {
-                                                    timeExtent[0] = event['t']
-                                                }
-                                                if (!!maxTime !== true || event['t'] > maxTime) {
-                                                    timeExtent[1] = event['t']
-                                                }
+                            es[s][t] = quads[s][t].store
+                                .map(d => {
+                                    var event = Object.assign({}, d);
+                                    let p;
+                                    for (p in event) {
+                                        if (p === 'group') {
+                                            // map groups
+                                            const group = ("" + event['group']);
+                                            if (group in foundGroups && foundGroups[group] === null) {
+                                                foundGroups[group] = true;
+                                            }
+                                        } else if (p === 't') {
+                                            // map times
+                                            const minTime = timeExtent[0];
+                                            const maxTime = timeExtent[1];
+                                            if (!!minTime !== true || event['t'] < minTime) {
+                                                timeExtent[0] = event['t']
+                                            }
+                                            if (!!maxTime !== true || event['t'] > maxTime) {
+                                                timeExtent[1] = event['t']
                                             }
                                         }
+                                    }
 
-                                        if (!checkCursorIntersection(cursorExtent,
-                                            [[event['x'] - 0.05, event['y'] - 0.05], [event['x'] + 0.05, event['y'] + 0.05]])
-                                        ) {
-                                            // flip sign to dim cursors that are outside the group
-                                            event['group'] = -event['group'] ;
-                                        }
+                                    if (!checkCursorIntersection(cursorExtent,
+                                        [[event['x'] - 0.05, event['y'] - 0.05], [event['x'] + 0.05, event['y'] + 0.05]])
+                                    ) {
+                                        // flip sign to dim cursors that are outside the group
+                                        event['group'] = -event['group'] ;
+                                    } else if (showGroups[Math.abs(event['group']) - 1] === true) {
+                                        ++groupsAreVisible;
+                                    }
 
-                                        return event;
-                                    })
-                                    .slice();
-                            }
+                                    return event;
+                                })
+                                .slice();
+
+                            // if (level > 5) console.log(
+                            //     "Found events (" + es[s][t].length + ")\n" +
+                            //     "Depth "+ depth +", Level " + level + "\n" +
+                            //     "  EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) + "\n" +
+                            //     "  cursor extents intersect: ", cursorExtent, quads[s][t].extent);
 
                         } else if (level > 3 && size > 0) {
-                            // if (level > 4) console.log("Level " + level +
-                            //     " EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
-                            //     " check cursor extents intersect: ", cursorExtent, quads[s][t].extent);
+                            // if (level > 4) console.log(
+                            //     "Level " + level +
+                            //     "  EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                            //     "  check cursor extents intersect: ", cursorExtent, quads[s][t].extent);
 
                             if (checkCursorIntersection(cursorExtent, quads[s][t].extent)) {
                                 if (typeof es[s][t] !== 'object') es[s][t] = {};
-                                // console.log("Depth "+ depth +", Level " + level +
-                                //         " EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
-                                //         " cursor extents intersect: ", cursorExtent, quads[s][t].extent);
-                                // if marker extent intersects this quad, go deeper
-                                mapEventState(es[s][t], quads[s][t].store, level, cursorExtent, 1, s, t);
+
+                                // console.log(
+                                //     "Depth "+ depth +", Level " + level +
+                                //     "  EventState " + (2 * (x - 1) + s) + "," + (2 * (y - 1) + t) +
+                                //     "  cursor extents intersect: ", cursorExtent, quads[s][t].extent);
+                                // // if marker extent intersects this quad, go deeper
+                                if (mapEventState(es[s][t], quads[s][t].store, level, cursorExtent, 1, s, t)) {
+                                    ++groupsAreVisible;
+
+                                } else {
+                                    es[s][t] = quadMarker;
+                                }
 
                             } else {
                                 es[s][t] = quadMarker;
@@ -282,6 +314,8 @@
             }
 
             --level;
+
+            return (groupsAreVisible > 0);
         }
     }
 
@@ -353,8 +387,9 @@
                     list.push(Object.assign({}, d))
                 }
             });
+        }
 
-        } for (const x in state) {
+        for (const x in state) {
             if (parseInt(x) === 1 || parseInt(x) === 2) {
                 for (const y in state[x]) {
                     if (parseInt(y) === 1 || parseInt(y) === 2) {
@@ -492,10 +527,20 @@
                 gl.uniform1i(fragmentTextureLocation, 0);
             }
 
+        } else if (material.vertName == "sprite-vertex-shader" && material.fragName == "sprite-fragment-shader") {
+
+            if (!!markerTexture) {
+                const fragmentTextureLocation = gl.getUniformLocation(program, "uTexture");
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, markerTexture);
+                gl.uniform1i(fragmentTextureLocation, 0);
+            }
+
         }
     };
 
-    let refreshState = () => {
+    let refreshState = async () => {
 
         const cursorExtent = [
             [
@@ -523,10 +568,10 @@
             else return g;
         });
 
-        ranges.labels.unshift("time-event");
-        ranges.min.unshift(timeExtent[0]);
-        ranges.max.unshift(timeExtent[1]);
-        ranges.step.unshift(60000);
+        // ranges.labels.unshift("time-event");
+        // ranges.min.unshift(timeExtent[0]);
+        // ranges.max.unshift(timeExtent[1]);
+        // ranges.step.unshift(60000);
 
         // console.log(foundGroups);
 
@@ -539,7 +584,19 @@
     let updateWorld = (event) => {
         // console.log(event);
 
-        refreshState()
+        setTimeout(async () => {
+            await refreshState();
+        }, 3);
+    };
+
+    let clickCheckbox = (event) => {
+        // console.log("REFRESH: ", event);
+
+        setTimeout(async () => {
+            await refreshState();
+        }, 33);
+
+        return true;
     };
 
     onMount(() => {
@@ -783,6 +840,8 @@
                         // Explore sign reversal
                         d["x"] = x;
                         d["y"] = -y;
+                        d["group"] = event.data["group"];
+                        d["height"] = 1.0;
                         // const px= d["x"] + planarWidth / 2;     // shift all planar numbers to positive domain
                         // const py = d["y"] + planarDepth / 2;    // shift all planar numbers to positive domain
                         // const tx = Math.floor(terrainWidth * px / planarWidth);
@@ -802,18 +861,20 @@
                         if (!!eventsLoading[0] && !eventsLoaded[0]) {
                             eventsLoading[0] = false;
 
-                            console.log(new Date(), "REFRESH EVENT STATE");
+                            // console.log("REFRESH EVENT STATE");
 
                             mapQuadState(quadState, eventQuad.get(), 0, depth);
 
                             // now map quadState to a flat list for rendering
                             quadList = mapStateToList(quadState, depth);
 
-                            console.log("QuadList has ", quadList.length);
+                            // console.log("QuadList has ", quadList.length);
 
-                            refreshState();
+                            // console.log("Total events loaded: ", eventTotal);
 
-                            console.log("Total events loaded: ", eventTotal);
+                            setTimeout(async () => {
+                                await refreshState();
+                            }, 3);
 
                             eventsLoaded[0] = true;
 
@@ -913,6 +974,38 @@
             {/each}
         {/if}
 
+        {#each eventList as event}
+            {#if event['group'] === 0 || (
+                (showGroups[0] === true && 1 === Math.abs(event['group'])) ||
+                (showGroups[1] === true && 2 === Math.abs(event['group'])) ||
+                (showGroups[2] === true && 3 === Math.abs(event['group'])) ||
+                (showGroups[3] === true && 4 === Math.abs(event['group'])) ||
+                (showGroups[4] === true && 5 === Math.abs(event['group'])) ||
+                (showGroups[5] === true && 6 === Math.abs(event['group'])) && (
+                    (!options['values'][2]) ||
+                    (!!options['values'][2] && (event['t'] - 333 < eventTime && eventTime < event['t'] + 333))
+                )
+            )}
+                <!-- markers -->
+<!--                <GL.Mesh-->
+<!--                        geometry={GL.sprite()}-->
+<!--                        location={[event['x'], initialTerrainHeight + markerHeight + event['height'], event['y']]}-->
+<!--                        vert={markerVert}-->
+<!--                        frag={markerFrag}-->
+<!--                        uniforms={{ color: adjustColor(color, event['group']), alpha: ((event['group'] > 0 && ((!options['values'][2]) || (!!options['values'][2] && (event['t'] - 33 < eventTime && eventTime < event['t'] + 33)))) ? 1.0 : 0.5) }}-->
+<!--                        transparent-->
+<!--                />-->
+                <GL.Mesh
+                        geometry={GL.sprite()}
+                        location={[event['x'], 1.0, event['y']]}
+                        vert={markerVert}
+                        frag={markerFrag}
+                        uniforms={{ color: markerColor(color, event['group']), alpha: ((event['group'] > 0 && ((!options['values'][2]) || (!!options['values'][2] && (event['t'] - 33 < eventTime && eventTime < event['t'] + 33)))) ? 1.0 : 0.5) }}
+                        transparent
+                />
+            {/if}
+        {/each}
+
         <!-- moving light -->
         <GL.Group location={[ light.x, light.y, light.z ]}>
             <GL.Mesh
@@ -937,9 +1030,11 @@
         bind:options={options}
         bind:rangeOptions={ranges}
         bind:rangeValues={ranges.values}
+        bind:groups={showGroups}
         bind:timeExtent={timeExtent}
         bind:viewLocation={location}
         bind:viewTarget={target}
         bind:worldPosition={worldPosition}
         extent={eventQuad.extent}
-        on:move={(event) => updateWorld(event)}/>
+        on:clickCheckbox={clickCheckbox}
+        on:move={updateWorld} />

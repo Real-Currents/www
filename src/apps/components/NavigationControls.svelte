@@ -6,7 +6,10 @@
 
     export let extent = [[-1.0, -1.0], [1.0, 1.0]];
 
+    export let groups = {};
+
     export let options = [];
+
     export let rangeOptions = [];
     export let rangeValues = [];
 
@@ -416,6 +419,14 @@
             <label>
                 <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
                 {rangeOptions['labels'][o]}({option})
+            </label><br />
+        {/each}
+    {/if}
+
+    {#if (groups.length > 0)}
+        {#each groups as group, i}
+            <label>
+                <input type="checkbox" bind:checked={group} on:click={() => dispatch("clickCheckbox")} /> Group {i + 1}
             </label><br />
         {/each}
     {/if}
