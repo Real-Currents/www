@@ -857,7 +857,7 @@ import { onMount } from 'svelte';
                         window.problem_events.push(Object.assign({ load_error }, event.data));
                     }
 
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         if (!!eventsLoading[0] && !eventsLoaded[0]) {
                             eventsLoading[0] = false;
 
@@ -872,9 +872,7 @@ import { onMount } from 'svelte';
 
                             // console.log("Total events loaded: ", eventTotal);
 
-                            setTimeout(async () => {
-                                await refreshState();
-                            }, 3);
+                            await refreshState();
 
                             eventsLoaded[0] = true;
 
@@ -997,7 +995,7 @@ import { onMount } from 'svelte';
 <!--                />-->
                 <GL.Mesh
                         geometry={GL.sprite()}
-                        location={[event['x'], 1.0, event['y']]}
+                        location={[event['x'], initialTerrainHeight + markerHeight , event['y']]}
                         vert={markerVert}
                         frag={markerFrag}
                         uniforms={{ color: markerColor(color, event['group']), alpha: ((event['group'] > 0 && ((!options['values'][2]) || (!!options['values'][2] && (event['t'] - 33 < eventTime && eventTime < event['t'] + 33)))) ? 1.0 : 0.5) }}
