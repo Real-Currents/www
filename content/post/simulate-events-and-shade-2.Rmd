@@ -1,7 +1,7 @@
 ---
-title: 'Events And Shade: Part 1'
+title: 'Events And Shade: Part 2'
 author: John
-date: '2020-08-29'
+date: '2020-11-19'
 draft: false
 categories:
   - GL
@@ -15,11 +15,9 @@ tags:
   - WebGL
 ---
 
-<div id="simulation-app" role="main" style="width: 100%;">
-&nbsp;
-</div>
+<div id="simulation-app-2" role="main" style="width: 100%;">&nbsp;</div>
 
-Events & Shade Across Time & Terrain: Part 1
+Events & Shade Across Time & Terrain: Part 2
 ============================================
 
 ```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
@@ -89,11 +87,8 @@ if (file.exists("data/terrain-large.png")) {
 
 image_gray <- data.frame(png::readPNG(large_input))
 
-cat(paste0('<img id="colormap" src="/post/', color_input, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
-Given two texture images that describe the same terrain, one color and one grayscale, the first objective is to simulate the perceived time-of-day by altering the color texture with light and shade effects. The ray-tracing-based shade algorithm that I will use comes from the blog post [Throwing Shade at the Cartographer Illuminati](https://www.tylermw.com/throwing-shade/) by Tyler Morgan-Wall.
-<br />
 
 ```{r map_vert_data, cache = FALSE, echo = FALSE}
 
@@ -144,93 +139,7 @@ for (y in 1:nrow(heightmap)) {
 #print(max(apply(heightmap, c(1, 2), max)))
 ```
 
-
-```{r throwing_shade, cache = TRUE, echo = TRUE, results= "asis"}
-shadow <- matrix(1, nrow = nrow(heightmap), ncol = ncol(heightmap))
-tanangheight <- matrix(1, nrow = nrow(heightmap), ncol = ncol(heightmap))
-
-sunangle <- 45 / 180 * pi
-angle <- -90 / 180 * pi
-diffangle <- 90 / 180 * pi
-numberangles <- 25
-anglebreaks <- seq(angle, diffangle, length.out = numberangles)
-maxdistance <- floor(sqrt(nrow(heightmap)^2 + ncol(heightmap)^2))
-
-for (y in 1:nrow(heightmap)) {
-    for (x in 1:ncol(heightmap)) {
-        for (anglei in anglebreaks) {
-            for (k in 1:maxdistance) {
-                xcoord <- (x + cos(sunangle) * k)
-                ycoord <- (y + sin(sunangle) * k)
-                if (xcoord > nrow(heightmap) ||
-                    ycoord > ncol(heightmap) ||
-                    xcoord < 0 ||
-                    ycoord < 0) {
-                    break
-                } else {
-                    tanangheight[y, x] <- heightmap[y, x] + tan(anglei) * k
-                    if (all(
-                        c(heightmap[ceiling(ycoord), ceiling(xcoord)],
-                          heightmap[ceiling(ycoord), floor(xcoord)],
-                          heightmap[floor(ycoord), ceiling(xcoord)],
-                          heightmap[floor(ycoord), floor(xcoord)]
-                        ) < tanangheight[y, x]
-                    )) next
-                    if (tanangheight[y, x] < bilinear(1:ncol(heightmap), 1:nrow(heightmap), heightmap, x0 = xcoord, y0 = ycoord)$z) {
-                        shadow[y, x] <- shadow[y, x] - 1 / length(anglebreaks)
-                        break
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-
-```{r shadow_image, cache = TRUE, echo = FALSE, results = "asis"}
-shadowmap <- matrix(1, nrow = nrow(shadow), ncol = ncol(shadow))
-
-for (y in 1:nrow(shadow)) {
-    for (x in 1:ncol(shadow)) {
-        shadowmap[y, x] <- shadow[y, x]
-    }
-}
-
-if (file.exists("data")) {
-    shadow_image <- "data/terrain-shadow.png"
-} else {
-    shadow_image <- file.choose(new = TRUE)
-}
-
-# test write to png
-png::writePNG(shadowmap, shadow_image)
-
-cat(paste0('<img src="/post/', shadow_image, '" style="float: right; width:256px; padding: 1%;" />'))
-```
-
-The R implementation of this particular method is pretty slow, as explained in the post about the algorithm referenced above, even on the small 128x128 example that was used. So, the author created a package called [`rayshader`](https://www.rayshader.com/) that imports a C implementation of the same. Here's how it works:
-
-```{r rayshader_package, cache = TRUE, echo = TRUE}
-elmat <- matrix(1, nrow = nrow(image_test), ncol = ncol(image_test))
-
-for (y in 1:nrow(image_test)) {
-    for (x in 1:ncol(image_test)) {
-        elmat[x, y] <- heightmap[y, x]
-    }
-}
-
-sunangle <- 45
-
-elmat %>%
-    ray_shade(
-        maxsearch = floor(sqrt(nrow(elmat)^2 + ncol(elmat)^2)) / 64,
-        zscale = 100, sunaltitude = 45, sunangle = sunangle, lambert = TRUE,
-        multicore = TRUE) %>%
-    plot_map()
-```
-
-Following the examples is pretty straight forward and incredibly useful once you understand the parameters. However, the actual data I want to render and superimpose on the colormap is quite large, so I will break it down into quadrants before processing:
+In part 2, I continue to employ `mapTerrainCoords` and the ray-tracing shading methods provided by [rayshader](https://github.com/tylermorganwall/rayshader) that were explored in [Generating Planar Terrain Mesh](post/terrain) and [Events And Shade: Part 1](post/simulate-events-and-shade-1), respectively, to generate the terrain height maps, normal maps and shaded textures:
 
 ```{r heights, cache = TRUE, echo = FALSE}
 # Map terrain heights from the highdensity image
@@ -320,7 +229,23 @@ normals <- map$normals
 textureCoords <- map$textureCoords
 ```
 
-```{r rayshader_high_dim, cache = FALSE, echo = TRUE, results = "asis"}
+```{r normal_map, cache = FALSE, echo = FALSE, results = "asis"}
+
+jsonlite::write_json(heights, "data/planar-terrain-heights.json")
+
+if (file.exists("data")) {
+  normal_test_file <- "data/planar-terrain-normals.png"
+} else {
+  normal_test_file <- file.choose(new = TRUE)
+}
+
+# test write to png
+png::writePNG(map$normal_array, normal_test_file)
+
+cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="width: 100%" />'))
+```
+
+```{r rayshaded_map, cache = FALSE, echo = FALSE, results = "asis"}
 xparts <- 2
 yparts <- 2
 width <- ncol(heights)
@@ -377,16 +302,8 @@ for (j in 1:yparts) {
         # image function and ggplot are slow; save with PNG function from PNG package.
         png::writePNG(t(single_angle_shadow), rayshader_test_file)
 
-        cat(paste0('<img id="shademap', (i - 1), "", (j - 1), '" src="/post/', rayshader_test_file, '" style="width: 100%" />'))
-
         for (y in 1:quad_height) {
             for (x in 1:quad_width ) {
-                # sanity check
-                #image_shaded[quad_height_start + y, quad_width_start + x, ] <- c(
-                #    image_color[quad_height_start + y, quad_width_start + x + (0 * width)],
-                #    image_color[quad_height_start + y, quad_width_start + x + (1 * width)],
-                #    image_color[quad_height_start + y, quad_width_start + x + (2 * width)]
-                #)
 
                 # combine shadow with colormap, with a value ratio of 1:2 respectively
                 image_shaded[quad_height_start + y, quad_width_start + x, ] <- c(
@@ -405,26 +322,7 @@ if (file.exists("data")) {
     rayshaded_file <- file.choose(new = TRUE)
 }
 
-## test write to png
 png::writePNG(image_shaded, rayshaded_file)
 
 cat(paste0('<img id="shademap" src="/post/', rayshaded_file, '" style="width: 100%" />'))
-```
-
-I have made use of the `mapTerrainCoords` method that was developed in [Generating Planar Terrain Mesh](post/terrain) to generate the terrain heights and normals, and then write them out to a PNG and JSON file, respectively:
-
-```{r idx_data, cache = FALSE, echo = FALSE, results = "asis"}
-
-jsonlite::write_json(heights, "data/planar-terrain-heights.json")
-
-if (file.exists("data")) {
-    normal_test_file <- "data/planar-terrain-normals.png"
-} else {
-    normal_test_file <- file.choose(new = TRUE)
-}
-
-# test write to png
-png::writePNG(map$normal_array, normal_test_file)
-
-cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="width: 100%" />'))
 ```

@@ -21,13 +21,13 @@ options(warn = -1)
 working_dir <- getwd()
 
 if (!require(magrittr) || !require(rgdal) || !require(rayshader)) {
-    install.packages(c("magrittr", "maptools", "rgdal", "rgeos", "sf", "sp"))
-    devtools::install_github("tylermorganwall/rayimage")
-    devtools::install_github("tylermorganwall/rayshader")
+    install.packages(c("devtools", "magrittr", "maptools", "rgdal", "rgeos", "sf", "sp"))
+    devtools::install_github("tylermorganwall/rayimage@7a9a138e10e19119c88e960f9cfb191d1fdae002", update = "never")
+    devtools::install_github("tylermorganwall/terrainmeshr@e112055e47033508cc45c8246b8dc0a0e94920f7", update = "never")
+    devtools::install_github("tylermorganwall/rayshader@d0c9bd94be95c44eff6e7d8da5eadff070dc11db", update = "never")
 }
 
 library(magrittr)
-library(rayshader)
 ```
 
 rayshader
@@ -43,11 +43,11 @@ From [https://github.com/tylermorganwall/rayshader](https://github.com/tylermorg
 Installation
 ------------
 
-```{r install, cache = TRUE, echo = TRUE}
+```{r install, cache = FALSE, echo = TRUE}
 if (!require(rayshader)) {
     # To install the latest version from Github:
     # install.packages("devtools")
-    devtools::install_github("tylermorganwall/rayshader")
+    devtools::install_github("tylermorganwall/rayshader", update = "never")
 }
 
 library(rayshader)

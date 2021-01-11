@@ -1,5 +1,5 @@
 ---
-title: Shop
+title: about
 author: John
 
 ---

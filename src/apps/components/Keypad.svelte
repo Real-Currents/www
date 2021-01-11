@@ -5,9 +5,40 @@
 
 	const dispatch = createEventDispatcher();
 
-	const select = num => () => value += num;
+	const select = num => () => value = `${value}${num}`;
 	const clear  = () => value = '';
 	const submit = () => dispatch('submit');
+
+	document.addEventListener('keydown', function (event) {
+		const kbEvent = (event || window['event']); // cross-browser shenanigans
+
+		console.log(kbEvent);
+
+		if (kbEvent['keyCode'] === 13) { // Enter
+
+			submit();
+
+			kbEvent.preventDefault();
+
+		} else if (kbEvent['keyCode'] === 8 || kbEvent['keyCode'] === 46) { // Backspace or Delete
+
+			clear();
+
+			kbEvent.preventDefault();
+
+		} else if (47 < kbEvent['keyCode'] && kbEvent['keyCode'] < 58) { // numbers
+
+			value = `${value}${kbEvent['key']}`;
+			console.log(value);
+
+			kbEvent.preventDefault();
+
+		} else {
+			console.log('Keyboard Event: ', kbEvent['keyCode']);
+		}
+
+		return true;
+	});
 </script>
 
 <style>

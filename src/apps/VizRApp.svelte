@@ -75,7 +75,7 @@
     };
 
     let updateWorld = (event) => {
-        console.log(event);
+        // console.log(event);
     };
 
     onMount(() => {

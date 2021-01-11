@@ -2,10 +2,11 @@ import './styles/global.css';
 import App from './apps/App.svelte';
 import GLSLApp from './apps/GLSLApp.svelte';
 import SimulationApp from './apps/SimulationApp.svelte';
+import SimulationApp2 from './apps/SimulationApp2.svelte';
 import TerrainApp from './apps/TerrainApp.svelte';
+import InvoiceApp from './apps/InvoiceApp.svelte';
 import TechApp from './apps/TechApp.svelte';
 import VizRApp from './apps/VizRApp.svelte';
-
 
 const appId = 'svelte-app';
 const appElement = document.getElementById(appId);
@@ -48,7 +49,22 @@ export const simulationApp = (
     new SimulationApp({
         target: simulationAppElement,
         props: {
-            title: "Event Simulation"
+            title: "Event Simulation 1"
+        }
+    }) : {};
+
+
+const simulationApp2Id = "simulation-app-2";
+const simulationApp2Element = document.getElementById(simulationApp2Id);
+export const simulationApp2 = (
+    simulationApp2Element !== null &&
+    (simulationApp2Element.constructor.name === 'HTMLElement' ||
+        simulationApp2Element.constructor.name === 'HTMLDivElement')
+) ?
+    new SimulationApp2({
+        target: simulationApp2Element,
+        props: {
+            title: "Event Simulation 2"
         }
     }) : {};
 
@@ -64,6 +80,21 @@ export const terrainApp = (
         target: terrainAppElement,
         props: {
             title: "🦊 Hello SvelteGL!"
+        }
+    }) : {};
+
+
+const invoiceAppId = 'invoice-app';
+const invoiceAppElement = document.getElementById(invoiceAppId);
+export const invoiceApp = (
+    invoiceAppElement !== null &&
+    (invoiceAppElement.constructor.name === 'HTMLElement' ||
+        invoiceAppElement.constructor.name === 'HTMLDivElement')
+    ) ?
+    new InvoiceApp({
+        target: invoiceAppElement,
+        props: {
+            title: 'Invoicing'
         }
     }) : {};
 

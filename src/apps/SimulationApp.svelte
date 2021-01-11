@@ -5,12 +5,8 @@
     import generateFace from './modules/grid-generator';
     import QuadStore from "./modules/quad-store";
     import terrain from './modules/terrain-small';
-    import markerFrag from './shaders/custom/sprite-fragment-shader.glsl';
-    import markerVert from './shaders/custom/sprite-vertex-shader.glsl';
     import quadFrag from './shaders/custom/normal-selected-txt-fragment-shader.glsl';
     import quadVert from './shaders/custom/normal-selected-txt-vertex-shader.glsl';
-    // import terrainFrag from './shaders/default/frag.glsl';
-    // import terrainVert from './shaders/default/vert.glsl';
     import terrainFrag from './shaders/custom/terrain-frag.glsl';
     import terrainVert from './shaders/custom/terrain-and-light-vert.glsl';
 
@@ -305,7 +301,7 @@
     }
 
     let updateWorld = (event) => {
-        console.log(event);
+        // console.log(event);
 
         refreshState()
     };

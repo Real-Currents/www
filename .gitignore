@@ -6,8 +6,10 @@
 .RData
 .Rhistory
 *.Rproj*
+*.bak
 bin
 blogdown
+data
 dist
 docs
 log
