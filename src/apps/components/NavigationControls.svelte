@@ -2,7 +2,8 @@
     import {  createEventDispatcher } from 'svelte';
 
     export let title;
-    export let color = '#ff3e00';
+
+    export let color = '#F7C77B';
 
     export let extent = [[-1.0, -1.0], [1.0, 1.0]];
 
@@ -290,6 +291,14 @@
 
                     kbEvent.preventDefault();
 
+                } else if (kbEvent['keyCode'] === 27) { // ESC
+
+                    kbEvent['minimize'] = true;
+
+                    toggleFullscreen(kbEvent); // minimize
+
+                    kbEvent.preventDefault();
+
                 } else {
                     console.log('Keyboard Event: ', kbEvent['keyCode']);
                 }
@@ -319,18 +328,21 @@
                 navContext = terrainNavigationCursor(mapCursor, c);
             }
 
-            toggleFullscreen = () => {
-                if (!isFullscreen) {
-                    isFullscreen = true;
-                    c.parentElement.className += " fullscreen"
-                    for (const control of document.getElementsByClassName("controls")) {
-                        control.className += " fullscreen";
-                    }
-                } else {
+            toggleFullscreen = (event) => {
+                console.log(event['minimize']);
+
+                if (!!event['minimize'] | !!isFullscreen) {
                     isFullscreen = false;
                     c.parentElement.className = c.parentElement.className.replace("fullscreen", '');
                     for (const control of document.getElementsByClassName("controls")) {
                         control.className = control.className.replace("fullscreen", '');
+                    }
+
+                } else {
+                    isFullscreen = true;
+                    c.parentElement.className += " fullscreen"
+                    for (const control of document.getElementsByClassName("controls")) {
+                        control.className += " fullscreen";
                     }
                 }
             }
@@ -390,7 +402,7 @@
 
 </style>
 
-<div class="controls right" style="top: 0;">
+<div class="controls right" style="top: -5em;">
     <!--{#if (!!color)}-->
     <!--    <label>-->
     <!--        <input type="color" style="height: 40px" bind:value={color}>-->
@@ -414,15 +426,6 @@
         magnification({zoomY})
     </label><br />
 
-    {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
-        {#each rangeValues as option, o}
-            <label>
-                <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
-                {rangeOptions['labels'][o]}({option})
-            </label><br />
-        {/each}
-    {/if}
-
     {#if (groups.length > 0)}
         {#each groups as group, i}
             <label>
@@ -435,6 +438,15 @@
         {#each options['values'] as option, o}
             <label>
                 <input type="checkbox" bind:checked={option} /> {options['labels'][o]}
+            </label><br />
+        {/each}
+    {/if}
+
+    {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
+        {#each rangeValues as option, o}
+            <label>
+                <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
+                {rangeOptions['labels'][o]}({option})
             </label><br />
         {/each}
     {/if}
