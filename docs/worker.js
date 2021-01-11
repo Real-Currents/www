@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(global = global || self, factory(global.self = global.self || {}));
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.self = global.self || {}));
 }(this, (function (exports) { 'use strict';
 
 	function createCommonjsModule(fn, module) {
@@ -26,7 +26,9 @@
 	module.exports = exports = global.fetch;
 
 	// Needed for TypeScript and Webpack.
-	exports.default = global.fetch.bind(global);
+	if (global.fetch) {
+		exports.default = global.fetch.bind(global);
+	}
 
 	exports.Headers = global.Headers;
 	exports.Request = global.Request;
@@ -995,100 +997,6 @@
 	    return subscribeTo(result)(innerSubscriber);
 	}
 
-	/** PURE_IMPORTS_START tslib,_map,_observable_from,_innerSubscribe PURE_IMPORTS_END */
-	function mergeMap(project, resultSelector, concurrent) {
-	    if (concurrent === void 0) {
-	        concurrent = Number.POSITIVE_INFINITY;
-	    }
-	    if (typeof resultSelector === 'function') {
-	        return function (source) { return source.pipe(mergeMap(function (a, i) { return from(project(a, i)).pipe(map(function (b, ii) { return resultSelector(a, b, i, ii); })); }, concurrent)); };
-	    }
-	    else if (typeof resultSelector === 'number') {
-	        concurrent = resultSelector;
-	    }
-	    return function (source) { return source.lift(new MergeMapOperator(project, concurrent)); };
-	}
-	var MergeMapOperator = /*@__PURE__*/ (function () {
-	    function MergeMapOperator(project, concurrent) {
-	        if (concurrent === void 0) {
-	            concurrent = Number.POSITIVE_INFINITY;
-	        }
-	        this.project = project;
-	        this.concurrent = concurrent;
-	    }
-	    MergeMapOperator.prototype.call = function (observer, source) {
-	        return source.subscribe(new MergeMapSubscriber(observer, this.project, this.concurrent));
-	    };
-	    return MergeMapOperator;
-	}());
-	var MergeMapSubscriber = /*@__PURE__*/ (function (_super) {
-	    __extends(MergeMapSubscriber, _super);
-	    function MergeMapSubscriber(destination, project, concurrent) {
-	        if (concurrent === void 0) {
-	            concurrent = Number.POSITIVE_INFINITY;
-	        }
-	        var _this = _super.call(this, destination) || this;
-	        _this.project = project;
-	        _this.concurrent = concurrent;
-	        _this.hasCompleted = false;
-	        _this.buffer = [];
-	        _this.active = 0;
-	        _this.index = 0;
-	        return _this;
-	    }
-	    MergeMapSubscriber.prototype._next = function (value) {
-	        if (this.active < this.concurrent) {
-	            this._tryNext(value);
-	        }
-	        else {
-	            this.buffer.push(value);
-	        }
-	    };
-	    MergeMapSubscriber.prototype._tryNext = function (value) {
-	        var result;
-	        var index = this.index++;
-	        try {
-	            result = this.project(value, index);
-	        }
-	        catch (err) {
-	            this.destination.error(err);
-	            return;
-	        }
-	        this.active++;
-	        this._innerSub(result);
-	    };
-	    MergeMapSubscriber.prototype._innerSub = function (ish) {
-	        var innerSubscriber = new SimpleInnerSubscriber(this);
-	        var destination = this.destination;
-	        destination.add(innerSubscriber);
-	        var innerSubscription = innerSubscribe(ish, innerSubscriber);
-	        if (innerSubscription !== innerSubscriber) {
-	            destination.add(innerSubscription);
-	        }
-	    };
-	    MergeMapSubscriber.prototype._complete = function () {
-	        this.hasCompleted = true;
-	        if (this.active === 0 && this.buffer.length === 0) {
-	            this.destination.complete();
-	        }
-	        this.unsubscribe();
-	    };
-	    MergeMapSubscriber.prototype.notifyNext = function (innerValue) {
-	        this.destination.next(innerValue);
-	    };
-	    MergeMapSubscriber.prototype.notifyComplete = function () {
-	        var buffer = this.buffer;
-	        this.active--;
-	        if (buffer.length > 0) {
-	            this._next(buffer.shift());
-	        }
-	        else if (this.active === 0 && this.hasCompleted) {
-	            this.destination.complete();
-	        }
-	    };
-	    return MergeMapSubscriber;
-	}(SimpleOuterSubscriber));
-
 	/** PURE_IMPORTS_START _Observable,_util_subscribeToPromise,_scheduled_schedulePromise PURE_IMPORTS_END */
 	function fromPromise(input, scheduler) {
 	    if (!scheduler) {
@@ -1170,24 +1078,22 @@
 	    return SwitchMapSubscriber;
 	}(SimpleOuterSubscriber));
 
-	var fetched = false;
-
 	function get(url) {
 	    return fromPromise(fetch(new browser_2(url)))
-	    .pipe(map(res =>{
-	        if ((`${res.status}`).match(/^(?:[4|5])/) !== null) {
-	            throw res; // abort
-	        }
-	        return res;
-	    }))
-	    .pipe(switchMap(response => {
-	        if (typeof response['json'] === 'function') {
-	            const res = response;
-	            return fromPromise(res.json());
-	        } else {
-	            return response;
-	        }
-	    }));
+	        .pipe(map(res =>{
+	            if ((`${res.status}`).match(/^(?:[4|5])/) !== null) {
+	                throw res; // abort
+	            }
+	            return res;
+	        }))
+	        .pipe(switchMap(response => {
+	            if (typeof response['json'] === 'function') {
+	                const res = response;
+	                return fromPromise(res.json());
+	            } else {
+	                return response;
+	            }
+	        }));
 	}
 
 	function unpack (data, depth, extra = {}) {
@@ -1218,16 +1124,15 @@
 
 	// Main
 	let onmessage = function(evt) {
-	    const position_events = [];
 	    const problem_events = [];
 
 	    console.log(evt.data);
 
-	    if (!fetched && "action" in evt.data && evt.data["action"].match(/event data/) !== null) {
+	    if ( "action" in evt.data && evt.data["action"].match(/event data/) !== null) {
 	        console.log("Fetching events...");
 
 	        const eventSource = evt.data["payload"]["event-source"];
-	        const heightmapSource = evt.data["payload"]["heightmap-source"];
+	        // const heightmapSource = evt.data["payload"]["heightmap-source"];
 	        const planarExtent = evt.data["payload"]["planar-extent"];
 
 	        const planarWidth = (planarExtent[1][0] - planarExtent[0][0]) / 2,
@@ -1236,73 +1141,85 @@
 	        // first get all of the position events,
 	        // then get terrain heights to map to
 	        // events by proximity of x, y
-	        get(eventSource).pipe(
-	            map(response => {
-	                const data = response;
+	        get(eventSource)//.pipe(
+	        //     map(response => {
+	        //         const data = response;
+	        //
+	        //         return unpack(data, 10);
+	        //
+	        //     }),
+	        //     mergeMap(events => {
+	        //
+	        //         events.forEach(d => position_events.push(Object.assign({}, d)));
+	        //
+	        //         return get(heightmapSource);
+	        //     })
+	        // )
+	            .subscribe({
+	                // next(heights) {
+	                //     console.log(heights);
+	                //
+	                //     console.log('Processing event and height data...');
+	                //
+	                //     const delay = {
+	                //         time: 1
+	                //     };
+	                //
+	                //     fetched = true;
+	                //
+	                //     const heightAdjustment = 0.75;
+	                //
+	                //     const heightOffset = 0.5;
+	                //
+	                //     const terrainDepth = (Array.isArray(heights) && heights.length > 0) ?
+	                //         heights.length : 0;
+	                //     const terrainWidth = (terrainDepth > 0 && heights[0].length > 0) ?
+	                //         heights[0].length : 0;
+	                //
+	                //     position_events.forEach((d, i, a) => {
+	                //         // delay.time += 6; // simulate slow load
+	                //         setTimeout(() => {
+	                //             if ("x" in d && "y" in d) try {
+	                //                 // Explore sign reversal
+	                //                 const x = d["x"], y = d["y"];
+	                //                 d["y"] = -x;
+	                //                 d["x"] = y;
+	                //                 const px= d["x"] + planarWidth / 2;     // shift all planar numbers to positive domain
+	                //                 const py = d["y"] + planarDepth / 2;    // shift all planar numbers to positive domain
+	                //                 const tx = Math.floor(terrainWidth * px / planarWidth);
+	                //                 const ty = Math.floor(terrainDepth * py / planarDepth);
+	                //                 const height = heightOffset + heightAdjustment * heights[tx][ty]; // assign height at this index
+	                //
+	                //                 postMessage(Object.assign({ height }, d));
+	                //             } catch (load_error) {
+	                //                 problem_events.push(Object.assign({ load_error }, d));
+	                //             }
+	                //         }, delay.time);
+	                //
+	                //         if (i === (a.length - 1)) {
+	                //             setTimeout(() => {
+	                //                 postMessage("Event data processing is complete.");
+	                //                 console.log("Problem events (height?): ", problem_events);
+	                //             }, delay.time);
+	                //         }
+	                //     });
+	                // },
+	                next(events) {
+	                    console.log(events);
 
-	                return unpack(data, 10);
+	                    unpack(events, 10).forEach((d, i, a) => {
+	                        postMessage(Object.assign({}, d));
 
-
-	            }),
-	            mergeMap(events => {
-
-	                events.forEach(d => position_events.push(Object.assign({}, d)));
-
-	                return get(heightmapSource);
-	            })
-	        )
-	        .subscribe({
-	            next(heights) {
-	                console.log(heights);
-
-	                console.log('Processing event and height data...');
-
-	                const delay = {
-	                    time: 1
-	                };
-
-	                fetched = true;
-
-	                const heightAdjustment = 0.75;
-
-	                const heightOffset = 0.5;
-
-	                const terrainDepth = (Array.isArray(heights) && heights.length > 0) ?
-	                    heights.length : 0;
-	                const terrainWidth = (terrainDepth > 0 && heights[0].length > 0) ?
-	                    heights[0].length : 0;
-
-	                position_events.forEach((d, i, a) => {
-	                    // delay.time += 6; // simulate slow load
-	                    setTimeout(() => {
-	                        if ("x" in d && "y" in d) try {
-	                            // Explore sign reversal
-	                            const x = d["x"], y = d["y"];
-	                            d["y"] = -x;
-	                            d["x"] = y;
-	                            const px= d["x"] + planarWidth / 2;     // shift all planar numbers to positive domain
-	                            const py = d["y"] + planarDepth / 2;    // shift all planar numbers to positive domain
-	                            const tx = Math.floor(terrainWidth * px / planarWidth);
-	                            const ty = Math.floor(terrainDepth * py / planarDepth);
-	                            const height = heightOffset + heightAdjustment * heights[tx][ty]; // assign height at this index
-
-	                            postMessage(Object.assign({ height }, d));
-	                        } catch (load_error) {
-	                            problem_events.push(Object.assign({ load_error }, d));
-	                        }
-	                    }, delay.time);
-
-	                    if (i === (a.length - 1)) {
-	                        setTimeout(() => {
+	                        if (i === (a.length - 1)) {
 	                            postMessage("Event data processing is complete.");
 	                            console.log("Problem events (height?): ", problem_events);
-	                        }, delay.time);
-	                    }
-	                });
-	            },
-	            error(err) { console.error(err); },
-	            complete() { console.log("Event fetch is complete"); }
-	        });    }
+	                        }
+	                    });
+	                },
+	                error(err) { console.error(err); },
+	                complete() { console.log("Event fetch is complete"); }
+	            });
+	    }
 	};
 
 	let onmessageerror = null;

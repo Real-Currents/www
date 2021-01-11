@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <base href="/">
-  <title>SveltR: truly epic visualizations!</title>
-  
+  <title>Real~Currents</title>
+
   <link href='/fonts/font-test.b64.css' rel='stylesheet' type='text/css' />
   <link href="/global.css" rel="stylesheet" type='text/css' />
 
@@ -25,12 +25,12 @@
     <main id="svelte-app" role="main" style="min-width:604px">
     </main>
 
-    
+
     <p id="copyright">
-        
-        
+
+
     </p>
-    
+
     <p id="built_with">
         ...built with <a href="https://github.com/Real-Currents/SveltR" target="_blank">SveltR</a>.
     </p>
@@ -49,7 +49,7 @@
                 <span style="color:#00FF00">Real</span><span style="color:rgb(17,187,255)">~Currents</span>
             </a>
         </h1><br />
-        
+
     </div>
     <br />
     <br />
@@ -57,14 +57,16 @@
     <div id="content" style="min-width:604px">
 
 
- 
+
 <article class="content">
   <main>
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
 
 
 <div id="rayshader" class="section level2">
 <h2>rayshader</h2>
-<p>From <a href="https://github.com/tylermorganwall/rayshader" class="uri">https://github.com/tylermorganwall/rayshader</a>:</p>
+<p>From <a href="https://github.com/tylermorganwall/rayshader">https://github.com/tylermorganwall/rayshader</a>:</p>
 <blockquote>
 <p><strong>rayshader</strong> is an open source package for producing 2D and 3D data visualizations in R. <strong>rayshader</strong> uses elevation data in a base R matrix and a combination of raytracing, spherical texture mapping, overlays, and ambient occlusion to generate beautiful topographic 2D and 3D maps. In addition to maps, <strong>rayshader</strong> also allows the user to translate <strong>ggplot2</strong> objects into beautiful 3D data visualizations.</p>
 <p>The models can be rotated and examined interactively or the camera movement can be scripted to create animations. Scenes can also be rendered using a high-quality pathtracer, <strong>rayrender</strong>.The user can also create a cinematic depth of field post-processing effect to direct the user’s focus to important regions in the figure. The 3D models can also be exported to a 3D-printable format with a built-in STL export function.</p>
@@ -75,7 +77,7 @@
 <pre class="r"><code>if (!require(rayshader)) {
     # To install the latest version from Github:
     # install.packages(&quot;devtools&quot;)
-    devtools::install_github(&quot;tylermorganwall/rayshader&quot;)
+    devtools::install_github(&quot;tylermorganwall/rayshader&quot;, update = &quot;never&quot;)
 }
 
 library(rayshader)</code></pre>

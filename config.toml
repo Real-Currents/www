@@ -1,7 +1,7 @@
 baseurl = "/"
 languageCode = "en-us"
 languageLang = "en"
-title = "SveltR: truly epic visualizations!"
+title = "Real~Currents"
 
 ignoreFiles = ["_cache$", "md$", "Rmd$", "Rmarkdown$" ]
 
