@@ -106,6 +106,7 @@ mapHeight <- function(image_map, image_width, image_height) {
 }
 ```
 
+
 ```{r preview_map_data, cache = FALSE, echo = FALSE, results = "asis"}
 # import desert heightmap demo for test data
 localtif <- raster::raster("data/dem_01.tif")
@@ -139,7 +140,6 @@ for (y in 1:nrow(heightmap)) {
 #print(max(apply(heightmap, c(1, 2), max)))
 ```
 
-In part 2, I continue to employ `mapTerrainCoords` and the ray-tracing shading methods provided by [rayshader](https://github.com/tylermorganwall/rayshader) that were explored in [Generating Planar Terrain Mesh](post/terrain) and [Events And Shade: Part 1](post/simulate-events-and-shade-1), respectively, to generate the terrain height maps, normal maps and shaded textures:
 
 ```{r heights, cache = TRUE, echo = FALSE}
 # Map terrain heights from the highdensity image
@@ -229,6 +229,7 @@ normals <- map$normals
 textureCoords <- map$textureCoords
 ```
 
+
 ```{r normal_map, cache = FALSE, echo = FALSE, results = "asis"}
 
 jsonlite::write_json(heights, "data/planar-terrain-heights.json")
@@ -242,8 +243,10 @@ if (file.exists("data")) {
 # test write to png
 png::writePNG(map$normal_array, normal_test_file)
 
-cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="width: 100%" />'))
+cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
+
+In part 2, I continue to employ `mapTerrainCoords` and the ray-tracing shading methods provided by [rayshader](https://github.com/tylermorganwall/rayshader) that were explored in [Generating Planar Terrain Mesh](post/terrain) and [Events And Shade: Part 1](post/simulate-events-and-shade-1), respectively, to generate the terrain height maps, normal maps and shaded textures.
 
 ```{r rayshaded_map, cache = FALSE, echo = FALSE, results = "asis"}
 xparts <- 2
@@ -324,5 +327,6 @@ if (file.exists("data")) {
 
 png::writePNG(image_shaded, rayshaded_file)
 
-cat(paste0('<img id="shademap" src="/post/', rayshaded_file, '" style="width: 100%" />'))
+cat(paste0('<img id="shademap" src="/post/', rayshaded_file, '" style="width: 100%;" />'))
 ```
+
