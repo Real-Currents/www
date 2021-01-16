@@ -123,6 +123,15 @@
         }
     }
 
+    let tryDateTime = function (value) {
+        let toDate = value;try {
+            if (parseInt(value) > 1577810000000)
+                toDate = new Date(value).toString().match(/(.+) GMT/)[1];
+        } finally {
+            return toDate;
+        }
+    }
+
     let zoom = function (y) {
         worldPosition.y = y;
         worldPosition.r = Math.pow(2, (-y / 4));
@@ -326,6 +335,27 @@
             if (!!navContext !== true) {
                 const mapCursor = document.getElementById("terrain-navigation-cursor");
                 navContext = terrainNavigationCursor(mapCursor, c);
+
+                let intro;
+                let sinceLastMoveBack = (new Date()).getTime();
+
+                const loop = () => {
+
+                    if (zoomY > -2.5) {
+                        zoomY -= 0.15;
+                        zoom(-(zoomY.toFixed(2)));
+                        if (((new Date()).getTime() - sinceLastMoveBack) > 66) {
+                            sinceLastMoveBack = (new Date()).getTime();
+                            triggerMovement('backward');
+                        }
+                        intro = requestAnimationFrame(loop);
+                    } else {
+                        zoomY = -2.5;
+                        zoom(-zoomY);
+                    }
+                };
+
+                setTimeout(loop, 533);
             }
 
             toggleFullscreen = (event) => {
@@ -446,7 +476,7 @@
         {#each rangeValues as option, o}
             <label>
                 <input type="range" bind:value={option} min={rangeOptions['min'][o]} max={rangeOptions['max'][o]} step={rangeOptions['step'][o]} /><br />
-                {rangeOptions['labels'][o]}({option})
+                {rangeOptions['labels'][o]}({tryDateTime(option)})
             </label><br />
         {/each}
     {/if}
