@@ -4522,7 +4522,7 @@ var app = (function (exports) {
     	let { process_extra_shader_components } = $$props; // (gl, material) => {}
 
     	let draw = () => {
-    		
+
     	};
 
     	let camera_stores = {
@@ -4539,7 +4539,7 @@ var app = (function (exports) {
     			}
     		}
     	: () => {
-    			
+
     		};
 
     	const width = writable(1);
@@ -4663,7 +4663,7 @@ var app = (function (exports) {
     				return;
     			}
 
-    			
+
     			$$invalidate(16, pending = false);
 
     			// gl.clearColor(...bg, backgroundOpacity);
@@ -8571,7 +8571,7 @@ var app = (function (exports) {
     			rotate(dx * 0.003, dy * 0.003);
     			last_x = touch.clientX;
     			last_y = touch.clientY;
-    			
+
     		});
 
     		function handle_touchend(event) {
@@ -9276,7 +9276,7 @@ var app = (function (exports) {
     			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, index, gl.STATIC_DRAW);
     			this.buffers.__index = buffer;
     		}
-    		
+
     		// Un-bind buffers
     		gl.bindBuffer(gl.ARRAY_BUFFER, null);
     		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
@@ -9299,7 +9299,7 @@ var app = (function (exports) {
 
     			// Bind the position buffer.
     			const buffer = this.buffers[key];
-    			
+
     			// if (this.primitive = 'POINTS') console.log("enableVertexAttribArray on location ", key);
 
     			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -10383,9 +10383,9 @@ var app = (function (exports) {
     		} else {
     			gl.texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, data);
     		}
-    		
+
     		gl.generateMipmap(TEXTURE_2D);
-    		
+
     		const width  = 'naturalWidth'  in data ? data.naturalWidth  : data.width;
     		const height = 'naturalHeight' in data ? data.naturalHeight : data.height;
 
@@ -11546,29 +11546,29 @@ var app = (function (exports) {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[37] = list[i];
-    	child_ctx[38] = list;
-    	child_ctx[39] = i;
+    	child_ctx[38] = list[i];
+    	child_ctx[39] = list;
+    	child_ctx[40] = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[37] = list[i];
-    	child_ctx[40] = list;
-    	child_ctx[39] = i;
+    	child_ctx[38] = list[i];
+    	child_ctx[41] = list;
+    	child_ctx[40] = i;
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[41] = list[i];
-    	child_ctx[42] = list;
-    	child_ctx[43] = i;
+    	child_ctx[42] = list[i];
+    	child_ctx[43] = list;
+    	child_ctx[44] = i;
     	return child_ctx;
     }
 
-    // (429:4) {#if (groups.length > 0)}
+    // (459:4) {#if (groups.length > 0)}
     function create_if_block_2(ctx) {
     	let each_1_anchor;
     	let each_value_2 = /*groups*/ ctx[0];
@@ -11629,19 +11629,19 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(429:4) {#if (groups.length > 0)}",
+    		source: "(459:4) {#if (groups.length > 0)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (430:8) {#each groups as group, i}
+    // (460:8) {#each groups as group, i}
     function create_each_block_2(ctx) {
     	let label;
     	let input;
     	let t0;
-    	let t1_value = /*i*/ ctx[43] + 1 + "";
+    	let t1_value = /*i*/ ctx[44] + 1 + "";
     	let t1;
     	let t2;
     	let br;
@@ -11649,7 +11649,7 @@ var app = (function (exports) {
     	let dispose;
 
     	function input_change_handler() {
-    		/*input_change_handler*/ ctx[18].call(input, /*each_value_2*/ ctx[42], /*i*/ ctx[43]);
+    		/*input_change_handler*/ ctx[19].call(input, /*each_value_2*/ ctx[43], /*i*/ ctx[44]);
     	}
 
     	const block = {
@@ -11662,14 +11662,14 @@ var app = (function (exports) {
     			br = element("br");
     			attr_dev(input, "type", "checkbox");
     			attr_dev(input, "class", "svelte-pu5kxd");
-    			add_location(input, file$5, 431, 16, 14266);
-    			add_location(label, file$5, 430, 12, 14242);
-    			add_location(br, file$5, 432, 20, 14390);
+    			add_location(input, file$5, 461, 16, 15271);
+    			add_location(label, file$5, 460, 12, 15247);
+    			add_location(br, file$5, 462, 20, 15395);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			append_dev(label, input);
-    			input.checked = /*group*/ ctx[41];
+    			input.checked = /*group*/ ctx[42];
     			append_dev(label, t0);
     			append_dev(label, t1);
     			append_dev(label, t2);
@@ -11678,7 +11678,7 @@ var app = (function (exports) {
     			if (!mounted) {
     				dispose = [
     					listen_dev(input, "change", input_change_handler),
-    					listen_dev(input, "click", /*click_handler*/ ctx[19], false, false, false)
+    					listen_dev(input, "click", /*click_handler*/ ctx[20], false, false, false)
     				];
 
     				mounted = true;
@@ -11688,7 +11688,7 @@ var app = (function (exports) {
     			ctx = new_ctx;
 
     			if (dirty[0] & /*groups*/ 1) {
-    				input.checked = /*group*/ ctx[41];
+    				input.checked = /*group*/ ctx[42];
     			}
     		},
     		d: function destroy(detaching) {
@@ -11703,14 +11703,14 @@ var app = (function (exports) {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(430:8) {#each groups as group, i}",
+    		source: "(460:8) {#each groups as group, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (437:4) {#if (options['labels'].length > 0 && options['values'].length > 0)}
+    // (467:4) {#if (options['labels'].length > 0 && options['values'].length > 0)}
     function create_if_block_1(ctx) {
     	let each_1_anchor;
     	let each_value_1 = /*options*/ ctx[1]["values"];
@@ -11771,19 +11771,19 @@ var app = (function (exports) {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(437:4) {#if (options['labels'].length > 0 && options['values'].length > 0)}",
+    		source: "(467:4) {#if (options['labels'].length > 0 && options['values'].length > 0)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (438:8) {#each options['values'] as option, o}
+    // (468:8) {#each options['values'] as option, o}
     function create_each_block_1(ctx) {
     	let label;
     	let input;
     	let t0;
-    	let t1_value = /*options*/ ctx[1]["labels"][/*o*/ ctx[39]] + "";
+    	let t1_value = /*options*/ ctx[1]["labels"][/*o*/ ctx[40]] + "";
     	let t1;
     	let t2;
     	let br;
@@ -11791,7 +11791,7 @@ var app = (function (exports) {
     	let dispose;
 
     	function input_change_handler_1() {
-    		/*input_change_handler_1*/ ctx[20].call(input, /*each_value_1*/ ctx[40], /*o*/ ctx[39]);
+    		/*input_change_handler_1*/ ctx[21].call(input, /*each_value_1*/ ctx[41], /*o*/ ctx[40]);
     	}
 
     	const block = {
@@ -11804,14 +11804,14 @@ var app = (function (exports) {
     			br = element("br");
     			attr_dev(input, "type", "checkbox");
     			attr_dev(input, "class", "svelte-pu5kxd");
-    			add_location(input, file$5, 439, 16, 14580);
-    			add_location(label, file$5, 438, 12, 14556);
-    			add_location(br, file$5, 440, 20, 14671);
+    			add_location(input, file$5, 469, 16, 15585);
+    			add_location(label, file$5, 468, 12, 15561);
+    			add_location(br, file$5, 470, 20, 15676);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			append_dev(label, input);
-    			input.checked = /*option*/ ctx[37];
+    			input.checked = /*option*/ ctx[38];
     			append_dev(label, t0);
     			append_dev(label, t1);
     			append_dev(label, t2);
@@ -11826,10 +11826,10 @@ var app = (function (exports) {
     			ctx = new_ctx;
 
     			if (dirty[0] & /*options*/ 2) {
-    				input.checked = /*option*/ ctx[37];
+    				input.checked = /*option*/ ctx[38];
     			}
 
-    			if (dirty[0] & /*options*/ 2 && t1_value !== (t1_value = /*options*/ ctx[1]["labels"][/*o*/ ctx[39]] + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*options*/ 2 && t1_value !== (t1_value = /*options*/ ctx[1]["labels"][/*o*/ ctx[40]] + "")) set_data_dev(t1, t1_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(label);
@@ -11843,14 +11843,14 @@ var app = (function (exports) {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(438:8) {#each options['values'] as option, o}",
+    		source: "(468:8) {#each options['values'] as option, o}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (445:4) {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
+    // (475:4) {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}
     function create_if_block$1(ctx) {
     	let each_1_anchor;
     	let each_value = /*rangeValues*/ ctx[2];
@@ -11877,7 +11877,7 @@ var app = (function (exports) {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*rangeValues, rangeOptions*/ 20) {
+    			if (dirty[0] & /*tryDateTime, rangeValues, rangeOptions*/ 1044) {
     				each_value = /*rangeValues*/ ctx[2];
     				validate_each_argument(each_value);
     				let i;
@@ -11911,14 +11911,14 @@ var app = (function (exports) {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(445:4) {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}",
+    		source: "(475:4) {#if (rangeOptions['labels'].length > 0 && rangeValues.length > 0)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (446:8) {#each rangeValues as option, o}
+    // (476:8) {#each rangeValues as option, o}
     function create_each_block(ctx) {
     	let label;
     	let input;
@@ -11927,10 +11927,10 @@ var app = (function (exports) {
     	let input_step_value;
     	let br0;
     	let t0;
-    	let t1_value = /*rangeOptions*/ ctx[4]["labels"][/*o*/ ctx[39]] + "";
+    	let t1_value = /*rangeOptions*/ ctx[4]["labels"][/*o*/ ctx[40]] + "";
     	let t1;
     	let t2;
-    	let t3_value = /*option*/ ctx[37] + "";
+    	let t3_value = /*tryDateTime*/ ctx[10](/*option*/ ctx[38]) + "";
     	let t3;
     	let t4;
     	let br1;
@@ -11938,7 +11938,7 @@ var app = (function (exports) {
     	let dispose;
 
     	function input_change_input_handler_1() {
-    		/*input_change_input_handler_1*/ ctx[21].call(input, /*each_value*/ ctx[38], /*o*/ ctx[39]);
+    		/*input_change_input_handler_1*/ ctx[22].call(input, /*each_value*/ ctx[39], /*o*/ ctx[40]);
     	}
 
     	const block = {
@@ -11953,18 +11953,18 @@ var app = (function (exports) {
     			t4 = text(")\n            ");
     			br1 = element("br");
     			attr_dev(input, "type", "range");
-    			attr_dev(input, "min", input_min_value = /*rangeOptions*/ ctx[4]["min"][/*o*/ ctx[39]]);
-    			attr_dev(input, "max", input_max_value = /*rangeOptions*/ ctx[4]["max"][/*o*/ ctx[39]]);
-    			attr_dev(input, "step", input_step_value = /*rangeOptions*/ ctx[4]["step"][/*o*/ ctx[39]]);
-    			add_location(input, file$5, 447, 16, 14854);
-    			add_location(br0, file$5, 447, 147, 14985);
-    			add_location(label, file$5, 446, 12, 14830);
-    			add_location(br1, file$5, 449, 20, 15066);
+    			attr_dev(input, "min", input_min_value = /*rangeOptions*/ ctx[4]["min"][/*o*/ ctx[40]]);
+    			attr_dev(input, "max", input_max_value = /*rangeOptions*/ ctx[4]["max"][/*o*/ ctx[40]]);
+    			attr_dev(input, "step", input_step_value = /*rangeOptions*/ ctx[4]["step"][/*o*/ ctx[40]]);
+    			add_location(input, file$5, 477, 16, 15859);
+    			add_location(br0, file$5, 477, 147, 15990);
+    			add_location(label, file$5, 476, 12, 15835);
+    			add_location(br1, file$5, 479, 20, 16084);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, label, anchor);
     			append_dev(label, input);
-    			set_input_value(input, /*option*/ ctx[37]);
+    			set_input_value(input, /*option*/ ctx[38]);
     			append_dev(label, br0);
     			append_dev(label, t0);
     			append_dev(label, t1);
@@ -11985,24 +11985,24 @@ var app = (function (exports) {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*rangeOptions*/ 16 && input_min_value !== (input_min_value = /*rangeOptions*/ ctx[4]["min"][/*o*/ ctx[39]])) {
+    			if (dirty[0] & /*rangeOptions*/ 16 && input_min_value !== (input_min_value = /*rangeOptions*/ ctx[4]["min"][/*o*/ ctx[40]])) {
     				attr_dev(input, "min", input_min_value);
     			}
 
-    			if (dirty[0] & /*rangeOptions*/ 16 && input_max_value !== (input_max_value = /*rangeOptions*/ ctx[4]["max"][/*o*/ ctx[39]])) {
+    			if (dirty[0] & /*rangeOptions*/ 16 && input_max_value !== (input_max_value = /*rangeOptions*/ ctx[4]["max"][/*o*/ ctx[40]])) {
     				attr_dev(input, "max", input_max_value);
     			}
 
-    			if (dirty[0] & /*rangeOptions*/ 16 && input_step_value !== (input_step_value = /*rangeOptions*/ ctx[4]["step"][/*o*/ ctx[39]])) {
+    			if (dirty[0] & /*rangeOptions*/ 16 && input_step_value !== (input_step_value = /*rangeOptions*/ ctx[4]["step"][/*o*/ ctx[40]])) {
     				attr_dev(input, "step", input_step_value);
     			}
 
     			if (dirty[0] & /*rangeValues*/ 4) {
-    				set_input_value(input, /*option*/ ctx[37]);
+    				set_input_value(input, /*option*/ ctx[38]);
     			}
 
-    			if (dirty[0] & /*rangeOptions*/ 16 && t1_value !== (t1_value = /*rangeOptions*/ ctx[4]["labels"][/*o*/ ctx[39]] + "")) set_data_dev(t1, t1_value);
-    			if (dirty[0] & /*rangeValues*/ 4 && t3_value !== (t3_value = /*option*/ ctx[37] + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*rangeOptions*/ 16 && t1_value !== (t1_value = /*rangeOptions*/ ctx[4]["labels"][/*o*/ ctx[40]] + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*rangeValues*/ 4 && t3_value !== (t3_value = /*tryDateTime*/ ctx[10](/*option*/ ctx[38]) + "")) set_data_dev(t3, t3_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(label);
@@ -12016,7 +12016,7 @@ var app = (function (exports) {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(446:8) {#each rangeValues as option, o}",
+    		source: "(476:8) {#each rangeValues as option, o}",
     		ctx
     	});
 
@@ -12095,32 +12095,32 @@ var app = (function (exports) {
     			attr_dev(img, "width", img_width_value = /*map*/ ctx[5].style.width);
     			attr_dev(img, "height", img_height_value = /*map*/ ctx[5].style.height);
     			attr_dev(img, "class", "svelte-pu5kxd");
-    			add_location(img, file$5, 412, 8, 13625);
+    			add_location(img, file$5, 442, 8, 14630);
     			attr_dev(canvas, "id", "terrain-navigation-cursor");
     			attr_dev(canvas, "width", canvas_width_value = /*map*/ ctx[5].width);
     			attr_dev(canvas, "height", canvas_height_value = /*map*/ ctx[5].height);
     			set_style(canvas, "border-color", /*color*/ ctx[3]);
     			attr_dev(canvas, "class", "svelte-pu5kxd");
-    			add_location(canvas, file$5, 416, 8, 13774);
+    			add_location(canvas, file$5, 446, 8, 14779);
     			attr_dev(div0, "id", "terrain-navigation-view");
     			attr_dev(div0, "class", "svelte-pu5kxd");
-    			add_location(div0, file$5, 411, 4, 13582);
-    			add_location(b0, file$5, 424, 8, 13984);
+    			add_location(div0, file$5, 441, 4, 14587);
+    			add_location(b0, file$5, 454, 8, 14989);
     			attr_dev(input, "id", "magnification");
     			attr_dev(input, "type", "range");
     			attr_dev(input, "min", input_min_value = -4);
     			attr_dev(input, "max", input_max_value = 0.5);
     			attr_dev(input, "step", input_step_value = 0.1);
-    			add_location(input, file$5, 424, 16, 13992);
-    			add_location(b1, file$5, 424, 123, 14099);
-    			add_location(br0, file$5, 424, 131, 14107);
-    			add_location(label0, file$5, 423, 4, 13968);
-    			add_location(br1, file$5, 426, 12, 14157);
-    			add_location(button, file$5, 454, 8, 15120);
-    			add_location(label1, file$5, 453, 4, 15104);
+    			add_location(input, file$5, 454, 16, 14997);
+    			add_location(b1, file$5, 454, 123, 15104);
+    			add_location(br0, file$5, 454, 131, 15112);
+    			add_location(label0, file$5, 453, 4, 14973);
+    			add_location(br1, file$5, 456, 12, 15162);
+    			add_location(button, file$5, 484, 8, 16138);
+    			add_location(label1, file$5, 483, 4, 16122);
     			attr_dev(div1, "class", "controls right svelte-pu5kxd");
     			set_style(div1, "top", "-5em");
-    			add_location(div1, file$5, 404, 0, 13358);
+    			add_location(div1, file$5, 434, 0, 14363);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -12155,8 +12155,8 @@ var app = (function (exports) {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "change", /*input_change_input_handler*/ ctx[17]),
-    					listen_dev(input, "input", /*input_change_input_handler*/ ctx[17]),
+    					listen_dev(input, "change", /*input_change_input_handler*/ ctx[18]),
+    					listen_dev(input, "input", /*input_change_input_handler*/ ctx[18]),
     					listen_dev(
     						input,
     						"input",
@@ -12310,7 +12310,7 @@ var app = (function (exports) {
     	let sinceLastMovementEvent = 0;
 
     	let toggleFullscreen = function () {
-    		
+
     	};
 
     	let renderTerrainNavigationCursor = function (ctx) {
@@ -12338,12 +12338,12 @@ var app = (function (exports) {
     		// Adjust worldPosition coords
     		switch (direction) {
     			case "forward":
-    				$$invalidate(10, worldPosition.x += positive_forward_vector_x, worldPosition);
-    				$$invalidate(10, worldPosition.z += positive_forward_vector_z, worldPosition);
+    				$$invalidate(11, worldPosition.x += positive_forward_vector_x, worldPosition);
+    				$$invalidate(11, worldPosition.z += positive_forward_vector_z, worldPosition);
     				break;
     			case "backward":
-    				$$invalidate(10, worldPosition.x -= positive_forward_vector_x, worldPosition);
-    				$$invalidate(10, worldPosition.z -= positive_forward_vector_z, worldPosition);
+    				$$invalidate(11, worldPosition.x -= positive_forward_vector_x, worldPosition);
+    				$$invalidate(11, worldPosition.z -= positive_forward_vector_z, worldPosition);
     				break;
     		} // // Need better math for lateral movement...
 
@@ -12365,11 +12365,11 @@ var app = (function (exports) {
     		//         worldPosition.z -= positive_forward_vector_x;
     		//     }
     		//     break;
-    		if (worldPosition.x < -terrainWidth * 0.45) $$invalidate(10, worldPosition.x = -terrainWidth * 0.45, worldPosition);
+    		if (worldPosition.x < -terrainWidth * 0.45) $$invalidate(11, worldPosition.x = -terrainWidth * 0.45, worldPosition);
 
-    		if (terrainWidth * 0.45 < worldPosition.x) $$invalidate(10, worldPosition.x = terrainWidth * 0.45, worldPosition);
-    		if (worldPosition.z < -terrainDepth * 0.45) $$invalidate(10, worldPosition.z = -terrainDepth * 0.45, worldPosition);
-    		if (terrainDepth * 0.45 < worldPosition.z) $$invalidate(10, worldPosition.z = terrainDepth * 0.45, worldPosition);
+    		if (terrainWidth * 0.45 < worldPosition.x) $$invalidate(11, worldPosition.x = terrainWidth * 0.45, worldPosition);
+    		if (worldPosition.z < -terrainDepth * 0.45) $$invalidate(11, worldPosition.z = -terrainDepth * 0.45, worldPosition);
+    		if (terrainDepth * 0.45 < worldPosition.z) $$invalidate(11, worldPosition.z = terrainDepth * 0.45, worldPosition);
 
     		// Pass event to SvelteGL App for view update
     		dispatch("move");
@@ -12379,9 +12379,19 @@ var app = (function (exports) {
     		}
     	};
 
+    	let tryDateTime = function (value) {
+    		let toDate = value;
+
+    		try {
+    			if (parseInt(value) > 1577810000000) toDate = new Date(value).toString().match(/(.+) GMT/)[1];
+    		} finally {
+    			return toDate;
+    		}
+    	};
+
     	let zoom = function (y) {
-    		$$invalidate(10, worldPosition.y = y, worldPosition);
-    		$$invalidate(10, worldPosition.r = Math.pow(2, -y / 4), worldPosition);
+    		$$invalidate(11, worldPosition.y = y, worldPosition);
+    		$$invalidate(11, worldPosition.r = Math.pow(2, -y / 4), worldPosition);
 
     		// Pass event to SvelteGL App for view update
     		dispatch("move");
@@ -12426,8 +12436,8 @@ var app = (function (exports) {
     				mouse_y = current_y;
 
     				if (mouse_down) {
-    					$$invalidate(10, worldPosition.x += scale_correct * (terrainWidth / 2 * delta_x / parseInt(cursorCanvas.style.width.substring(-2, 3))), worldPosition);
-    					$$invalidate(10, worldPosition.z += scale_correct * (terrainDepth / 2 * delta_y / parseInt(cursorCanvas.style.height.substring(-2, 3))), worldPosition);
+    					$$invalidate(11, worldPosition.x += scale_correct * (terrainWidth / 2 * delta_x / parseInt(cursorCanvas.style.width.substring(-2, 3))), worldPosition);
+    					$$invalidate(11, worldPosition.z += scale_correct * (terrainDepth / 2 * delta_y / parseInt(cursorCanvas.style.height.substring(-2, 3))), worldPosition);
 
     					// Pass event to SvelteGL App for view update
     					dispatch("move");
@@ -12580,6 +12590,27 @@ var app = (function (exports) {
     			if (!!navContext !== true) {
     				const mapCursor = document.getElementById("terrain-navigation-cursor");
     				navContext = terrainNavigationCursor(mapCursor, c);
+    				let intro;
+    				let sinceLastMoveBack = new Date().getTime();
+
+    				const loop = () => {
+    					if (zoomY > -2.5) {
+    						$$invalidate(8, zoomY -= 0.15);
+    						zoom(-zoomY.toFixed(2));
+
+    						if (new Date().getTime() - sinceLastMoveBack > 66) {
+    							sinceLastMoveBack = new Date().getTime();
+    							triggerMovement("backward");
+    						}
+
+    						intro = requestAnimationFrame(loop);
+    					} else {
+    						$$invalidate(8, zoomY = -2.5);
+    						zoom(-zoomY);
+    					}
+    				};
+
+    				setTimeout(loop, 533);
     			}
 
     			$$invalidate(7, toggleFullscreen = event => {
@@ -12648,17 +12679,17 @@ var app = (function (exports) {
     	}
 
     	$$self.$set = $$props => {
-    		if ("title" in $$props) $$invalidate(11, title = $$props.title);
+    		if ("title" in $$props) $$invalidate(12, title = $$props.title);
     		if ("color" in $$props) $$invalidate(3, color = $$props.color);
-    		if ("extent" in $$props) $$invalidate(12, extent = $$props.extent);
+    		if ("extent" in $$props) $$invalidate(13, extent = $$props.extent);
     		if ("groups" in $$props) $$invalidate(0, groups = $$props.groups);
     		if ("options" in $$props) $$invalidate(1, options = $$props.options);
     		if ("rangeOptions" in $$props) $$invalidate(4, rangeOptions = $$props.rangeOptions);
     		if ("rangeValues" in $$props) $$invalidate(2, rangeValues = $$props.rangeValues);
-    		if ("timeExtent" in $$props) $$invalidate(13, timeExtent = $$props.timeExtent);
-    		if ("viewLocation" in $$props) $$invalidate(14, viewLocation = $$props.viewLocation);
-    		if ("viewTarget" in $$props) $$invalidate(15, viewTarget = $$props.viewTarget);
-    		if ("worldPosition" in $$props) $$invalidate(10, worldPosition = $$props.worldPosition);
+    		if ("timeExtent" in $$props) $$invalidate(14, timeExtent = $$props.timeExtent);
+    		if ("viewLocation" in $$props) $$invalidate(15, viewLocation = $$props.viewLocation);
+    		if ("viewTarget" in $$props) $$invalidate(16, viewTarget = $$props.viewTarget);
+    		if ("worldPosition" in $$props) $$invalidate(11, worldPosition = $$props.worldPosition);
     	};
 
     	$$self.$capture_state = () => ({
@@ -12693,6 +12724,7 @@ var app = (function (exports) {
     		toggleFullscreen,
     		renderTerrainNavigationCursor,
     		triggerMovement,
+    		tryDateTime,
     		zoom,
     		zoomY,
     		terrainNavigationCursor,
@@ -12700,17 +12732,17 @@ var app = (function (exports) {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("title" in $$props) $$invalidate(11, title = $$props.title);
+    		if ("title" in $$props) $$invalidate(12, title = $$props.title);
     		if ("color" in $$props) $$invalidate(3, color = $$props.color);
-    		if ("extent" in $$props) $$invalidate(12, extent = $$props.extent);
+    		if ("extent" in $$props) $$invalidate(13, extent = $$props.extent);
     		if ("groups" in $$props) $$invalidate(0, groups = $$props.groups);
     		if ("options" in $$props) $$invalidate(1, options = $$props.options);
     		if ("rangeOptions" in $$props) $$invalidate(4, rangeOptions = $$props.rangeOptions);
     		if ("rangeValues" in $$props) $$invalidate(2, rangeValues = $$props.rangeValues);
-    		if ("timeExtent" in $$props) $$invalidate(13, timeExtent = $$props.timeExtent);
-    		if ("viewLocation" in $$props) $$invalidate(14, viewLocation = $$props.viewLocation);
-    		if ("viewTarget" in $$props) $$invalidate(15, viewTarget = $$props.viewTarget);
-    		if ("worldPosition" in $$props) $$invalidate(10, worldPosition = $$props.worldPosition);
+    		if ("timeExtent" in $$props) $$invalidate(14, timeExtent = $$props.timeExtent);
+    		if ("viewLocation" in $$props) $$invalidate(15, viewLocation = $$props.viewLocation);
+    		if ("viewTarget" in $$props) $$invalidate(16, viewTarget = $$props.viewTarget);
+    		if ("worldPosition" in $$props) $$invalidate(11, worldPosition = $$props.worldPosition);
     		if ("dispatch" in $$props) $$invalidate(9, dispatch = $$props.dispatch);
     		if ("formatPlayTime" in $$props) formatPlayTime = $$props.formatPlayTime;
     		if ("mouse_x" in $$props) mouse_x = $$props.mouse_x;
@@ -12728,7 +12760,8 @@ var app = (function (exports) {
     		if ("toggleFullscreen" in $$props) $$invalidate(7, toggleFullscreen = $$props.toggleFullscreen);
     		if ("renderTerrainNavigationCursor" in $$props) renderTerrainNavigationCursor = $$props.renderTerrainNavigationCursor;
     		if ("triggerMovement" in $$props) triggerMovement = $$props.triggerMovement;
-    		if ("zoom" in $$props) $$invalidate(35, zoom = $$props.zoom);
+    		if ("tryDateTime" in $$props) $$invalidate(10, tryDateTime = $$props.tryDateTime);
+    		if ("zoom" in $$props) $$invalidate(36, zoom = $$props.zoom);
     		if ("zoomY" in $$props) $$invalidate(8, zoomY = $$props.zoomY);
     		if ("terrainNavigationCursor" in $$props) terrainNavigationCursor = $$props.terrainNavigationCursor;
     	};
@@ -12754,6 +12787,7 @@ var app = (function (exports) {
     		toggleFullscreen,
     		zoomY,
     		dispatch,
+    		tryDateTime,
     		worldPosition,
     		title,
     		extent,
@@ -12780,18 +12814,18 @@ var app = (function (exports) {
     			create_fragment$f,
     			safe_not_equal,
     			{
-    				title: 11,
+    				title: 12,
     				color: 3,
-    				extent: 12,
+    				extent: 13,
     				groups: 0,
     				options: 1,
     				rangeOptions: 4,
     				rangeValues: 2,
-    				timeExtent: 13,
-    				viewLocation: 14,
-    				viewTarget: 15,
-    				worldPosition: 10,
-    				init: 16
+    				timeExtent: 14,
+    				viewLocation: 15,
+    				viewTarget: 16,
+    				worldPosition: 11,
+    				init: 17
     			},
     			[-1, -1]
     		);
@@ -12806,15 +12840,15 @@ var app = (function (exports) {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*title*/ ctx[11] === undefined && !("title" in props)) {
+    		if (/*title*/ ctx[12] === undefined && !("title" in props)) {
     			console_1$1.warn("<NavigationControls> was created without expected prop 'title'");
     		}
 
-    		if (/*viewLocation*/ ctx[14] === undefined && !("viewLocation" in props)) {
+    		if (/*viewLocation*/ ctx[15] === undefined && !("viewLocation" in props)) {
     			console_1$1.warn("<NavigationControls> was created without expected prop 'viewLocation'");
     		}
 
-    		if (/*viewTarget*/ ctx[15] === undefined && !("viewTarget" in props)) {
+    		if (/*viewTarget*/ ctx[16] === undefined && !("viewTarget" in props)) {
     			console_1$1.warn("<NavigationControls> was created without expected prop 'viewTarget'");
     		}
     	}
@@ -12908,7 +12942,7 @@ var app = (function (exports) {
     	}
 
     	get init() {
-    		return this.$$.ctx[16];
+    		return this.$$.ctx[17];
     	}
 
     	set init(value) {
@@ -14521,7 +14555,7 @@ var app = (function (exports) {
     	let { options = {
     		"labels": ["Show Terrain Cursor"], //, "Show Quad Extents", "Filter Events By Time", " Play Time Loop" ],
     		"values": [showCursor], //, showQuads, showByTime, playTimeLoop ]
-    		
+
     	} } = $$props;
 
     	let { ranges = {
@@ -16861,7 +16895,7 @@ var app = (function (exports) {
     		max: [eventTime + 10000], //, 1.0 , 2.0, 180.0, 100.0 ],
     		step: [100], //, 0.05, 0.25, 15.0, 10.0 ],
     		values: [eventTime], //, a, h, rot, 100 ]
-    		
+
     	};
 
     	let timeExtent = [eventTime - 10000, eventTime + 10000];
@@ -16891,7 +16925,7 @@ var app = (function (exports) {
     		return offsetH;
     	}
 
-    	
+
     	let controlInit;
 
     	// initial view
@@ -17499,7 +17533,7 @@ var app = (function (exports) {
     							// console.log(i, k, heightmap[i][k]);
     							d["height"] = heightmap[i][k];
     						} catch(e) {
-    							
+
     						} // console.log(i, k);
 
     						d["t"] = event.data["t"];
@@ -30534,7 +30568,7 @@ var app = (function (exports) {
           var t = y * ca - x * sa;
           x = x * ca + y * sa;
           y = t;
-        }    
+        }
         return [x + tx, y + ty];
       }
       projection.invert = function(p) {
@@ -32782,7 +32816,7 @@ var app = (function (exports) {
           step = start, start = stop, stop = step;
           step = i0, i0 = i1, i1 = step;
         }
-        
+
         while (maxIter-- > 0) {
           step = tickIncrement(start, stop, count);
           if (step === prestep) {
@@ -39414,7 +39448,7 @@ var app = (function (exports) {
     			date: d["date"],
     			price: +d["price"], // make number
     			qt: +d["qt"], // make number
-    			
+
     		}));
     	}
 
@@ -41843,7 +41877,7 @@ var app = (function (exports) {
     	let isFullscreen = false;
 
     	let toggleFullscreen = function () {
-    		
+
     	};
 
     	const init = function () {
@@ -42971,7 +43005,7 @@ var app = (function (exports) {
     	};
 
     	let updateWorld = event => {
-    		
+
     	}; // console.log(event);
 
     	onMount(() => {
