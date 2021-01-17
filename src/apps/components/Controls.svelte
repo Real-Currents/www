@@ -150,7 +150,7 @@
     }
 </style>
 
-<div class="controls right">
+<div class="controls right" style="top: -5em;">
 
     <h4>{ title }</h4>
 

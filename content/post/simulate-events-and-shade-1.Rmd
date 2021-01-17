@@ -320,18 +320,14 @@ normals <- map$normals
 textureCoords <- map$textureCoords
 ```
 
-```{r rayshader_high_dim, cache = FALSE, echo = TRUE, results = "asis"}
+
+```{r rayshader_high_dim, cache = TRUE, echo = TRUE, results = "asis"}
 xparts <- 2
 yparts <- 2
 width <- ncol(heights)
 height <- nrow(heights)
 quad_width <- floor(width / xparts)
 quad_height <- floor(height / yparts)
-
-#print(paste0("data width: ", width))
-#print(paste0("data height: ", height))
-#print(paste0("quad width: ", quad_width))
-#print(paste0("quad height: ", quad_height))
 
 image_shaded <- array(dim = c(height, width, 3))
 
@@ -381,13 +377,6 @@ for (j in 1:yparts) {
 
         for (y in 1:quad_height) {
             for (x in 1:quad_width ) {
-                # sanity check
-                #image_shaded[quad_height_start + y, quad_width_start + x, ] <- c(
-                #    image_color[quad_height_start + y, quad_width_start + x + (0 * width)],
-                #    image_color[quad_height_start + y, quad_width_start + x + (1 * width)],
-                #    image_color[quad_height_start + y, quad_width_start + x + (2 * width)]
-                #)
-
                 # combine shadow with colormap, with a value ratio of 1:2 respectively
                 image_shaded[quad_height_start + y, quad_width_start + x, ] <- c(
                     ((single_angle_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (0 * width)]),
