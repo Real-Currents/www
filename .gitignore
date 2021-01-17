@@ -12,6 +12,7 @@ data
 dist
 log
 man
+modules
 node_modules
 public
 static
