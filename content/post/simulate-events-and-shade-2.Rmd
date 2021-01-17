@@ -246,9 +246,9 @@ png::writePNG(map$normal_array, normal_test_file)
 cat(paste0('<img id="heightmap" src="/post/', normal_test_file, '" style="float: right; width:256px; padding: 1%;" />'))
 ```
 
-In part 2, I continue to employ `mapTerrainCoords` and the ray-tracing shading methods provided by [rayshader](https://github.com/tylermorganwall/rayshader) that were explored in [Generating Planar Terrain Mesh](post/terrain) and [Events And Shade: Part 1](post/simulate-events-and-shade-1), respectively, to generate the terrain height maps, normal maps and shaded textures.
+In part 2, I continue to employ `mapTerrainCoords` that was developed in [Generating Planar Terrain Mesh](post/terrain) to generate the terrain height maps and normal maps, as well as the ray-traced shading methods provided by <a href="https://github.com/tylermorganwall/rayshader" target="_blank">rayshader</a> that were explored in [Events And Shade: Part 1](post/simulate-events-and-shade-1) to produce the shaded texture map.
 
-```{r rayshaded_map, cache = FALSE, echo = FALSE, results = "asis"}
+```{r rayshaded_map, cache = FALSE, echo = TRUE, results = "asis"}
 xparts <- 2
 yparts <- 2
 width <- ncol(heights)
@@ -256,15 +256,7 @@ height <- nrow(heights)
 quad_width <- floor(width / xparts)
 quad_height <- floor(height / yparts)
 
-#print(paste0("data width: ", width))
-#print(paste0("data height: ", height))
-#print(paste0("quad width: ", quad_width))
-#print(paste0("quad height: ", quad_height))
-
 image_shaded <- array(dim = c(height, width, 3))
-
-#print(paste0("image width: ", ncol(image_shaded)))
-#print(paste0("image height: ", nrow(image_shaded)))
 
 for (j in 1:yparts) {
     for (i in 1:xparts) {
@@ -289,7 +281,7 @@ for (j in 1:yparts) {
             }
         }
 
-        single_angle_shadow <- (revx_elmat %>%
+        terrain_shadow <- (revx_elmat %>%
             ray_shade(
                 maxsearch = floor(sqrt(nrow(elmat)^2 + ncol(elmat)^2)) / 64,
                 zscale = 100, sunaltitude = 45, sunangle = sunangle, lambert = TRUE,
@@ -297,22 +289,22 @@ for (j in 1:yparts) {
         )
 
         if (file.exists("data")) {
-            rayshader_test_file <- paste0("data/terrain-rayshaded-", (i - 1), "", (j - 1), ".png")
+            terrain_shademap <- paste0("data/terrain-rayshaded-", (i - 1), "", (j - 1), ".png")
         } else {
-            rayshader_test_file <- file.choose(new = TRUE)
+            terrain_shademap <- file.choose(new = TRUE)
         }
 
         # image function and ggplot are slow; save with PNG function from PNG package.
-        png::writePNG(t(single_angle_shadow), rayshader_test_file)
+        png::writePNG(t(terrain_shadow), terrain_shademap)
 
         for (y in 1:quad_height) {
             for (x in 1:quad_width ) {
 
                 # combine shadow with colormap, with a value ratio of 1:2 respectively
                 image_shaded[quad_height_start + y, quad_width_start + x, ] <- c(
-                    ((single_angle_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (0 * width)]),
-                    ((single_angle_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (1 * width)]),
-                    ((single_angle_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (2 * width)])
+                    ((terrain_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (0 * width)]),
+                    ((terrain_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (1 * width)]),
+                    ((terrain_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (2 * width)])
                 )
             }
         }

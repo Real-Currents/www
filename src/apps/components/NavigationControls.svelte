@@ -342,9 +342,9 @@
                 const loop = () => {
 
                     if (zoomY > -2.5) {
-                        zoomY -= 0.15;
+                        zoomY -= 0.125;
                         zoom(-(zoomY.toFixed(2)));
-                        if (((new Date()).getTime() - sinceLastMoveBack) > 66) {
+                        if (((new Date()).getTime() - sinceLastMoveBack) > 45) {
                             sinceLastMoveBack = (new Date()).getTime();
                             triggerMovement('backward');
                         }
