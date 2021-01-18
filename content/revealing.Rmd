@@ -3,6 +3,10 @@ title: 'Revealing the Invisible'
 author: John
 date: '2020-07-11'
 draft: false
+always_allow_html: true
+output:
+  html_document:
+    keep_md: yes
 categories:
   - R
 tags:

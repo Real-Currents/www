@@ -4,4 +4,5 @@ if (!require("blogdown")) {
     library(blogdown)
     blogdown::install_hugo()
 }
-blogdown::build_site(local = TRUE)
+
+blogdown::build_site(build_rmd = TRUE, local = TRUE)

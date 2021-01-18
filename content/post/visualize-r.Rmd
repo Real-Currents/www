@@ -3,6 +3,10 @@ title: Visualizing R Data with SveltR
 author: John
 date: '2020-03-14'
 draft: false
+always_allow_html: true
+output:
+  html_document:
+    keep_md: yes
 categories:
   - GL
 tags:

@@ -3,9 +3,12 @@ languageCode = "en-us"
 languageLang = "en"
 title = "Real~Currents"
 
-ignoreFiles = ["_cache$", "md$", "Rmd$", "Rmarkdown$" ]
+ignoreFiles = ["_cache$", "html$", "Rmd$", "Rmarkdown$" ]
 
 # RSS, categories and tags disabled for an easy start
 # See configuration options for more details:
 # https://gohugo.io/getting-started/configuration/#toml-configuration
 disableKinds = ["RSS", "taxonomy", "taxonomyTerm"]
+
+[markup]
+defaultMarkdownHandler = "blackfriday"

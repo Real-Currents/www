@@ -3,6 +3,10 @@ title: 'Events And Shade: Part 2'
 author: John
 date: '2020-11-19'
 draft: false
+always_allow_html: true
+output:
+  html_document:
+    keep_md: yes
 categories:
   - GL
 tags:

@@ -3,7 +3,10 @@ title: "RayShader"
 author: John
 date: '2020-08-16'
 draft: false
-output: html_document
+always_allow_html: true
+output:
+  html_document:
+    keep_md: yes
 categories:
   - GL
 tags:

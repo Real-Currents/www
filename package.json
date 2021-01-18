@@ -88,7 +88,7 @@
     "build:_preview": "Rscript src/build_preview.R",
     "build:_rollup": "rollup -c",
     "build:_webpack": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
-    "install-extra:fedora": "sudo dnf install armadillo armadillo-devel pandoc gdal-devel geos-devel proj-devel mesa-libGLU mesa-libGLU-devel udunits2-devel",
+    "install-extra:fedora": "sudo dnf install -y armadillo armadillo-devel libcurl-devel libgit2-devel libjpeg-devel libpng-devel gdal gdal-devel geos-devel mesa-libGLU mesa-libGLU-devel pandoc proj-devel udunits2-develp",
     "lint": "eslint src",
     "live-preview": "run-p live-preview:**",
     "live-preview:_webpack": "webpack --config webpack.dev.js -w",
