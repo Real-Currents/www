@@ -1,0 +1,93 @@
+---
+title: "Hartford Strategic Vision 2020"
+author: John
+date: '2021-01-22'
+output: html_notebook
+---
+
+Strategic Vision
+================
+
+```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
+options(warn = -1)
+working_dir <- getwd()
+print(working_dir)
+if (!require("knitr")) {
+  install.packages("knitr")
+  library("knitr")
+}
+knitr::opts_chunk$set(cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+
+if (!require(akima) || !require(magick)  || !require(png)  || !require(reshape2) || !require(viridis)) {
+    install.packages(c("akima", "ggplot2", "magick", "png", "reshape2", "viridis"))
+    devtools::install_github("tylermorganwall/rayimage@7a9a138e10e19119c88e960f9cfb191d1fdae002")
+    devtools::install_github("tylermorganwall/terrainmeshr@e112055e47033508cc45c8246b8dc0a0e94920f7")
+    devtools::install_github("tylermorganwall/rayshader@d0c9bd94be95c44eff6e7d8da5eadff070dc11db")
+    devtools::install_github("MilesMcBain/slippymath")
+    devtools::install_github("neilcharles/geoviz")
+}
+```
+
+
+<br /><br />
+
+```{r geoviz_test, cache = FALSE, dev.args = list(bg = 'transparent'), echo = FALSE}
+options(warn = -1)
+suppressMessages(library(geoviz))
+suppressMessages(library(rayshader))
+suppressMessages(library(raster))
+suppressMessages(library(slippymath))
+
+# Load an example IGC (GPS track log) file
+igc <- example_igc()
+
+# Load a small example elevation raster showing a piece of the English Lake district
+DEM <- example_raster()
+
+# import desert heightmap demo
+if (file.exists("data/57-Elevation_DEMHF0p7m2016_N5145E281.img")) {
+    localdem <- raster::raster("data/57-Elevation_DEMHF0p7m2016_N5145E281.img")
+} else {
+    localdem <- file.choose()
+}
+
+DEM <- raster(localdem)
+
+sunangle <- 270
+
+zscale <- 25
+
+# Get a Stamen map that will cover our DEM
+stamen_overlay <- slippy_overlay(DEM, image_source = "stamen", image_type = "watercolor", png_opacity = 0.3)
+
+# Make an elevation shading layer with dark valleys and light peaks (not essential but I like it!)
+suppressMessages(elevation_overlay <- elevation_shade(DEM, elevation_palette = c("#000000", "#FFFFFF"), png_opacity = 0.6))
+
+# Calculate the 'rayshader' scene (see 'rayshader' documentation)
+elmat <- matrix(
+  raster::extract(DEM, raster::extent(DEM), method = 'bilinear'),
+  nrow = ncol(DEM),
+  ncol = nrow(DEM)
+)
+
+scene <- elmat %>%
+  sphere_shade(sunangle = sunangle, texture = "bw") %>%
+  add_overlay(elevation_overlay) %>%
+  add_overlay(stamen_overlay)
+
+scene %>%
+  plot_map()
+
+## Render the 'rayshader' scene
+#rayshader::plot_3d(
+#  scene,
+#  elmat,
+#  zscale = zscale,
+#  solid = FALSE,
+#  shadow = TRUE,
+#  shadowdepth = -100
+#)
+```
+
+MAPPING THE FUTURE OF HARTFORD, VT

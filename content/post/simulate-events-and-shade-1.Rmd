@@ -15,9 +15,7 @@ tags:
   - WebGL
 ---
 
-<div id="simulation-app" role="main" style="width: 100%;">
-&nbsp;
-</div>
+<div id="simulation-app" role="main" style="width: 100%;">&nbsp;</div>
 
 Events & Shade Across Time & Terrain: Part 1
 ============================================
