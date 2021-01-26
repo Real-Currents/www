@@ -5,7 +5,7 @@ if (file.exists("~/.Rprofile")) {
 
 options(
         blogdown.generator = "hugo",
-        #blogdown.method = "custom",
+        blogdown.method = "markdown",
         blogdown.new_bundle = FALSE,       # force making page bundle (i.e folder instead of single file)
         blogdown.author = "John",          # Who the author of posts is
         blogdown.ext = '.Rmd',             # File extension for posts
