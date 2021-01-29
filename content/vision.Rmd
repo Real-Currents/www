@@ -5,8 +5,13 @@ date: '2021-01-22'
 output: html_notebook
 ---
 
-Strategic Vision
+Victorious Hartford
 ================
+
+|                   |                   |
+|-------------------|-------------------|
+| John Hall         | Rachel Edens      |
+| Ally Tufenkjian   | Julia Dalphin     |
 
 ```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
 options(warn = -1)
@@ -89,5 +94,7 @@ scene %>%
 #  shadowdepth = -100
 #)
 ```
+
+### Strategic Vision For Victory in Hartford
 
 MAPPING THE FUTURE OF HARTFORD, VT
