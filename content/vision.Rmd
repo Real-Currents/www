@@ -6,13 +6,14 @@ output: html_notebook
 ---
 
 Victorious Hartford
-================
+===================
+Candidates for Selectboard 2021
 
 |                   |                   |
 |-------------------|-------------------|
+| Dan Fraser        |                   |
 | John Hall         | Rachel Edens      |
 | Ally Tufenkjian   | Julia Dalphin     |
-
 
 ```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
 options(warn = -1)
@@ -102,4 +103,4 @@ scene %>%
 
 Hartford is a land of three rivers cradling countless flora and fauna. Trees cover a cumulative 23 square miles of the total 45 square mile expanse that is Hartford. Across that expanse, almost ten thousand souls live and labor and depend on the stability of the land beneath their feet and the social and economic systems that bind our realities together. These systems are as fragile as any forest ecosystem, possibly more so, and like any river, great care and maintenance and awareness are required to keep the water flowing to every place and every mouth that needs it.
 
-As issues within our community come to the surface, be they challenges to our economic well-being, environmental health, social cohesion, or otherwise, we must honestly evaluate strategies to deepen our understanding of these challenges and plot a course of action that will fundamentally improve the ways that the Town relates to its personnel and to its residents. I understand that both the process of acknowledging real issues, and the genesis of effective strategies must be driven by the groups on which those issues have the greatest impact. We need to frequently remind ourselves of that dynamic value and accept that when we allow the powers of choice and action to stagnate, we lose the ability to adapt to disasters of all forms, be they biological, climactic, or economic. Every person in our community must freely exercise these powers in order for all of us to be victorious.
+As issues within our community come to the surface, be they challenges to our economic well-being, environmental health, social cohesion, or otherwise, we must honestly evaluate strategies to deepen our understanding of these challenges and plot a course of action that will fundamentally improve the ways that the Town relates to its personnel and to its residents. I understand that both the process of acknowledging real issues, and the genesis of effective strategies must be driven by the groups on which those issues have the greatest impact. We need to frequently remind ourselves of that dynamic value and accept that when we allow the powers of choice and action to stagnate, we lose the ability to adapt to disasters of all forms, be they biological, climactic, or economic. Every person in our community must be granted access and agency over these powers of governance in order for all of us to be victorious.
