@@ -8,7 +8,7 @@ output: html_notebook
 Victorious Hartford
 ===================
 
-## A Strategic Vision
+## A Strategic Vision By John Hall
 
 ```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
 options(warn = -1)
@@ -108,9 +108,9 @@ Candidates for Selectboard 2021
 </audio>
 </div>
 
-<br /><br />
+<span id="text_title" style="display:none">Vision</span>
 
-<em>Victorious Hartford</em> or <em>Victory For Hartford</em> means discovering and building strength from within our community. By strength, I mean creative problem solving, health, resilience, trust and well-being. We can see that the challenges of the recent past and of the near future will continue to push our current resources and systems to the absolute limit of their capacity to respond and to stabilize. We, and by we I mean the entire community, must consciously and continuously re-evaluate and re-invest in our collective capabilities ── enhancing our strengths, shining light on our blind spots and working through our shortcomings ── in order to overcome these challenges.
+<em>Victorious Hartford&nbsp;&nbsp;</em> or <em>Victory For Hartford&nbsp;&nbsp;</em> means discovering and building strength from within our community. By strength, I mean creative problem solving, health, resilience, trust and well-being. We can see that the challenges of the recent past and of the near future will continue to push our current resources and systems to the absolute limit of their capacity to respond and to stabilize. We, and by we I mean the entire community, must consciously and continuously re-evaluate and re-invest in our collective capabilities ── enhancing our strengths, shining light on our blind spots and working through our shortcomings ── in order to overcome these challenges.
 
 Hartford is a land of three rivers cradling countless flora and fauna. Trees cover a cumulative 23 square miles of the total 45 square mile expanse that is Hartford. Across that expanse, almost ten thousand souls live and labor and depend on the stability of the land beneath their feet and the social and economic systems that bind our realities together. These systems are as fragile as any forest ecosystem, possibly more so, and like any river, great care and maintenance and awareness are required to keep the water flowing to every place and every mouth that needs it.
 
