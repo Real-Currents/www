@@ -7,13 +7,8 @@ output: html_notebook
 
 Victorious Hartford
 ===================
-Candidates for Selectboard 2021
 
-|                   |                   |
-|-------------------|-------------------|
-| Dan Fraser        |                   |
-| John Hall         | Rachel Edens      |
-| Ally Tufenkjian   | Julia Dalphin     |
+## A Strategic Vision
 
 ```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
 options(warn = -1)
@@ -35,9 +30,6 @@ if (!require(akima) || !require(magick)  || !require(png)  || !require(reshape2)
     devtools::install_github("neilcharles/geoviz")
 }
 ```
-
-
-<br /><br />
 
 ```{r geoviz_test, cache = FALSE, dev.args = list(bg = 'transparent'), echo = FALSE}
 options(warn = -1)
@@ -97,9 +89,28 @@ scene %>%
 #)
 ```
 
-### A Strategic Vision of Victory for Hartford
+<p style="margin-top: -35px;"></p>
 
-"Victorious Hartford" or "Victory For Hartford" means discovering and building strength from within our community. By strength, I mean creative problem solving, health, resilience, trust and well-being. We can see that the challenges of the recent past and of the near future will continue to push our current resources and systems to the absolute limit of their capacity to respond and to stabilize. We, and by we I mean the entire community, must consciously and continuously re-evaluate and re-invest in our collective capabilities ── enhancing our strengths, shining light on our blind spots and working through our shortcomings ── in order to overcome these challenges.
+Candidates for Selectboard 2021
+
+|                             |                             |
+|-----------------------------|-----------------------------|
+| Dan Fraser      &nbsp;&nbsp;|                 &nbsp;&nbsp;|
+| John Hall       &nbsp;&nbsp;| Rachel Edens    &nbsp;&nbsp;|
+| Ally Tufenkjian &nbsp;&nbsp;| Julia Dalphin   &nbsp;&nbsp;|
+
+<div id="stream" style="text-align:center">
+<a id="aud1_play" href="/vision#" onclick="(function(evt) { evt.target.innerHTML='Now Playing'; evt.target.onclick = null; window.userTriggered=true; }) (event || window.event)">Play</a>
+&nbsp;<br /><br />
+<!--a href="http://www.w3.org/2010/05/video/mediaevents.html" target="_blank">Media Help</a-->
+<audio id="aud1" controls="true" preload="auto" muted="true" style="width:280px;">
+<source src="/vision/vision.mp3" />
+</audio>
+</div>
+
+<br /><br />
+
+<em>Victorious Hartford</em> or <em>Victory For Hartford</em> means discovering and building strength from within our community. By strength, I mean creative problem solving, health, resilience, trust and well-being. We can see that the challenges of the recent past and of the near future will continue to push our current resources and systems to the absolute limit of their capacity to respond and to stabilize. We, and by we I mean the entire community, must consciously and continuously re-evaluate and re-invest in our collective capabilities ── enhancing our strengths, shining light on our blind spots and working through our shortcomings ── in order to overcome these challenges.
 
 Hartford is a land of three rivers cradling countless flora and fauna. Trees cover a cumulative 23 square miles of the total 45 square mile expanse that is Hartford. Across that expanse, almost ten thousand souls live and labor and depend on the stability of the land beneath their feet and the social and economic systems that bind our realities together. These systems are as fragile as any forest ecosystem, possibly more so, and like any river, great care and maintenance and awareness are required to keep the water flowing to every place and every mouth that needs it.
 
