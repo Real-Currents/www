@@ -1,9 +1,23 @@
-{{ define "footer" }}
-    </div><!-- content -->
-</div>
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="{{ .Site.RSSLink | relURL }}" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
 
-<!--div id="control" onclick="(function(evt) { if (evt.target.innerHTML=='Play') { if (!!window.playVideo) { window.playVideo(); evt.target.parentNode.className='playing'; var playToggle = window.document.querySelector('#aud1_play'); if (!!playToggle) playToggle.innerHTML='Now Playing'; } } } (event))" >
-    <a id="toggle_control" href="/#" onclick="(function(evt) { var playToggle = window.document.querySelector('#aud1_play'); if (aud1.muted && !window.userTriggered) { setTimeout(function () { aud1.muted=false; }, 533); window.userTriggered=true; } else if (!aud1.paused) {  if (!!playToggle && playToggle.innerHTML!='Now Playing') aud1.pause(); } window.document.querySelector('canvas#fathers').style='image-rendering: optimizespeed !important; width: 960px; height: 540px; margin-left: -240px; position: fixed; top: 25%; pointer-events: none;' } (event));">Hide Control</a>
-</div-->
+    </div>
+    {{ partial "footer_highlightjs" . }}
+    {{ partial "footer_mathjax" . }}
+    {{ template "_internal/google_analytics.html" . }}
 
-{{ end }}
+    {{ $script := .Site.Data.assets.main }}
+    {{ with $script.js }}
+    <script src="{{ relURL . }}"></script>
+    {{ end }}
+
+  </body>
+</html>

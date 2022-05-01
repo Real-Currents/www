@@ -38,7 +38,7 @@
     const navWidth = 200, navHeight = 200;
 
     let map = new Image();
-    map.src = "images/map.png";
+    map.src = "/images/map.png";
     map.style.width = navWidth + "px";
     map.style.height = navWidth + "px";
 

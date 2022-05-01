@@ -312,7 +312,7 @@
 
         window.eventQuad = eventQuad; // debug
 
-        const eventProcessor = new Worker('worker.js');
+        const eventProcessor = new Worker('/worker.js');
 
         eventProcessor.postMessage({
             "action": "Load event data",
@@ -419,7 +419,7 @@
             // webgl.pixelStorei(webgl.UNPACK_FLIP_Y_WEBGL, true);
         });
 
-        markerImage.src = "images/pin.png";
+        markerImage.src = "/images/pin.png";
 
         const faceInfos = [
             // {target: webgl.TEXTURE_CUBE_MAP_POSITIVE_X, faceColor: '#F00', textColor: '#0FF', text: '+X'},

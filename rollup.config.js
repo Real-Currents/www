@@ -1,189 +1,211 @@
+import babel from "rollup-plugin-babel";
 import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
-import svelte from 'rollup-plugin-svelte';
-import commonjs from 'rollup-plugin-commonjs';
-import copy from 'rollup-plugin-copy';
-// import del from 'rollup-plugin-delete';
+import commonjs from "rollup-plugin-commonjs";
+import copy from "rollup-plugin-copy";
 import json from 'rollup-plugin-json';
 import livereload from 'rollup-plugin-livereload';
-import resolve from 'rollup-plugin-node-resolve';
-import postcss from 'rollup-plugin-postcss';
+import resolve from "rollup-plugin-node-resolve";
+import svelte from "rollup-plugin-svelte";
+import postcss from "rollup-plugin-postcss";
+import preprocess from "svelte-preprocess";
 import shader from 'rollup-plugin-shader';
 import { terser } from 'rollup-plugin-terser';
 
-const production = !process.env.ROLLUP_WATCH;
+const postcss_config = require("./postcss.config.cjs");
+
+// const production = !process.env.NODE_ENV && !process.env.ROLLUP_WATCH;
+const production = !(
+    process.env.NODE_ENV === "dev" ||
+    process.env.NODE_ENV === "development" ||
+    process.env.NODE_ENV === "test" ||
+    process.env.ROLLUP_WATCH ||
+    process.argv.filter(arg => arg.match(/\s-w/) !== null).length > 0
+);
+
+(function (prod_value) {
+    console.log("PRODUCTION: ", prod_value);
+}(production));
 
 export default [
 
-	/* SERVER MODULES: */
-	{
-		input: 'src/modules/invoice-service.js',
-		output: {
-			dir: 'modules',
-			format: 'umd',
-			name: 'self',
-			exports: 'named',
-			extend: true
-		},
-		plugins: [
-			resolve({
-				browser: true
-			}),
+    // START BUILD: App ----
+    {
+        external: ["Shiny"],
+        input: "src/main.js",
+        output: {
+            name: "apps",
+            file: "static/main.js",
+            exports: 'named',
+            format: "iife",
+            sourcemap: true
+        },
+        plugins: [
+            babel({
+                "runtimeHelpers": true
+            }),
 
-			builtins(),
+            commonjs({ sourceMap: false }),
 
-			globals(),
+            copy({
+                targets: [
+                    { src: 'content/js-demos/data', dest: 'static/' },
+                    { src: 'content/js-demos/images', dest: 'static/' },
+                    { src: 'content/js-demos/scripts', dest: 'static/' },
+                    { src: 'content/js-demos/stymaps', dest: 'static/' },
+                    { src: "src/fonts", dest: "static/" },
+                    { src: "src/images", dest: "static/" },
+                    { src: 'src/styles/**', dest: 'static/' }
+                ]
+            }),
 
-			commonjs(),
+            json(),
 
-			json()
-		],
-		watch: {
-			clearScreen: false
-		}
-	},
+            postcss({
+                extensions: ['.css'],
+                extract: true,
+                minimize: !!production,
+                sourceMap: !production,
+                use: [['sass', {
+                    includePaths: [
+                        './src/app.css',
+                        './node_modules'
+                    ]
+                }]]
+            }),
 
-	/* WORKER MODULES: */
+            resolve({
+                browser: true,
+                dedupe: importee =>
+                    importee === "svelte" || importee.startsWith("svelte/")
+            }),
 
-	{
-		input: 'src/modules/event-processor-service.js',
-		output: {
-			sourcemap: true,
-			name: 'self',
-			format: 'umd',
-			extend: true,
-			exports: 'named',
-			file: 'public/worker.js'
-		},
-		plugins: [
-			commonjs(),
+            svelte({
+                dev: !production,
+                // hydratable: true,
+                preprocess: preprocess({
+                    postcss: postcss_config
+                })
+            }),
 
-			resolve({
-				browser: true
-			})
-		],
-		watch: {
-			clearScreen: false
-		}
-	},
+            shader({
+                // All match files will be parsed by default,
+                // but you can also specifically include/exclude files
+                include: [
+                    '../@sveltejs/gl/**/*.glsl',
+                    '**/*.glsl',
+                    '**/*.vs',
+                    '**/*.fs'
+                ],
+                // specify whether to remove comments
+                removeComments: true,   // default: true
+            }),
 
-	/* APPLICATION: */
+            // In dev mode, watch the `public` directory
+            // and refresh the browser on changes
+            !production && livereload({
+                watch: [
+                    'static/main.js',
+                    'static/main.css',
+                    'static/styles.css'
+                ], delay: 1533}
+            ),
 
-	{
-		input: 'src/main.js',
-		output: {
-			sourcemap: true,
-			format: 'iife',
-			name: 'app',
-			exports: 'named',
-			file: 'public/main.js'
-		},
-		plugins: [
-			commonjs(),
+            // In dev mode, call `npm run start` once
+            // the bundle has been generated
+            !production && serve(),
 
-			// del({
-			// 	targets: [
-			// 		'public/fonts',
-			// 		'public/images',
-			// 		'public/libs',
-			// 		'public/scripts',
-			// 		'public/styles'
-			// 	],
-			// 	verbose: true
-			// }),
+            // If we're building for production (npm run build
+            // instead of npm run dev), minify
+            production && terser()
+        ],
+        watch: {
+            chokidar: {
+                usePolling: true
+            },
+            clearScreen: false,
+            exclude: [
+                'static/*.css',
+                'static/*.js',
+                'static/**/*'
+            ],
+            include: [
+                'static/*',
+                'static/**/*',
+                'src/*.js',
+                'src/**/*.js',
+                'src/*.svelte',
+                'src/**/*.svelte'
+            ]
+        }
+    },
+    // END BUILD
 
-			copy({
-				targets: [
-					{ src: 'content/js-demos/data', dest: 'public/' },
-					{ src: 'content/js-demos/images', dest: 'public/' },
-					{ src: 'content/js-demos/scripts', dest: 'public/' },
-					{ src: 'content/js-demos/stymaps', dest: 'public/' },
-					{ src: 'src/images', dest: 'public/' },
-					{ src: 'src/styles/imports', dest: 'public/' }
-				]
-			}),
+    /* SERVER MODULE */
+    {
+        input: 'src/modules/invoice-service.js',
+        output: {
+            dir: 'modules',
+            format: 'umd',
+            name: 'self',
+            exports: 'named',
+            extend: true
+        },
+        plugins: [
+            resolve({
+                browser: true
+            }),
 
-			json(),
+            builtins(),
 
-			postcss({
-				extract: 'public/global.css',
-				plugins: [],
-				minimize: true,
-				use: [
-					['sass', {
-						includePaths: [
-							'./theme',
-							'./node_modules'
-						]
-					}]
-				]
-			}),
+            globals(),
 
-			// If you have external dependencies installed from
-			// npm, you'll most likely need these plugins. In
-			// some cases you'll need additional configuration -
-			// consult the documentation for details:
-			// https://github.com/rollup/plugins/tree/master/packages/commonjs
-			resolve({
-				browser: true,
-				dedupe: ['svelte']
-			}),
+            commonjs(),
 
-			svelte({
-				// enable run-time checks when not in production
-				dev: !production,
-				emitCss: true,
-				// we'll extract any component CSS out into
-				// a separate file - better for performance
-				css: css => {
-					css.write('public/main.css', true);
-				}
-			}),
+            json()
+        ],
+        watch: {
+            clearScreen: false
+        }
+    },
 
-			shader( {
-				// All match files will be parsed by default,
-				// but you can also specifically include/exclude files
-				include: [
-					'../@sveltejs/gl/**/*.glsl',
-					'**/*.glsl',
-					'**/*.vs',
-					'**/*.fs'
-				],
-				// specify whether to remove comments
-				removeComments: true,   // default: true
-			} ),
+    /* WORKER MODULE */
+    {
+        input: 'src/modules/event-processor-service.js',
+        output: {
+            sourcemap: true,
+            name: 'self',
+            format: 'umd',
+            extend: true,
+            exports: 'named',
+            file: 'static/worker.js'
+        },
+        plugins: [
+            commonjs(),
 
-			// In dev mode, call `npm run start` once
-			// the bundle has been generated
-			!production && serve(),
-
-			// Watch the `public` directory and refresh the
-			// browser on changes when not in production
-			!production && livereload('public'),
-
-			// If we're building for production (npm run build
-			// instead of npm run dev), minify
-			production && terser()
-		],
-		watch: {
-			clearScreen: false
-		}
-	}
+            resolve({
+                browser: true
+            })
+        ],
+        watch: {
+            clearScreen: false
+        }
+    }
 ];
 
 function serve() {
-	let started = false;
+    let started = false;
 
-	return {
-		writeBundle() {
-			if (!started) {
-				started = true;
+    return {
+        writeBundle() {
+            if (!started) {
+                started = true;
 
-				require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-					stdio: ['ignore', 'inherit', 'inherit'],
-					shell: true
-				});
-			}
-		}
-	};
+                require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+                    stdio: ['ignore', 'inherit', 'inherit'],
+                    shell: true
+                });
+            }
+        }
+    };
 }

@@ -688,7 +688,7 @@ onMount(() => {
         // webgl.pixelStorei(webgl.UNPACK_FLIP_Y_WEBGL, true);
     });
 
-    markerImage.src = "images/pin.png";
+    markerImage.src = "/images/pin.png";
 
     const faceInfos = [
         {target: webgl.TEXTURE_2D, faceColor: '#F00', textColor: '#0FF', text: '+X'},
@@ -774,7 +774,7 @@ onMount(() => {
 
         window.problem_events = [];
 
-        const eventProcessor = new Worker('worker.js');
+        const eventProcessor = new Worker('/worker.js');
 
         eventProcessor.postMessage({
             "action": "Load event data",
