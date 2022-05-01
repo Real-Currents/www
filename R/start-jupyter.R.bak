@@ -1,0 +1,16 @@
+if (!require("reticulate")) {
+  install.packages("languageserver")
+  install.packages("reticulate")
+  library("reticulate")
+  reticulate::conda_install(packages = c("jupyter_core", "ipython", "ipykernel", "python-language-server"))
+}
+
+working_dir <- getwd()
+# print(grepl("/R", getwd(), ignore.case = TRUE))
+if (grepl("/R", getwd(), ignore.case = TRUE)) {
+  working_dir <- stringr::str_replace(getwd(), "/R", "")
+  setwd(working_dir)
+  print("")
+}
+
+reticulate::source_python(paste0(working_dir, "/R/start-jupyter.py"))

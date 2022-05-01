@@ -17,3 +17,4 @@ Videos
 
 packrat/lib*
 renv/lib*
+.Rproj.user
