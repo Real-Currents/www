@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "description": "Exploring JavaScript, using both core language and client-side scripts",
   "scripts": {
-    "start": "concurrently --kill-others \"browser-sync start -c bs-config.js --ws\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,7 +16,7 @@
     "es5"
   ],
   "author": "Revlin John",
-  "license": "Creative Commons Attribution-ShareAlike 3.0 New Zealand License 2019",
+  "license": "Creative Commons Attribution-ShareAlike 3.0 New Zealand License 2013 ",
   "bugs": {
     "url": "https://github.com/Revlin/js-demos/issues"
   },
