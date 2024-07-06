@@ -2,6 +2,15 @@
 .gradle
 .idea
 .ipynb_checkpoints
+/.quarto/
+_site/
+data/
+node_modules/
+
+R/
+_targets.R
+data.*
+*.html
 .RData
 .Rhistory
 *.Rproj*
@@ -10,10 +19,9 @@ bin
 blogdown
 data
 dist
+docs
 log
 man
-modules
 node_modules
 public
 static
-*.html
