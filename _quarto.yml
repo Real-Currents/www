@@ -5,7 +5,7 @@ website:
   title: "Real~Currents"
   navbar:
     left:
-      - href: content/index.qmd
+      - href: index.qmd
         text: Home
       - content/about.qmd
 
