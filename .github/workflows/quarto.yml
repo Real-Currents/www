@@ -29,13 +29,12 @@ jobs:
         with:
           cache-version: 2
           packages: |
-            any::DT
-            any::ggplot2
+            any::renv
 
-      - name: Install R Dependencies with renv
-        uses: r-lib/actions/setup-renv@v2
-        with:
-          cache-version: 1
+#      - name: Install R dependencies with renv
+#        uses: r-lib/actions/setup-renv@v2
+#        with:
+#          cache-version: 1
 
       - name: Print GITHUB_TOKEN
         run: echo ${{ secrets.GITHUB_TOKEN }}
