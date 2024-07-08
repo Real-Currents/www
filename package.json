@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "quarto render",
-    "preview": "quarto preview"
+    "preview": "quarto preview",
+    "render:about": "cd content && quarto render about/index.qmd --to gfm --output-dir ."
   }
 }

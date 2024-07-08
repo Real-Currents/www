@@ -1,0 +1,236 @@
+---
+title: Generate_Planar_Terrain_Mesh
+author: John
+date: '2020-04-06'
+draft: false
+categories:
+  - GL
+tags:
+  - GL
+  - SvelteJS
+  - SvelteGL
+  - WebGL
+---
+
+## Generate Planar Terrain Mesh
+
+```{r setup, include=FALSE}
+options(warn = -1)
+working_dir <- getwd()
+print(working_dir)
+if (!require("knitr")) {
+  install.packages("knitr")
+  library("knitr")
+}
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+
+require(jsonlite)
+
+if (!require("png")) {
+  install.packages("png")
+}
+library(png)
+```
+
+Given a gray scale height map, I need a planar triangulated mesh to serve as the base for a terrain object + shader.
+
+I already have some tools to analyze the heightmap. What I actually need is a set of vertices (x, y, z), a normal for each vertex, a texture coordinate (s, t) for each vertex and a sequence of indices to tie everything together. I'm going to start with a smaller version of the heightmap image file which I've converted to grayscale:
+```{r gl_data, echo = FALSE, results = "asis"}
+heightmap <- data.frame(c())
+if (file.exists("data/heightmap-small.png")) {
+    heightmap <- data.frame(png::readPNG("data/heightmap-small.png"))
+} else {
+    heightmap <- data.frame(png::readPNG(file.choose()))
+}
+
+length(heightmap[, 1])
+length(heightmap[1,])
+str(heightmap)
+```
+Now for every point in the heightmap, I need to create a 3d vertex:
+```{r gl_data, echo = FALSE, results = "asis"}
+
+# make a 1.0 x 1.0 plane
+image_width <- length(heightmap[1,])
+image_height <- length(heightmap[, 1])
+image_map <- matrix(nrow = image_width, ncol = image_height)
+
+for (y in 1:image_height) {
+    for (x in 1:image_width) {
+        image_map[y, x] <- round(heightmap[y, x], 4)
+        print(paste0(round((x / image_width),4), ", ", round(y / image_height, 4), ", ", round(heightmap[y, x], 4))) # z is "up"
+        print(paste0(0.0, ", ", 0.0, ", ", 1.0)) # z is "up"
+        print(paste0(round((x / image_width),4), ", ", round(y / image_height, 4)))
+    }
+}
+
+print(length(image_map[1,]))
+print(length(image_map[,1]))
+
+# test write to png
+# png::writePNG(image_map, file.choose(new = TRUE))
+
+```
+
+```{r gl_data, echo = FALSE, results = "asis"}
+options(warn = -1)
+working_dir <- getwd()
+# print(working_dir)
+heightmap <- data.frame(c())
+if (file.exists("data/heightmap-medium.png")) {
+    heightmap <- data.frame(png::readPNG("data/heightmap-medium.png"))
+} else {
+    heightmap <- data.frame(png::readPNG(file.choose()))
+}
+
+head(heightmap)
+length(heightmap)
+str(heightmap)
+```
+
+The following line will convert the height map frame to json:
+```{r gl_data, echo = FALSE, results = "asis"}
+
+toJSON(heightmap)
+```
+
+
+So there the vertices, the normals, and the texture. Just need indices to trace the vertices into triangular faces:
+```{r gl_data, echo = FALSE, results = "asis"}
+
+# make a 1.0 x 1.0 plane
+vertices <- list()
+normals <- list()
+textureCoords <- list()
+image_width <- length(heightmap[1,])
+image_height <- length(heightmap[, 1])
+normal_array <- array(dim = c(image_height, image_width, 3))
+height_array <- list()
+height_array_x <- c()
+i <- 0
+
+for (y in 1:image_height) {
+    height_array_x <- c()
+    for (x in 1:image_width) {
+        i <- i + 1 # incremet before to start on 1
+        height_array_x <- c(height_array_x , heightmap[y, x]) # z is up
+        # height_array_x <- c(height_array_x , heightmap[(image_height + 1 - y), x]) # z is up
+        # vertices[[i]] <- c(2.0 * round((x / image_width - (1.0 / image_width) - 0.5), 4), 2.0 * round((y / image_height - (1.0 / image_height) - 0.5), 4), 0.0)  # z is "up", but use flat plane for now
+        # normals[[i]] <- c(0.0, 0.0, 1.0)
+        # textureCoords[[i]] <- c(round((x / image_width - ((image_width - x) /  (image_width * image_width))),4), round(1.0 - (y / image_height - ((image_height - y) /  (image_height * image_height))), 4)) # go to flip the y
+    }
+
+    # start mapping z normals
+    for (x in 1:image_width) {
+        normal_array[y, x,] <- c(0.0, 0.0, round(height_array_x[x], 4))
+    }
+
+    height_array[[y]] <- height_array_x
+}
+
+length(height_array_x)
+length(height_array[1])
+length(height_array[[1]])
+# print(height_array[64])
+# print(height_array[[64]])
+
+total_points <- i
+
+# Now calculate x and y normals
+for (y in 1:image_height) {
+    for (x in 1:image_width) {
+        if (x < image_width) {
+            za <- normal_array[y, x, 3]
+            zb <- normal_array[y, x + 1, 3]
+            xa <- (za - zb) # / image_width
+            # print(paste0(za, " - ", zb,  " = ", xa))
+            # normal_array[y, x,] <- c(round(xa, 6), 0.0, 0.0)
+            normal_array[y, x,] <- c(round(xa, 6), normal_array[y, x, 2], normal_array[y, x, 3])
+        }
+        if (y < image_height) {
+            za <- normal_array[y, x, 3]
+            zb <- normal_array[y + 1, x, 3]
+            ya <- (za - zb) # / image_height
+            # print(paste0(za, " - ", zb,  " = ", ya))
+            # normal_array[y, x,] <- c(0.0, round(ya, 6), 0.0)
+            normal_array[y, x,] <- c(normal_array[y, x, 1], round(ya, 6), normal_array[y, x, 3])
+        }
+    }
+
+    height_array[[y]] <- height_array_x
+}
+
+print(length(normal_array[1,1,]))
+print(length(normal_array[,1,1]))
+print(length(normal_array[,,1]))
+
+# test write to png
+# png::writePNG(normal_array, file.choose(new = TRUE))
+```
+
+Now I have some idea of what this is supposed to look like so I can verify whether or not my indexing algorithm works...
+```{r gl_data, echo = FALSE, results = "asis"}
+currentRow <- 1
+indices <- c()
+indices <- c(indices, (image_width - 1)) # start at the end,
+indices <- c(indices, (image_width - 2)) # walk back one,
+indices <- c(indices, (image_width - 1 + image_width)) # cross diagnally down right, landing on the next row
+indices <- c(indices, (image_width - 1 + (image_width - 1)))# start again on one to the left
+indices <- c(indices, (image_width - 1 + image_width)) # walk back to the right
+indices <- c(indices, (image_width - 2)) # cross diagnolly up to the left, landing on the starting row
+# one point to the left
+
+```
+
+It's looking like this might be recursive by I will need a helper function...
+```{r gl_data, echo = FALSE, results = "asis"}
+
+knitTriangleIndices <- function(img_width, img_height) {
+    ind <- c()
+    width <- img_width - 1
+    row <- 1
+
+    for (r in 1:(img_height - 1)) {
+        offset <- (img_width * (row - 1))
+        while (width > 0) {
+            idx1 <- (width) + offset
+            idx2 <- (width - 1) + offset # walk back one,
+            idx3 <- (width + img_width) + offset # cross diagnally down right, landing on the next row
+            idx4 <- (width + (img_width - 1)) + offset # start again on one to the left
+            idx5 <- (width + img_width) + offset# walk back to the right
+            idx6 <- (width - 1) + offset # cross diagnolly up to the left, landing on the starting row
+            print(idx1)
+            print(idx2)
+            print(idx3)
+            print(idx4)
+            print(idx5)
+            print(idx6)
+             ind <- c(ind, idx1, idx2, idx3, idx4, idx5, idx6)
+
+            width <- (width - 1)
+        }
+        width <- img_width - 1
+        row <- row + 1
+    }
+
+    ind
+}
+
+```
+
+Hours later, I decided my force powers are not strong enough for recursion in R, hence the for loop. Now I have to save all this to json
+```{r}
+# jsonlite::toJSON(height_array)
+# jsonlite::toJSON(vertices)
+# jsonlite::toJSON(normals)
+# jsonlite::toJSON(textureCoords)
+# jsonlite::toJSON(knitTriangleIndices(image_width, image_height))
+
+jsonlite::write_json(height_array, "data/planar-terrain-heights.json")
+jsonlite::write_json(vertices, "data/planar-terrain-verts.json")
+jsonlite::write_json(normals, "data/planar-terrain-norms.json")
+jsonlite::write_json(textureCoords, "data/planar-terrain-uvs.json")
+jsonlite::write_json(knitTriangleIndices(image_width, image_height), "data/planar-terrain-idx.json")
+
+```
