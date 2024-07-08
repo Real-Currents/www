@@ -49,6 +49,6 @@ jobs:
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List outputs after quarto render
-        run: |
-          ls -l "${GITHUB_WORKSPACE}/_site"
+#      - name: List outputs after quarto render
+#        run: |
+#          ls -l "${GITHUB_WORKSPACE}/_site"
