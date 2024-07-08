@@ -1,0 +1,66 @@
+var mxSubs = /* mxSubs is defined as a global here,
+              * but would be better to setup server
+              * for asynchronous json...
+              */
+{
+    "mxSubFeature1": {
+        "sub": "mxSubFeature1",
+        "super": "mxSub2.option1",
+        "theme": "mxTheme-green",
+        "features": [
+            {
+                "header": "MX SubFeature 1",
+                "options": [
+                    {
+                        "name": "Option 1",
+                        "action": "mxSubFeature1.option1",
+                        "active": false
+                    },
+                    {
+                        "name": "Option 2",
+                        "action": "mxSubFeature1.option2",
+                        "active": false
+                    },
+                    {
+                        "name": "Option 3",
+                        "action": "mxSubFeature1.option3",
+                        "active": false
+                    }
+                ],
+                "plural": true
+            }
+        ]
+    },
+    "mxSubFeature2": {
+        "sub": "mxSubFeature2",
+        "super": "mxSub2.option2",
+        "theme": "mxTheme-orange",
+        "features": [
+            {
+                "header": "MX SubFeature 2",
+                "options": [
+                    {
+                        "name": "Option 1",
+                        "action": "mxSubFeature2.option1",
+                        "active": false
+                    },
+                    {
+                        "name": "Option 2",
+                        "action": "mxSubFeature2.option2",
+                        "active": false
+                    },
+                    {
+                        "name": "Option 3",
+                        "action": "mxSubFeature2.option3",
+                        "active": false
+                    },
+                    {
+                        "name": "Option 4",
+                        "action": "mxSubFeature2.option4",
+                        "active": false
+                    }
+                ]
+            }
+        ]
+    }
+}
