@@ -1,5 +1,0 @@
----
-title: gallery
-author: John
-
----

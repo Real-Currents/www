@@ -1,5 +1,0 @@
----
-title: contact
-author: John
-
----

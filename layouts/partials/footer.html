@@ -1,9 +1,0 @@
-{{ define "footer" }}
-    </div><!-- content -->
-</div>
-
-<!--div id="control" onclick="(function(evt) { if (evt.target.innerHTML=='Play') { if (!!window.playVideo) { window.playVideo(); evt.target.parentNode.className='playing'; var playToggle = window.document.querySelector('#aud1_play'); if (!!playToggle) playToggle.innerHTML='Now Playing'; } } } (event))" >
-    <a id="toggle_control" href="/#" onclick="(function(evt) { var playToggle = window.document.querySelector('#aud1_play'); if (aud1.muted && !window.userTriggered) { setTimeout(function () { aud1.muted=false; }, 533); window.userTriggered=true; } else if (!aud1.paused) {  if (!!playToggle && playToggle.innerHTML!='Now Playing') aud1.pause(); } window.document.querySelector('canvas#fathers').style='image-rendering: optimizespeed !important; width: 960px; height: 540px; margin-left: -240px; position: fixed; top: 25%; pointer-events: none;' } (event));">Hide Control</a>
-</div-->
-
-{{ end }}

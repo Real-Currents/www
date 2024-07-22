@@ -1,11 +1,11 @@
+name: Quarto Publish
+
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - dev/quarto
-
-name: Quarto Publish
+      - 'dev/**'
 
 jobs:
   build-deploy:

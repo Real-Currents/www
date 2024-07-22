@@ -35,26 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.DS_Store
-.gradle
-.idea
-.ipynb_checkpoints
 /.quarto/
 /_site/
-
-bin/
-blogdown/
-build/
-data/
-dist/
-docs/
-log/
-man/
-node_modules/
-R/
-.RData
-.Rhistory
-*.Rproj*
-*.bak
 *.html
-_targets.R

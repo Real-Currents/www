@@ -8,14 +8,28 @@
   "repository": "Real-Currents/www",
   "main": "index.js",
   "dependencies": {
+    "next": "14.2.4",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "gray-matter": "^4.0.3",
+    "markdown-to-jsx": "^7.4.7",
+    "typescript": "^5"
   },
   "resolutions": {
   },
   "scripts": {
-    "build": "quarto render",
+    "dev": "npm run render:markdown && next dev",
+    "build": "npm run render:markdown && next build",
+    "start": "python -m http.server -d out 3000",
+    "lint": "next lint",
     "preview": "quarto preview",
-    "render:about": "cd content && quarto render about/index.qmd --to gfm --output-dir ."
+    "render:dev": "cd content/dev && quarto render index.qmd --to gfm --output README.md --output-dir .",
+    "render:markdown": "cd content && quarto render README.qmd --to gfm --output index.md",
+    "render:readme": "quarto render content/README.qmd --to gfm --output README.md"
   }
 }

@@ -7,12 +7,17 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - content/about.qmd
+      - href: content/about/index.qmd
+        text: About
+      - href: content/dev/index.qmd
+        text: Developer
 
 format:
   html:
     theme:
       - cosmo
-      - src/styles/custom.scss
-    css: src/styles/styles.css
+      - src/custom.scss
+    css: src/styles.css
     toc: true
+
+

@@ -6,7 +6,6 @@ About this site
 
 ```{r}
 #| label: Validate data directory
-#| echo: false
 #| eval: true
 
 data_dir <- "data"
