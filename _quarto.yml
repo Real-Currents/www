@@ -1,5 +1,10 @@
 project:
   type: website
+  pre-render:
+    - "cp -r public/* _site/"
+  render:
+    - "*.qmd"
+    - "!*.md"
 
 website:
   title: "Real~Currents"
