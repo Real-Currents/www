@@ -36,5 +36,9 @@ yarn-error.log*
 next-env.d.ts
 
 /.quarto/
-/_site/
+_site/
+*_cache/
+data/
+*.bak
+*.idea
 *.html

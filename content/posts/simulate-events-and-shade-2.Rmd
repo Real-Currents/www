@@ -1,0 +1,324 @@
+---
+title: "Events And Shade: Part 2"
+author: John
+date: '2020-11-19'
+draft: false
+categories:
+  - GL
+tags:
+  - GL
+  - Ray-Tracing
+  - Shadows
+  - SvelteJS
+  - SvelteGL
+  - Terrain
+  - WebGL
+---
+
+<div id="simulation-app-2" role="main" style="width: 100%;">&nbsp;</div>
+
+Events & Shade Across Time & Terrain: Part 2
+============================================
+
+```{r setup, cache = FALSE, echo = FALSE, include = FALSE}
+options(warn = -1)
+working_dir <- getwd()
+print(working_dir)
+if (!require("knitr")) {
+    install.packages("knitr")
+    library("knitr")
+}
+knitr::opts_chunk$set(cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load reticulate package for running python
+if (!require("png")) {
+    install.packages("png")
+}
+
+library(png)
+
+if (!require(akima) ||
+    !require(reshape2) ||
+    !require(viridis)) {
+    install.packages(c("akima", "ggplot2", "reshape2", "viridis"))
+}
+
+if (!require(magrittr) || !require(rgdal) || !require(rayshader)) {
+    install.packages(c("magrittr", "maptools", "rgdal", "rgeos", "sf", "sp"))
+    devtools::install_github("tylermorganwall/rayimage@7a9a138e10e19119c88e960f9cfb191d1fdae002", update = "never")
+    devtools::install_github("tylermorganwall/terrainmeshr@e112055e47033508cc45c8246b8dc0a0e94920f7", update = "never")
+    devtools::install_github("tylermorganwall/rayshader@d0c9bd94be95c44eff6e7d8da5eadff070dc11db", update = "never")
+}
+
+library(magrittr)
+library(akima)
+library(ggplot2)
+library(reshape2)
+library(rayshader)
+library(viridis)
+
+DISPLACE_MULTIPLY <- 0.125
+```
+
+
+```{r images, cache = FALSE, echo = FALSE, results = "asis"}
+if (file.exists("data/terrain-small.png")) {
+    small_input <- "data/terrain-small.png"
+} else {
+    small_input <- file.choose()
+}
+
+image_test <- data.frame(png::readPNG(small_input))
+
+if (file.exists("data/terrain-colormap.png")) {
+    color_input <- "data/terrain-colormap.png"
+} else {
+    color_input <- file.choose()
+}
+
+image_color <- data.frame(png::readPNG(color_input))
+
+if (file.exists("data/terrain-large.png")) {
+    large_input <- "data/terrain-large.png"
+} else {
+    large_input <- file.choose()
+}
+
+image_gray <- data.frame(png::readPNG(large_input))
+
+```
+
+
+```{r map_vert_data, cache = FALSE, echo = FALSE}
+
+mapHeight <- function(image_map, image_width, image_height) {
+    # make a 1.0 x 1.0 plane starting at (0, 0, 0)... z is up
+    heights <- matrix(1, nrow = image_height, ncol = image_width)
+
+    for (y in 1:image_height) {
+        for (x in 1:image_width) {
+            heights[y, x] <- round(image_map[y, x], 6)
+        }
+    }
+
+    heights
+}
+```
+
+
+```{r preview_map_data, cache = FALSE, echo = FALSE, results = "asis"}
+# import desert heightmap demo for test data
+localtif <- raster::raster("data/dem_01.tif")
+
+#And convert it to a matrix:
+elmat <- raster_to_matrix(localtif)
+
+heightmap <- mapHeight(image_test, length(image_test[1,]), length(image_test[, 1]))
+
+#print(nrow(heightmap))   # width of the heightmap
+#print(ncol(heightmap))   # height of the heightmap
+
+# print without tabs so R markdown will add it to the DOM tree of the resulting page
+cat(paste('<div id="data_in_html"><script type="application/json">', jsonlite::toJSON(heightmap), '\n</script>\n</div>', sep = ""))
+
+# I'm going to substitute this heightmap matrix for the volcano matrix that was used in the example below,
+# so I need to know use the volcano max as a multiplier against heightmap data (which is normalized)
+heightmap_max <- max(apply(heightmap, c(1, 2), max))
+#print(heightmap_max)
+elmat_max <- max(apply(elmat, c(1, 2), max))
+#print(elmat_max)
+height_mult <- elmat_max / heightmap_max
+#print(height_mult)
+
+for (y in 1:nrow(heightmap)) {
+    for (x in 1:ncol(heightmap)) {
+        heightmap[y, x] <- heightmap[y, x] * (height_mult / 10)
+    }
+}
+
+#print(max(apply(heightmap, c(1, 2), max)))
+```
+
+
+```{r heights, cache = TRUE, echo = FALSE}
+# Map terrain heights from the highdensity image
+mapTerrainCoords <- function(image_map, image_width, image_height) {
+    # make a 2.0 x 2.0 plane, starting from at (-1, -1, 0) ... z is up
+    heights <- matrix(1, nrow = image_height, ncol = image_width)
+    height_array <- array(dim = c(image_height, image_width))
+    vertices <- list()
+    normals <- list()
+    normal_array <- array(dim = c(image_height, image_width, 3))
+    textureCoords <- list()
+
+    # map heights
+    for (y in 1:image_height) {
+        for (x in 1:image_width) {
+            height <- round(image_map[y, x], 6)
+            heights[y, x] <- height
+        }
+    }
+
+    # map vetices, normals, texture
+    i <- 0
+    for (y in 1:image_height) {
+        height_array_x <- c()
+        for (x in 1:image_width) {
+            i <- i + 1 # increment before to start on 1
+            height_array_x <- c(height_array_x, heights[y, x])
+            # vertices (x, y, z)
+            # PNG y-coordinate system is reverse of WebGL
+            vertices[[i]] <- c(2.0 * round((x / image_width - (1.0 / image_width) - 0.5), 6), 2.0 * round((y / image_height - (1.0 / image_height) - 0.5), 6), heights[(image_width + 1) - y, x] * DISPLACE_MULTIPLY)  # z is up
+            # normals
+            normals[[i]] <- c(0.0, 0.0, 1.0)
+            # texture coordinates (s, t)
+            textureCoords[[i]] <- c(round((x / image_width - ((image_width - x) / (image_width * image_width))), 6), round(1.0 - (y / image_height - ((image_height - y) / (image_height * image_height))), 6)) # go to flip the y
+        }
+
+        # start mapping z normals
+        for (x in 1:image_width) {
+            normal_array[y, x,] <- c(0.0, 0.0, round(height_array_x[x], 6))
+        }
+
+        height_array[y,] <- height_array_x
+    }
+
+    # Now re-calculate x and y normals based on neighboring heightmap coords
+    i <- 0
+    for (y in 1:image_height) {
+        for (x in 1:image_width) {
+            i <- i + 1 # increment before to start on 1
+            # PNG y-coordinate system is reverse of WebGL
+            if (x < image_width) {
+                za <- normal_array[(image_width + 1) - y, x, 3]
+                zb <- normal_array[(image_width + 1) - y, x + 1, 3]
+                xa <- (za - zb) # / image_width
+                # print(paste0(za, " - ", zb,  " = ", xa))
+                # normal_array[y, x,] <- c(round(xa, 6), 0.0, 0.0)
+                normal_array[(image_width + 1) - y, x,] <- c(round(xa, 6), normal_array[(image_width + 1) - y, x, 2], normal_array[(image_width + 1) - y, x, 3])
+                normals[[i]] <- normal_array[(image_width + 1) - y, x,]
+            }
+            if (y < image_height) {
+                za <- normal_array[(image_width + 1) - y, x, 3]
+                zb <- normal_array[(image_width + 1) - (y + 1), x, 3]
+                ya <- (za - zb) # / image_height
+                # print(paste0(za, " - ", zb,  " = ", ya))
+                # normal_array[y, x,] <- c(0.0, round(ya, 6), 0.0)
+                normal_array[(image_width + 1) - y, x,] <- c(normal_array[(image_width + 1) - y, x, 1], round(ya, 6), normal_array[(image_width + 1) - y, x, 3])
+                normals[[i]] <- normal_array[(image_width + 1) - y, x,]
+            }
+        }
+    }
+
+    list(
+        heights = height_array,
+        vertices = vertices,
+        normals = normals,
+        normal_array = normal_array,
+        textureCoords = textureCoords
+    )
+}
+
+#heights <- mapHeight(image_gray, length(image_gray[1,]), length(image_gray[, 1])) # start with the simple height mapper for now
+map <- mapTerrainCoords(image_gray, nrow(image_gray), ncol(image_gray))
+
+heights <- map$heights
+vertices <- map$vertices
+normals <- map$normals
+textureCoords <- map$textureCoords
+```
+
+
+```{r normal_map, cache = FALSE, echo = FALSE, results = "asis"}
+
+jsonlite::write_json(heights, "data/planar-terrain-heights.json")
+
+if (file.exists("data")) {
+  normal_test_file <- "data/planar-terrain-normals.png"
+} else {
+  normal_test_file <- file.choose(new = TRUE)
+}
+
+# test write to png
+png::writePNG(map$normal_array, normal_test_file)
+
+cat(paste0('<img id="heightmap" src="/posts/', normal_test_file, '" style="float: right; width:256px; padding: 1%;" />'))
+```
+
+In part 2, I continue to employ `mapTerrainCoords` that was developed in [Generating Planar Terrain Mesh](posts/terrain) to generate the terrain height maps and normal maps, as well as the ray-traced shading methods provided by <a href="https://github.com/tylermorganwall/rayshader" target="_blank">rayshader</a> that were explored in [Events And Shade: Part 1](posts/simulate-events-and-shade-1) to produce the shaded texture map.
+
+```{r rayshaded_map, cache = FALSE, echo = TRUE, results = "asis"}
+xparts <- 2
+yparts <- 2
+width <- ncol(heights)
+height <- nrow(heights)
+quad_width <- floor(width / xparts)
+quad_height <- floor(height / yparts)
+
+image_shaded <- array(dim = c(height, width, 3))
+
+for (j in 1:yparts) {
+    for (i in 1:xparts) {
+        quad_width_start <- ((i - 1) * quad_width)
+        quad_width_end <- (i * quad_width)
+        quad_height_start <- ((j - 1) * quad_height)
+        quad_height_end <- (j * quad_height)
+        elmat <- matrix(1, nrow = quad_height, ncol = quad_width)
+
+        for (y in 1:quad_height) {
+            for (x in 1:quad_width ) {
+                elmat[x, y] <- heights[quad_height_start + y, quad_width_start + x] * height_mult
+            }
+        }
+
+        sunangle <- 45
+
+        revx_elmat <- matrix(1, nrow = nrow(elmat), ncol = ncol(elmat))
+        for (y in 1:nrow(elmat)) {
+            for (x in 1:ncol(elmat)) {
+                revx_elmat[y, x] <- elmat[(nrow(elmat) - y) + 1, x]
+            }
+        }
+
+        terrain_shadow <- (revx_elmat %>%
+            ray_shade(
+                maxsearch = floor(sqrt(nrow(elmat)^2 + ncol(elmat)^2)) / 64,
+                zscale = 100, sunaltitude = 45, sunangle = sunangle, lambert = TRUE,
+                multicore = TRUE)
+        )
+
+        if (file.exists("data")) {
+            terrain_shademap <- paste0("data/terrain-rayshaded-", (i - 1), "", (j - 1), ".png")
+        } else {
+            terrain_shademap <- file.choose(new = TRUE)
+        }
+
+        # image function and ggplot are slow; save with PNG function from PNG package.
+        png::writePNG(t(terrain_shadow), terrain_shademap)
+
+        for (y in 1:quad_height) {
+            for (x in 1:quad_width ) {
+
+                # combine shadow with colormap, with a value ratio of 1:2 respectively
+                image_shaded[quad_height_start + y, quad_width_start + x, ] <- c(
+                    ((terrain_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (0 * width)]),
+                    ((terrain_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (1 * width)]),
+                    ((terrain_shadow[x, y] / 2 + 0.5) * image_color[quad_height_start + y, quad_width_start + x + (2 * width)])
+                )
+            }
+        }
+    }
+}
+
+if (file.exists("data")) {
+    rayshaded_file <- paste0("data/terrain-shaded-colormap.png")
+} else {
+    rayshaded_file <- file.choose(new = TRUE)
+}
+
+png::writePNG(image_shaded, rayshaded_file)
+
+cat(paste0('<img id="shademap" src="/posts/', rayshaded_file, '" style="width: 100%;" />'))
+```
+

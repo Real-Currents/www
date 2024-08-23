@@ -9,7 +9,7 @@ format:
     variant: +yaml_metadata_block
 ---
 
-This site is about signs and symbols in motion; a showcase of experiments in Information Experience Design (IxD). It's purpose is to recognize and explore our need to turn what often appears to be a tsunami or avalanche of data (waves) into familiar and intuitive patterns (currents) which have direction, velocity and stability (or meta-stability).
+This site is about signs and symbols in motion; a showcase of experiments in [Information Experience Design (IxD)](https://scholarlykitchen.sspnet.org/2022/02/03/information-experience-design-holistic-humanistic-solutions-for-scholarly-products/){.external target="_blank"}. It's purpose is to recognize and explore our need to turn what often appears to be a tsunami or avalanche of data (waves) into familiar and intuitive patterns (currents) which have direction, velocity and stability (or meta-stability).
 
 In terms of information and insight (wisdom):
 
