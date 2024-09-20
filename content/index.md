@@ -1,20 +1,23 @@
 ---
-title: "Real~Currents"
+title: Real~Currents
 subtitles:
-  - "IxD:"
-  - "Web:"
-  - "Viz:"
+  - 'IxD:'
+  - 'Web:'
+  - 'Viz:'
 format:
   gfm:
     variant: +yaml_metadata_block
 ---
 
+
 This site is about signs and symbols in motion; a showcase of
-experiments in Information Experience Design (IxD). It’s purpose is to
-recognize and explore our need to turn what often appears to be a
-tsunami or avalanche of data (waves) into familiar and intuitive
-patterns (currents) which have direction, velocity and stability (or
-meta-stability).
+experiments in <a
+href="https://scholarlykitchen.sspnet.org/2022/02/03/information-experience-design-holistic-humanistic-solutions-for-scholarly-products/"
+class="external" target="_blank">Information Experience Design (IxD)</a>.
+It’s purpose is to recognize and explore our need to turn what often
+appears to be a tsunami or avalanche of data (waves) into familiar and
+intuitive patterns (currents) which have direction, velocity and
+stability (or meta-stability).
 
 In terms of information and insight (wisdom):
 

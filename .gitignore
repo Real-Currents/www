@@ -37,4 +37,6 @@ next-env.d.ts
 
 /.quarto/
 /_site/
+/public/
+*.bak
 *.html

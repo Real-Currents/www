@@ -8,28 +8,30 @@
   "repository": "Real-Currents/www",
   "main": "index.js",
   "dependencies": {
-    "next": "14.2.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "next": "14.2.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.25.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "gray-matter": "^4.0.3",
-    "markdown-to-jsx": "^7.4.7",
+    "markdown-to-jsx": "^7.5.0",
     "typescript": "^5"
   },
-  "resolutions": {
-  },
+  "resolutions": {},
   "scripts": {
     "dev": "npm run render:markdown && next dev",
     "build": "npm run render:markdown && next build",
     "start": "python -m http.server -d out 3000",
     "lint": "next lint",
+    "next": "next",
     "preview": "quarto preview",
     "render:dev": "cd content/dev && quarto render index.qmd --to gfm --output README.md --output-dir .",
     "render:markdown": "cd content && quarto render README.qmd --to gfm --output index.md",
     "render:readme": "quarto render content/README.qmd --to gfm --output README.md"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
