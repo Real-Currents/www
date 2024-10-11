@@ -116,8 +116,12 @@ main {
   }
 }
 
-.main > * p {
+main>* p {
   line-height: 1.5em;
+}
+
+main * ul, main * ul {
+  padding-left: 5%;
 }
 
 div#content {
