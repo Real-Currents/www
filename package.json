@@ -40,5 +40,6 @@
     "render:js-demos": "cd content/js-demos && quarto render --output-dir . && quarto render index.qmd --to gfm --output README.md --output-dir .",
     "render:posts": "cd content/posts && quarto render --output-dir .",
     "render:readme": "quarto render content/README.qmd --to gfm --output README.md"
-  }
+  },
+  "type": "module"
 }

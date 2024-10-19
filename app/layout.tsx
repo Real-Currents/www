@@ -25,7 +25,7 @@ function HeaderLayout ({ title, description, subtitles }: HeaderLayoutProps) {
               <Link href={"/"}><h1>
                   {(!!title && title.length > 0) ?
                       title.split("~").map((t, i) => {
-                          console.log(t);
+                          // console.log(t);
                           return (i % 2 < 1) ?
                               <span key={`title-${i}`} style={{color: "#00FF00"}}>{t}</span> :
                               <span key={`title-${i}`} style={{color: "rgb(17,187,255)"}}>~{t}</span>

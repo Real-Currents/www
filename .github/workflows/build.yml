@@ -74,7 +74,7 @@ jobs:
 
       - name: List outputs after next build
         run: |
-          ls -l "${GITHUB_WORKSPACE}"
+          ls -lA "${GITHUB_WORKSPACE}"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
