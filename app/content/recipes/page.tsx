@@ -10,7 +10,7 @@ import React from "react";
 export default function Home() {
   const postMetadata: Post[] = getPostMetadata("content/recipes");
 
-  console.log(postMetadata);
+  // console.log(postMetadata);
 
   return (
     // <main className={styles.main}>

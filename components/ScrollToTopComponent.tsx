@@ -1,17 +1,10 @@
 "use client";
 import { useEffect } from "react";
 
-export default function StaticRewriteComponent (props: { uri: string}) {
-
-    const { uri } = props;
+export default function ScrollToTopComponent () {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            window.history.replaceState(
-                {},
-                "",
-                uri
-            );
             // window.alert("scrollTo(0,0)");
             window.scrollTo(0,0);
         }
@@ -19,7 +12,7 @@ export default function StaticRewriteComponent (props: { uri: string}) {
 
     return (
         <span style={{ visibility: "hidden" }}>
-            Update navigation to read {uri}
+            Scroll to top of window
         </span>
     );
 }

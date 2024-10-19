@@ -5,10 +5,9 @@ import React from "react";
 import fs from "fs";
 import matter from "gray-matter";
 import Markdown from "markdown-to-jsx";
-import { metadata } from "@/app/layout";
 import StaticRewriteComponent from "@/components/StaticRewriteComponent";
 import { Post } from "@/types";
-import { getPostMetadata } from "@/utils";
+import { getPostMetadata, metadata } from "@/utils";
 
 interface ContentParams {
     params: Post;

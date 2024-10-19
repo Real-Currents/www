@@ -5,29 +5,10 @@ import matter from "gray-matter";
 import type { Metadata } from "next";
 import { Comfortaa, Inter, Bitter, Montserrat, Roboto } from "next/font/google";
 import Link from "next/link";
+import { HeaderLayoutProps } from "@/types";
+import { metadata } from "@/utils";
 
 const comfortaa = Comfortaa({ subsets: ["latin"] });
-
-export function getIntroContent() {
-    const file = `./content/index.md`;
-    const content = fs.readFileSync(file, "utf8");
-
-    const matterResult = matter(content);
-    return matterResult;
-}
-
-interface HeaderLayoutProps extends Metadata {
-    title: string,
-    description?: string,
-    subtitles?: string[]
-}
-
-// TODO: Populate metadata from index.md front matter
-export const metadata: HeaderLayoutProps = {
-    ...getIntroContent().data,
-  title: "Real~Currents",
-  description: "Experiments in Information Experience Design (IxD)",
-};
 
 // TODO: Use metadata props to build header
 function HeaderLayout ({ title, description, subtitles }: HeaderLayoutProps) {
@@ -74,7 +55,7 @@ export default function RootLayout ({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    console.log(metadata);
+    // console.log(metadata);
 
   return (
     <html lang="en">

@@ -1,10 +1,9 @@
-import React from "react";
+import * as React from "react";
 import fs from "fs";
 import matter from "gray-matter";
 import Markdown from "markdown-to-jsx";
-import { metadata } from "@/app/layout";
 import { Post } from "@/types";
-import { getPostMetadata } from "@/utils";
+import { metadata, getPostMetadata } from "@/utils";
 import StaticRewriteComponent from "@/components/StaticRewriteComponent";
 
 interface ContentParams {
@@ -27,7 +26,7 @@ export async function generateStaticParams (): Promise<Post[]> {
         // posts.map((post) => ({
         //     slug: post.slug,
         // }));
-        getPostMetadata("content/recipes")
+        getPostMetadata("content/posts")
     );
 }
 
@@ -39,7 +38,7 @@ export async function generateMetadata ({ params }: ContentParams) {
 }
 
 function getPostContent (slug: string) {
-    const file = `./content/recipes/${slug}.md`;
+    const file = `./content/posts/${slug}.md`;
     const content = fs.readFileSync(file, "utf8");
 
     const matterResult = matter(content);
