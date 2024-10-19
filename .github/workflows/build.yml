@@ -72,11 +72,11 @@ jobs:
       - name: Build with Next.js
         run: npx next build
 
+      - name: List outputs after next build
+        run: |
+          ls -l "${GITHUB_WORKSPACE}"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
-
-      - name: List outputs after next build
-        run: |
-          ls -l "${GITHUB_WORKSPACE}/out"
