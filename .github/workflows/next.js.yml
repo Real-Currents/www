@@ -59,7 +59,7 @@ jobs:
 
 #      - name: List outputs after quarto render
 #        run: |
-#          ls -l "${GITHUB_WORKSPACE}/_site"
+#          ls -l "${GITHUB_WORKSPACE}"
 
       - name: Setup Node.js
         uses: ./.github/workflows/node.js

@@ -59,7 +59,7 @@ jobs:
 
 #      - name: List outputs after quarto render
 #        run: |
-#          ls -l "${GITHUB_WORKSPACE}/_site"
+#          ls -l "${GITHUB_WORKSPACE}"
 
       - name: Setup Node.js
         uses: ./.github/workflows/node.js
@@ -70,7 +70,7 @@ jobs:
           static_site_generator: next
 
       - name: Build with Next.js
-        run: npx next build
+        run: npm run build
 
       - name: List outputs after next build
         run: |
