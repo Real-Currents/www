@@ -5,11 +5,11 @@ import { HeaderLayoutProps, Post } from "@/types";
 export function getContent (contents: string) {
     const matterResult = matter(contents);
 
-    for (const p in matterResult) {
-        if (matterResult.hasOwnProperty(p)) {
-            console.log("property in matter: ", p);
-        }
-    }
+    // for (const p in matterResult) {
+    //     if (matterResult.hasOwnProperty(p)) {
+    //         console.log("property in matter: ", p);
+    //     }
+    // }
 
     if (matterResult.hasOwnProperty("content")) {
         matterResult.content = matterResult.content

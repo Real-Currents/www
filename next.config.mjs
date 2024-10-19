@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    "output": "standalone", // "export", // <=== enables static exports
+    "distDir": "out",
+    "output": "export", // <=== enables static exports
+    // "output": "standalone",
     "reactStrictMode": true
 };
 
