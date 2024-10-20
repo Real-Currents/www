@@ -1,0 +1,28 @@
+project:
+  type: website
+#  post-render:
+#    - "cp -r public/* _site/"
+  render:
+    - "!*.md"
+    - "*.qmd"
+
+website:
+  title: "Real~Currents"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: content/about/index.qmd
+        text: About
+      - href: content/dev/index.qmd
+        text: Developer
+
+format:
+  html:
+    theme:
+      - cosmo
+      - src/custom.scss
+    css: src/styles.css
+    toc: true
+
+
