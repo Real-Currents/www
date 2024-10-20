@@ -51,4 +51,4 @@ jobs:
 
 #      - name: List outputs after quarto render
 #        run: |
-#          ls -l "${GITHUB_WORKSPACE}/_site"
+#          ls -lA "${GITHUB_WORKSPACE}/_site"

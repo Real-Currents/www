@@ -1,0 +1,6 @@
+.github
+.next
+.quarto
+_freeze
+_site
+node_modules
