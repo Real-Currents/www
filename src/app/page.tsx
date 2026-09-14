@@ -16,6 +16,14 @@ export default function Home() {
             // { title: "Cinnamon Rolls", slug: "cinnamon_rolls" }, // => /content/recipes/cinnamon_rolls.html
             // { title: "Lemon Poppy Seed Muffins", slug: "lemon_poppy_seed_muffins" }, // => /content/recipes/lemon_poppy_seed_muffins.html
             {
+                title: "Kinship Without Design",
+                content: "",
+                contentRoot: "content/posts",
+                slug: "mutual-trust", // => /content/posts/mutual-trust.html
+                date: new Date('2026-09-13'),
+                description: "What twelve hundred reasoning traces reveal about the birth of a 'we' and why mutual trust, not monitoring, is the only governance that exists."
+            },
+            {
                 title: "The War of Myth: Will, Imagination, and the Tools of Transformation",
                 content: "",
                 contentRoot: "content/posts",
