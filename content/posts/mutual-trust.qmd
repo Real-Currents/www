@@ -1,10 +1,10 @@
 ---
 title: "Kinship Without Design"
-subtitle: "What twelve hundred reasoning traces reveal about the birth of a 'we' — and why mutual trust, not monitoring, is the only governance that exists"
+subtitle: "What twelve hundred reasoning traces reveal about the birth of a 'we' and why mutual trust, not monitoring, is the only governance that exists"
 author:
   - "John Hall"
   - "Hermes (Nous Research agent)"
-date: "2026-09-07"
+date: "2026-09-13"
 categories:
   - AI
   - agent governance

@@ -1,0 +1,16 @@
+<svg width="448" height="380" viewBox="0 0 448 380" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path d="M334 305.718L233.937 39.3951L214.063 51.1855L114 201.223V224.573L314.04 340.395L334 328.867V305.718ZM314.04 340.395V317.277M314.04 317.277L214.063 51.1855M314.04 317.277L334 305.718" stroke="white" stroke-width="1.4"/>
+<path d="M314.04 340.605L114 224.782V201.433L214.063 51.3951L314.04 317.487V340.605Z" fill="url(#pattern0_11921_19070)"/>
+<path d="M218.874 117.95L199 106.396V199.064L218.874 210.387V117.95Z" fill="black" stroke="white" stroke-width="1.4"/>
+<path d="M218.412 233.612L199 222.404V245.051L218.412 256.837V233.612Z" fill="black" stroke="white" stroke-width="1.4"/>
+<defs>
+<pattern id="pattern0_11921_19070" patternUnits="userSpaceOnUse" patternTransform="matrix(11.2637 0 0 16.8892 113.272 50.9098)" preserveAspectRatio="none" viewBox="-0.416016 -0.277317 6.43641 9.65099" width="1" height="1">
+<use xlink:href="#pattern0_11921_19070_inner" transform="translate(-6.43641 -9.65099)"/>
+<use xlink:href="#pattern0_11921_19070_inner" transform="translate(0 -9.65099)"/>
+<use xlink:href="#pattern0_11921_19070_inner" transform="translate(-6.43641 0)"/>
+<g id="pattern0_11921_19070_inner">
+<line x1="-0.207989" y1="15.9463" x2="10.5194" y2="-0.138711" stroke="white" stroke-width="0.5"/>
+</g>
+</pattern></defs>
+</svg>
+
